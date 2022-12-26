@@ -37,7 +37,7 @@ public class GamePanel extends JPanel implements Runnable {
     // regulate it
 
 
-    Player player = new Player(100, 100, 3,5, null, 3, 1);
+    Player player = new Player(100, 100, 3, 5, null, 3, 1);
 
 
     public GamePanel() {
@@ -119,8 +119,8 @@ public class GamePanel extends JPanel implements Runnable {
     public void update() throws IOException {
 
         if (keyHandler.upPressed) {
-             player.setPositionY(player.getPositionY() - player.getMovementSpeed());
-             player.setCurrentAppearance(0);
+            player.setPositionY(player.getPositionY() - player.getMovementSpeed());
+            player.setCurrentAppearance(0);
         } else if (keyHandler.downPressed) {
             player.setPositionY(player.getPositionY() + player.getMovementSpeed());
             player.setCurrentAppearance(1);
@@ -140,7 +140,7 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(graph);
         Graphics2D graph2D = (Graphics2D) graph;
 
-        for(Entity entity : entityArrayList) {
+        for (Entity entity : entityArrayList) {
             graph2D.drawImage(player.getEntityAppearance().get(entity.getCurrentAppearance()), entity.getPositionX(), entity.getPositionY(), NEW_TILE_SIZE, NEW_TILE_SIZE, this);
         }
 
