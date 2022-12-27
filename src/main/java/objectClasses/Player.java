@@ -8,9 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player extends Entity {
-
     private int life;
-    //private List<Item> items;
+    //private List<Item> items; // should xposition be an attribute of player?
 
     public Player(int positionX, int positionY, int movementSpeed, int healthPoints, ArrayList<BufferedImage> entityAppearance, int life, int currentAppearance) {
         super(positionX, positionY, movementSpeed, healthPoints, entityAppearance, currentAppearance);

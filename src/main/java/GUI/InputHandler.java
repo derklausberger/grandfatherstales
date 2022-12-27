@@ -1,3 +1,5 @@
+package GUI;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.HashSet;
@@ -40,7 +42,6 @@ public class InputHandler implements KeyListener {
 
     /*
     public void multiKeys() {
-        System.out.println(keys.size());
         for(Integer key: keys) {
             System.out.println(key);
             switch (key) {

@@ -1,10 +1,13 @@
+package GUI;
+
 import objectClasses.Abstract.Entity;
-import objectClasses.Abstract.Item;
+import objectClasses.Game;
 import objectClasses.Player;
-import objectClasses.Weapon;
+import org.xml.sax.SAXException;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -14,15 +17,15 @@ import java.util.ArrayList;
 
 public class GamePanel extends JPanel implements Runnable {
 
-    final int SCALE_FACTOR = 3; // 16 x 16 won't actually be displayed as 16 x 16
-    final int ORIGINAL_TILE_SIZE = 16; // 16 x 16 pixel
-    final int NEW_TILE_SIZE = ORIGINAL_TILE_SIZE * SCALE_FACTOR;
+    static final int SCALE_FACTOR = 3; // 16 x 16 won't actually be displayed as 16 x 16
+    static final int ORIGINAL_TILE_SIZE = 16; // 16 x 16 pixel
+    public static final int NEW_TILE_SIZE = ORIGINAL_TILE_SIZE * SCALE_FACTOR;
 
-    final int MAX_SCREEN_COL = 16; // max. 16 tiles in x
-    final int MAX_SCREEN_ROW = 12; // max. 12 tiles in y
+    static final int MAX_SCREEN_COL = 16; // max. 16 tiles in x
+    static final int MAX_SCREEN_ROW = 12; // max. 12 tiles in y
 
-    final int WINDOW_WIDTH = NEW_TILE_SIZE * MAX_SCREEN_COL; // 768 pixel
-    final int WINDOW_HEIGHT = NEW_TILE_SIZE * MAX_SCREEN_ROW; // 576 pixel
+    static final int WINDOW_WIDTH = NEW_TILE_SIZE * MAX_SCREEN_COL; // 768 pixel
+    static final int WINDOW_HEIGHT = NEW_TILE_SIZE * MAX_SCREEN_ROW; // 576 pixel
 
     InputHandler keyHandler = new InputHandler(); // own class
     Thread gameThread = null;
@@ -37,10 +40,13 @@ public class GamePanel extends JPanel implements Runnable {
     // regulate it
 
 
-    Player player = new Player(100, 100, 3, 5, null, 3, 1);
+
+    private final Game game;
+
+    public GamePanel() throws IOException, ParserConfigurationException, SAXException {
+        game = new Game(new Player(100, 100, 3, 5, null, 3, 1));
 
 
-    public GamePanel() {
         this.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
         this.setBackground(Color.black);
         this.addKeyListener(keyHandler); // adds Listener
@@ -69,8 +75,8 @@ public class GamePanel extends JPanel implements Runnable {
         entityAppearance.add(bi3);
         entityAppearance.add(bi4);
 
-        player.setEntityAppearance(entityAppearance);
-        entityArrayList.add(player);
+        game.getPlayer().setEntityAppearance(entityAppearance);
+        entityArrayList.add(game.getPlayer());
 
         startGameThread();
     }
@@ -117,19 +123,18 @@ public class GamePanel extends JPanel implements Runnable {
 
 
     public void update() throws IOException {
-
         if (keyHandler.upPressed) {
-            player.setPositionY(player.getPositionY() - player.getMovementSpeed());
-            player.setCurrentAppearance(0);
+            game.getPlayer().setPositionY(game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed());
+            game.getPlayer().setCurrentAppearance(0);
         } else if (keyHandler.downPressed) {
-            player.setPositionY(player.getPositionY() + player.getMovementSpeed());
-            player.setCurrentAppearance(1);
+            game.getPlayer().setPositionY(game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed());
+            game.getPlayer().setCurrentAppearance(1);
         } else if (keyHandler.leftPressed) {
-            player.setPositionX(player.getPositionX() - player.getMovementSpeed());
-            player.setCurrentAppearance(2);
+            game.getPlayer().setPositionX(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed());
+            game.getPlayer().setCurrentAppearance(2);
         } else if (keyHandler.rightPressed) {
-            player.setPositionX(player.getPositionX() + player.getMovementSpeed());
-            player.setCurrentAppearance(3);
+            game.getPlayer().setPositionX(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed());
+            game.getPlayer().setCurrentAppearance(3);
         }
     }
 
@@ -140,8 +145,16 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(graph);
         Graphics2D graph2D = (Graphics2D) graph;
 
+        /*try {
+            game.render(graph2D);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+
         for (Entity entity : entityArrayList) {
-            graph2D.drawImage(player.getEntityAppearance().get(entity.getCurrentAppearance()), entity.getPositionX(), entity.getPositionY(), NEW_TILE_SIZE, NEW_TILE_SIZE, this);
+            graph2D.drawImage(game.getPlayer().getEntityAppearance().get(
+                    entity.getCurrentAppearance()), entity.getPositionX(),
+                    entity.getPositionY(), NEW_TILE_SIZE, NEW_TILE_SIZE, this);
         }
 
         /*
@@ -166,7 +179,6 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public static void main(String[] args) {
-
     }
 
 }
