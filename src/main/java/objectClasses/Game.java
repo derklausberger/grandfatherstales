@@ -80,36 +80,14 @@ public class Game {
         }
     }
 
-    private void playLevel(Player player, Level level) {
-
-    }
-
-    private void saveGameToFile(Player player) {
-
-    }
-
-    private void loadGameFromFile(Player player) {
-
-    }
-
-    public void render(Graphics2D g) throws IOException {
+    public void render(Graphics2D g) {//} throws IOException {
         Level level = getCurrentLevel();
         for (int i = 0; i < (32 * 32); i++) {
-            int field = level.getMap()[(int) i / 32][i % 32];
-            int tileSetKey = 0;
-            for(Map.Entry<Integer, TileSet> entry : level.getTileSets().entrySet()) {
-                if (tileSetKey < entry.getKey() && entry.getKey() <= field) {
-                    tileSetKey = entry.getKey();
-                }
-            }
-            TileSet tileSet = level.getTileSets().get(tileSetKey);
+            g.drawImage(level.getMap()[(int) i / 32][i % 32],
+                    (GamePanel.NEW_TILE_SIZE * (i % 32)) - player.getPositionX(), GamePanel.NEW_TILE_SIZE * (int) (i / 32) - player.getPositionY(),
+                    GamePanel.NEW_TILE_SIZE, GamePanel.NEW_TILE_SIZE,
+                    null);
 
-            if (tileSet != null) {
-                field -= tileSetKey;
-                int fieldX = (field % tileSet.getWidthTiles()) * 16;
-                int fieldY = ((int) (field / tileSet.getWidthTiles())) * 16;
-                g.drawImage(ImageIO.read(new File(tileSet.getPngFileName())).getSubimage(fieldX, fieldY, 16, 16), GamePanel.NEW_TILE_SIZE * (i % 32), GamePanel.NEW_TILE_SIZE * (int) (i / 32), GamePanel.NEW_TILE_SIZE, GamePanel.NEW_TILE_SIZE, null);
-            }
         }
     }
 

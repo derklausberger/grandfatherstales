@@ -10,7 +10,7 @@ public class Main {
             window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             window.setBackground(Color.black);
             window.setResizable(false);
-            window.setTitle("");
+            window.setTitle("Grandfather's Tales");
 
             GamePanel gamePanel = new GamePanel();
             window.add(gamePanel);

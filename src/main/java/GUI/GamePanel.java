@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class GamePanel extends JPanel implements Runnable {
+public class GamePanel extends JPanel implements Runnable{
 
     static final int SCALE_FACTOR = 3; // 16 x 16 won't actually be displayed as 16 x 16
     static final int ORIGINAL_TILE_SIZE = 16; // 16 x 16 pixel
@@ -28,7 +28,7 @@ public class GamePanel extends JPanel implements Runnable {
     static final int WINDOW_HEIGHT = NEW_TILE_SIZE * MAX_SCREEN_ROW; // 576 pixel
 
     InputHandler keyHandler = new InputHandler(); // own class
-    Thread gameThread = null;
+    Thread playerThread = null;
 
     //public static int playerPosX = 100; // static because of InputHandler
     //public static int playerPosY = 100; // static because of InputHandler
@@ -44,7 +44,7 @@ public class GamePanel extends JPanel implements Runnable {
     private final Game game;
 
     public GamePanel() throws IOException, ParserConfigurationException, SAXException {
-        game = new Game(new Player(100, 100, 3, 5, null, 3, 1));
+        game = new Game(new Player(0, 0, 3, 5, null, 3, 1));
 
 
         this.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
@@ -78,12 +78,12 @@ public class GamePanel extends JPanel implements Runnable {
         game.getPlayer().setEntityAppearance(entityAppearance);
         entityArrayList.add(game.getPlayer());
 
-        startGameThread();
+        startPlayerThread();
     }
 
-    public void startGameThread() {
-        gameThread = new Thread(this);
-        gameThread.start();
+    public void startPlayerThread() {
+        playerThread = new Thread(this);
+        playerThread.start();
     }
 
     @Override
@@ -92,13 +92,14 @@ public class GamePanel extends JPanel implements Runnable {
         long drawInterval = 1000000000 / FPS;
         long nextDrawTime = System.nanoTime() + drawInterval;
 
-        while (gameThread != null) {
+        while (playerThread != null) {
 
             // for the meantime update() not necessary because
             // inputhandler changes the pos of the player in its class
             // should be changed
             try {
                 update(); // updates: character positions, etc...
+                //paintComponent(graph);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -141,9 +142,12 @@ public class GamePanel extends JPanel implements Runnable {
 
     ArrayList<Entity> entityArrayList = new ArrayList<>();
 
-    public void paintComponent(Graphics graph) {
+    @Override
+    public void paint(Graphics graph) {
         super.paintComponent(graph);
         Graphics2D graph2D = (Graphics2D) graph;
+
+        game.render(graph2D);
 
         /*try {
             game.render(graph2D);
@@ -151,11 +155,16 @@ public class GamePanel extends JPanel implements Runnable {
             e.printStackTrace();
         }*/
 
-        for (Entity entity : entityArrayList) {
-            graph2D.drawImage(game.getPlayer().getEntityAppearance().get(
-                    entity.getCurrentAppearance()), entity.getPositionX(),
-                    entity.getPositionY(), NEW_TILE_SIZE, NEW_TILE_SIZE, this);
-        }
+        //for (Entity entity : entityArrayList) {
+            /*graph2D.drawImage(game.getPlayer().getEntityAppearance().get(
+                    game.getPlayer().getCurrentAppearance()), game.getPlayer().getPositionX(),
+                    game.getPlayer().getPositionY(), NEW_TILE_SIZE, NEW_TILE_SIZE, this);*/
+        //}
+
+        graph2D.drawImage(game.getPlayer().getEntityAppearance().get(
+                game.getPlayer().getCurrentAppearance()), (int)((WINDOW_WIDTH - NEW_TILE_SIZE) / 2),
+                (int)((WINDOW_HEIGHT - NEW_TILE_SIZE) / 2), NEW_TILE_SIZE, NEW_TILE_SIZE, this);
+
 
         /*
         for(Entity entity : entityArrayList){

@@ -6,16 +6,19 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
+import java.util.Map;
 
 public class Level {
     private int id;
-    private int[][] map;
+    private BufferedImage[][] map;
     private Hashtable<Integer, TileSet> tileSets;
 
     public Level(File mapXMLFile) throws ParserConfigurationException, IOException, SAXException {
@@ -23,7 +26,7 @@ public class Level {
         int map_height = 32;
 
         tileSets = new Hashtable<>();
-        map = new int[map_height][map_width];
+        map = new BufferedImage[map_height][map_width];
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.parse(mapXMLFile);
@@ -35,10 +38,6 @@ public class Level {
             n = nodeList.item(i);
             e = (Element) n;
 
-            /*tileSets.put(Integer.valueOf(e.getAttribute("firstgid")), Game
-                    .getTilesetFromXMLFileName(e.getAttribute("source")
-                            .split("/")[e.getAttribute("source").split("/")
-                            .length - 1]));*/
             tileSets.put(Integer.valueOf(e.getAttribute("firstgid")), Game
                     .getTilesetFromXMLFileName(e.getAttribute("source")
                             .replace("../", "")));
@@ -49,12 +48,25 @@ public class Level {
             n = nodeList.item(i);
             e = (Element) n;
 
-            int j = 0;
-            for (String s : e.getElementsByTagName("data").item(0)
-                    .getTextContent().replace("\n", "").replace("\r", "")
-                    .split(",")) {
-                map[(int) (j / map_height)][j % map_width] = Integer
-                        .parseInt(s);
+            int j = 0, field, tileSetKey, fieldX, fieldY;
+            TileSet tileSet;
+            for (String s : e.getElementsByTagName("data").item(0).getTextContent().replace("\n", "").replace("\r", "").split(",")) {
+                field = Integer.parseInt(s);
+                tileSetKey = 0;
+                for (Map.Entry<Integer, TileSet> entry : tileSets.entrySet()) {
+                    if (tileSetKey < entry.getKey() && entry.getKey() <= field) {
+                        tileSetKey = entry.getKey();
+                    }
+                }
+                tileSet = tileSets.get(tileSetKey);
+
+                if (tileSet != null) {
+                    field -= tileSetKey;
+                    fieldX = (field % tileSet.getWidthTiles()) * 16;
+                    fieldY = ((int) (field / tileSet.getWidthTiles())) * 16;
+                    map[(int) (j / map_height)][j % map_width] = ImageIO.read(new File(tileSet.getPngFileName())).getSubimage(fieldX, fieldY, 16, 16);
+                }
+
                 j++;
             }
         }
@@ -68,7 +80,7 @@ public class Level {
         this.id = id;
     }
 
-    public int[][] getMap() {
+    public BufferedImage[][] getMap() {
         return map;
     }
 
