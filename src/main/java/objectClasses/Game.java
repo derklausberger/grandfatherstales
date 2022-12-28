@@ -82,12 +82,30 @@ public class Game {
 
     public void render(Graphics2D g) {//} throws IOException {
         Level level = getCurrentLevel();
+        /*int field;
+        int tileSetKey;
+        TileSet tileSet;
+        int fieldX;
+        int fieldY;*/
         for (int i = 0; i < (32 * 32); i++) {
-            g.drawImage(level.getMap()[(int) i / 32][i % 32],
-                    (GamePanel.NEW_TILE_SIZE * (i % 32)) - player.getPositionX(), GamePanel.NEW_TILE_SIZE * (int) (i / 32) - player.getPositionY(),
-                    GamePanel.NEW_TILE_SIZE, GamePanel.NEW_TILE_SIZE,
-                    null);
+            /*field = level.getMap()[(int) i / 32][i % 32];
+            tileSetKey = 0;
+            for(Map.Entry<Integer, TileSet> entry : level.getTileSets().entrySet()) {
+                if (tileSetKey < entry.getKey() && entry.getKey() <= field) {
+                    tileSetKey = entry.getKey();
+                }
+            }
+            tileSet = level.getTileSets().get(tileSetKey);
 
+            if (tileSet != null) {
+                field -= tileSetKey;
+                fieldX = (field % tileSet.getWidthTiles()) * 16;
+                fieldY = ((int) (field / tileSet.getWidthTiles())) * 16;*/
+                g.drawImage(level.getMap()[(int) i / 32][i % 32],//ImageIO.read(new File(tileSet.getPngFileName())).getSubimage(fieldX, fieldY, 16, 16),
+                        (GamePanel.NEW_TILE_SIZE * (i % 32)) - player.getPositionX(), GamePanel.NEW_TILE_SIZE * (int) (i / 32) - player.getPositionY(),
+                        GamePanel.NEW_TILE_SIZE, GamePanel.NEW_TILE_SIZE,
+                        null);
+            //}
         }
     }
 
