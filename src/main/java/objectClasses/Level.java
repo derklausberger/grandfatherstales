@@ -1,5 +1,6 @@
 package objectClasses;
 
+import GUI.GamePanel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -18,7 +19,7 @@ import java.util.Map;
 
 public class Level {
     private int id;
-    private BufferedImage[][] map;
+    private BufferedImage[][] map;//height width
     private Hashtable<Integer, TileSet> tileSets;
 
     public Level(File mapXMLFile) throws ParserConfigurationException, IOException, SAXException {
@@ -65,6 +66,8 @@ public class Level {
                     fieldX = (field % tileSet.getWidthTiles()) * 16;
                     fieldY = ((int) (field / tileSet.getWidthTiles())) * 16;
                     map[(int) (j / map_height)][j % map_width] = ImageIO.read(new File(tileSet.getPngFileName())).getSubimage(fieldX, fieldY, 16, 16);
+                } else {
+                    map[(int) (j / map_height)][j % map_width] = null;
                 }
 
                 j++;
@@ -86,5 +89,18 @@ public class Level {
 
     public Hashtable<Integer, TileSet> getTileSets() {
         return tileSets;
+    }
+
+    public boolean isSolid(int x, int y) {
+        int map_y = (int) (y / GamePanel.NEW_TILE_SIZE);
+        int map_x = (int) (x / GamePanel.NEW_TILE_SIZE);
+        System.out.println(y + " " + map_y);
+
+        if (y < 0 || x < 0 || map_y > 31 || map_x > 31) {
+            return false;
+        } else if (map[map_y][map_x] != null) {
+            return true;
+        }
+        return false;
     }
 }

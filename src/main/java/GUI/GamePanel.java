@@ -24,8 +24,8 @@ public class GamePanel extends JPanel implements Runnable{
     static final int MAX_SCREEN_COL = 16; // max. 16 tiles in x
     static final int MAX_SCREEN_ROW = 12; // max. 12 tiles in y
 
-    static final int WINDOW_WIDTH = NEW_TILE_SIZE * MAX_SCREEN_COL; // 768 pixel
-    static final int WINDOW_HEIGHT = NEW_TILE_SIZE * MAX_SCREEN_ROW; // 576 pixel
+    public static final int WINDOW_WIDTH = NEW_TILE_SIZE * MAX_SCREEN_COL; // 768 pixel
+    public static final int WINDOW_HEIGHT = NEW_TILE_SIZE * MAX_SCREEN_ROW; // 576 pixel
 
     InputHandler keyHandler = new InputHandler(); // own class
     Thread playerThread = null;
@@ -44,7 +44,7 @@ public class GamePanel extends JPanel implements Runnable{
     private final Game game;
 
     public GamePanel() throws IOException, ParserConfigurationException, SAXException {
-        game = new Game(new Player(0, 0, 3, 5, null, 3, 1));
+        game = new Game(new Player((int)((WINDOW_WIDTH)/ 2), (int)((WINDOW_HEIGHT)/ 2), 3, 5, null, 3, 1));
 
 
         this.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
@@ -124,16 +124,23 @@ public class GamePanel extends JPanel implements Runnable{
 
 
     public void update() throws IOException {
-        if (keyHandler.upPressed) {
+
+        // collisions oben sollten passen
+        if (keyHandler.upPressed
+                && game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - (NEW_TILE_SIZE / 3), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed())
+                && game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + (NEW_TILE_SIZE / 3), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed())) {
             game.getPlayer().setPositionY(game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed());
             game.getPlayer().setCurrentAppearance(0);
-        } else if (keyHandler.downPressed) {
+        } else if (keyHandler.downPressed&&
+                game.getCurrentLevel().isSolid(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed() + NEW_TILE_SIZE)) {
             game.getPlayer().setPositionY(game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed());
             game.getPlayer().setCurrentAppearance(1);
-        } else if (keyHandler.leftPressed) {
+        } else if (keyHandler.leftPressed &&
+                game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed() - NEW_TILE_SIZE, game.getPlayer().getPositionY())) {
             game.getPlayer().setPositionX(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed());
             game.getPlayer().setCurrentAppearance(2);
-        } else if (keyHandler.rightPressed) {
+        } else if (keyHandler.rightPressed &&
+                game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed() + NEW_TILE_SIZE, game.getPlayer().getPositionY())) {
             game.getPlayer().setPositionX(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed());
             game.getPlayer().setCurrentAppearance(3);
         }

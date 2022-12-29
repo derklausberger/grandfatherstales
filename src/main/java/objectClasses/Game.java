@@ -42,7 +42,7 @@ public class Game {
         return null;
     }
 
-    private Level getCurrentLevel() {
+    public Level getCurrentLevel() {
         return getLevelById(currentLevelNumber);
     }
 
@@ -102,7 +102,8 @@ public class Game {
                 fieldX = (field % tileSet.getWidthTiles()) * 16;
                 fieldY = ((int) (field / tileSet.getWidthTiles())) * 16;*/
                 g.drawImage(level.getMap()[(int) i / 32][i % 32],//ImageIO.read(new File(tileSet.getPngFileName())).getSubimage(fieldX, fieldY, 16, 16),
-                        (GamePanel.NEW_TILE_SIZE * (i % 32)) - player.getPositionX(), GamePanel.NEW_TILE_SIZE * (int) (i / 32) - player.getPositionY(),
+                        (GamePanel.NEW_TILE_SIZE * (i % 32)) - player.getPositionX() + (int)(GamePanel.WINDOW_WIDTH / 2),
+                        GamePanel.NEW_TILE_SIZE * (int) (i / 32) - player.getPositionY() + (int)(GamePanel.WINDOW_HEIGHT / 2),
                         GamePanel.NEW_TILE_SIZE, GamePanel.NEW_TILE_SIZE,
                         null);
             //}
