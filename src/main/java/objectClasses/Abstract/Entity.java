@@ -1,14 +1,18 @@
 package objectClasses.Abstract;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/* extends JPanel */
+import GUI.GamePanel;
+import objectClasses.Game;
+
+import javax.imageio.ImageIO;
+
 public abstract class Entity {
 
     private int positionX;
@@ -19,36 +23,36 @@ public abstract class Entity {
     private int currentAppearance;
     private ArrayList<BufferedImage> entityAppearance;
 
-    public void setEntityAppearance(ArrayList<BufferedImage> entityAppearance) {
-        this.entityAppearance = entityAppearance;
+    public int getPositionX() {
+        return positionX;
     }
 
     public void setPositionX(int positionX) {
         this.positionX = positionX;
     }
 
-    public void setPositionY(int positionY) {
-        this.positionY = positionY;
-    }
-
-    public int getPositionX() {
-        return positionX;
-    }
-
     public int getPositionY() {
         return positionY;
+    }
+
+    public void setPositionY(int positionY) {
+        this.positionY = positionY;
     }
 
     public int getMovementSpeed() {
         return movementSpeed;
     }
 
+    public void setMovementSpeed(int movementSpeed) {
+        this.movementSpeed = movementSpeed;
+    }
+
     public int getHealthPoints() {
         return healthPoints;
     }
 
-    public ArrayList<BufferedImage> getEntityAppearance() {
-        return entityAppearance;
+    public void setHealthPoints(int healthPoints) {
+        this.healthPoints = healthPoints;
     }
 
     public int getCurrentAppearance() {
@@ -59,7 +63,39 @@ public abstract class Entity {
         this.currentAppearance = currentAppearance;
     }
 
-    public Entity(int positionX, int positionY, int movementSpeed, int healthPoints, ArrayList<BufferedImage> entityAppearance, int currentAppearance) {
+    public ArrayList<BufferedImage> getEntityAppearance() {
+        return entityAppearance;
+    }
+
+    public void setEntityAppearance(ArrayList<BufferedImage> entityAppearance) {
+        this.entityAppearance = entityAppearance;
+    }
+
+    public Entity(int positionX, int positionY, int movementSpeed, int healthPoints,
+                  ArrayList<BufferedImage> entityAppearance, int currentAppearance) {
+
+        entityAppearance = new ArrayList<>();
+
+        BufferedImage bi = null;
+        BufferedImage bi2 = null;
+        BufferedImage bi3 = null;
+        BufferedImage bi4 = null;
+
+        try {
+            bi = ImageIO.read(new File("src/main/resources/playerUp.png"));
+            bi2 = ImageIO.read(new File("src/main/resources/playerDown.png"));
+            bi3 = ImageIO.read(new File("src/main/resources/playerLeft.png"));
+            bi4 = ImageIO.read(new File("src/main/resources/playerRight.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        assert false;
+        entityAppearance.add(bi);
+        entityAppearance.add(bi2);
+        entityAppearance.add(bi3);
+        entityAppearance.add(bi4);
+
         this.positionX = positionX;
         this.positionY = positionY;
         this.movementSpeed = movementSpeed;
@@ -68,21 +104,5 @@ public abstract class Entity {
         this.currentAppearance = currentAppearance;
     }
 
-    /*
-    public void paintComponent(Graphics graph) {
-        super.paintComponent(graph);
-        Graphics2D graph2D = (Graphics2D) graph;
-        System.out.println("Here - Entity");
-
-        try {
-            bi = ImageIO.read(new File("src/main/resources/item/armor/armor_type_chainmail.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        graph2D.drawImage(bi, positionX, positionY, 100, 100, this);
-        graph2D.dispose();
-    }
-
-     */
+    public abstract void draw(Graphics2D graph2D, Game game, GamePanel gamePanel) throws IOException;
 }

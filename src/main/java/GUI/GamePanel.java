@@ -1,6 +1,7 @@
 package GUI;
 
 import objectClasses.Abstract.Entity;
+import objectClasses.Enemy;
 import objectClasses.Game;
 import objectClasses.Player;
 import org.xml.sax.SAXException;
@@ -9,13 +10,14 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
 
-public class GamePanel extends JPanel implements Runnable{
+public class GamePanel extends JPanel implements Runnable {
 
     static final int SCALE_FACTOR = 3; // 16 x 16 won't actually be displayed as 16 x 16
     static final int ORIGINAL_TILE_SIZE = 16; // 16 x 16 pixel
@@ -30,22 +32,17 @@ public class GamePanel extends JPanel implements Runnable{
     InputHandler keyHandler = new InputHandler(); // own class
     Thread playerThread = null;
 
-    //public static int playerPosX = 100; // static because of InputHandler
-    //public static int playerPosY = 100; // static because of InputHandler
-    //public static int playerSpeed = 4; // static because of InputHandler
-
     int FPS = 60;
     // needed because repaint() is called depending
     // on the frames per second -> thus we need to
     // regulate it
 
 
-
     private final Game game;
+    ArrayList<Entity> entityArrayList = new ArrayList<>();
 
     public GamePanel() throws IOException, ParserConfigurationException, SAXException {
-        game = new Game(new Player((int)((WINDOW_WIDTH)/ 2), (int)((WINDOW_HEIGHT)/ 2), 3, 5, null, 3, 1));
-
+        game = new Game(new Player((int) ((WINDOW_WIDTH) / 2), (int) ((WINDOW_HEIGHT) / 2), 3, 5, null, 3, 1));
 
         this.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
         this.setBackground(Color.black);
@@ -53,30 +50,11 @@ public class GamePanel extends JPanel implements Runnable{
         this.setDoubleBuffered(true); // improves rendering
         this.setFocusable(true); // GamePanel "focused" to receive key input
 
-        ArrayList<BufferedImage> entityAppearance = new ArrayList<>();
-
-        BufferedImage bi = null;
-        BufferedImage bi2 = null;
-        BufferedImage bi3 = null;
-        BufferedImage bi4 = null;
-
-        try {
-            bi = ImageIO.read(new File("src/main/resources/playerUp.png"));
-            bi2 = ImageIO.read(new File("src/main/resources/playerDown.png"));
-            bi3 = ImageIO.read(new File("src/main/resources/playerLeft.png"));
-            bi4 = ImageIO.read(new File("src/main/resources/playerRight.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        assert false;
-        entityAppearance.add(bi);
-        entityAppearance.add(bi2);
-        entityAppearance.add(bi3);
-        entityAppearance.add(bi4);
-
-        game.getPlayer().setEntityAppearance(entityAppearance);
         entityArrayList.add(game.getPlayer());
+
+        for (Enemy e : game.getCurrentLevel().getEnemies()) {
+            entityArrayList.add(e);
+        }
 
         startPlayerThread();
     }
@@ -94,12 +72,8 @@ public class GamePanel extends JPanel implements Runnable{
 
         while (playerThread != null) {
 
-            // for the meantime update() not necessary because
-            // inputhandler changes the pos of the player in its class
-            // should be changed
             try {
                 update(); // updates: character positions, etc...
-                //paintComponent(graph);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -122,79 +96,152 @@ public class GamePanel extends JPanel implements Runnable{
         }
     }
 
-
     public void update() throws IOException {
 
-        // collisions oben sollten passen
-        if (keyHandler.upPressed
-                && game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - (NEW_TILE_SIZE / 3), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed())
-                && game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + (NEW_TILE_SIZE / 3), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed())) {
+        /*
+        if (keyHandler.upPressed && (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed())
+                && (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed()) ||
+                (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed())))))
+
+        {
             game.getPlayer().setPositionY(game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed());
             game.getPlayer().setCurrentAppearance(0);
-        } else if (keyHandler.downPressed&&
-                game.getCurrentLevel().isSolid(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed() + NEW_TILE_SIZE)) {
+        }
+
+        if (keyHandler.downPressed && (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed())
+                && (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed()) ||
+                (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed())))))
+
+        {
             game.getPlayer().setPositionY(game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed());
             game.getPlayer().setCurrentAppearance(1);
-        } else if (keyHandler.leftPressed &&
-                game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed() - NEW_TILE_SIZE, game.getPlayer().getPositionY())) {
+        }
+
+        if (keyHandler.leftPressed && (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed(), game.getPlayer().getPositionY())
+                && (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed())) ||
+                (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed()))))
+
+        {
             game.getPlayer().setPositionX(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed());
             game.getPlayer().setCurrentAppearance(2);
-        } else if (keyHandler.rightPressed &&
-                game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed() + NEW_TILE_SIZE, game.getPlayer().getPositionY())) {
+
+        }
+
+        if (keyHandler.rightPressed && (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed(), game.getPlayer().getPositionY())
+                && (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed()) ||
+                (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed())))))
+
+        {
+            game.getPlayer().setPositionX(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed());
+            game.getPlayer().setCurrentAppearance(3);
+        }
+         */
+
+
+        if (keyHandler.upPressed
+                && game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE, 3)) &&
+                game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE, 3)))
+
+        {
+            game.getPlayer().setPositionY(game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed());
+            game.getPlayer().setCurrentAppearance(0);
+        }
+
+        else if (keyHandler.downPressed
+                && game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE, 3)) &&
+                game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE, 3 )))
+
+        {
+            game.getPlayer().setPositionY(game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed());
+            game.getPlayer().setCurrentAppearance(1);
+        }
+
+        else if (keyHandler.leftPressed
+                && game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() + Math.floorDiv(NEW_TILE_SIZE, 3)) &&
+                game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() - Math.floorDiv(NEW_TILE_SIZE, 3)))
+
+        {
+            game.getPlayer().setPositionX(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed());
+            game.getPlayer().setCurrentAppearance(2);
+
+        }
+
+        else if (keyHandler.rightPressed
+                && game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() - Math.floorDiv(NEW_TILE_SIZE, 3)) &&
+                game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() + Math.floorDiv(NEW_TILE_SIZE, 3)))
+
+        {
             game.getPlayer().setPositionX(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed());
             game.getPlayer().setCurrentAppearance(3);
         }
     }
 
 
-    ArrayList<Entity> entityArrayList = new ArrayList<>();
+    int cooldown = 0;
 
     @Override
     public void paint(Graphics graph) {
         super.paintComponent(graph);
         Graphics2D graph2D = (Graphics2D) graph;
 
-        game.render(graph2D);
+        int startAngle = 0;
+        int arcAngle = 0;
 
-        /*try {
-            game.render(graph2D);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
-
-        //for (Entity entity : entityArrayList) {
-            /*graph2D.drawImage(game.getPlayer().getEntityAppearance().get(
-                    game.getPlayer().getCurrentAppearance()), game.getPlayer().getPositionX(),
-                    game.getPlayer().getPositionY(), NEW_TILE_SIZE, NEW_TILE_SIZE, this);*/
-        //}
-
-        graph2D.drawImage(game.getPlayer().getEntityAppearance().get(
-                game.getPlayer().getCurrentAppearance()), (int)((WINDOW_WIDTH - NEW_TILE_SIZE) / 2),
-                (int)((WINDOW_HEIGHT - NEW_TILE_SIZE) / 2), NEW_TILE_SIZE, NEW_TILE_SIZE, this);
-
-
-        /*
-        for(Entity entity : entityArrayList){
-
+        if (keyHandler.attackPressed
+                && cooldown == 0) {
+            switch (keyHandler.lastPressed) {
+                case (KeyEvent.VK_W) -> {
+                    cooldown = 60;
+                    startAngle = 45;
+                    arcAngle = 90;
+                }
+                case (KeyEvent.VK_A) -> {
+                    cooldown = 60;
+                    startAngle = 135;
+                    arcAngle = 90;
+                }
+                case (KeyEvent.VK_S) -> {
+                    cooldown = 60;
+                    startAngle = 225;
+                    arcAngle = 90;
+                }
+                case (KeyEvent.VK_D) -> {
+                    cooldown = 60;
+                    startAngle = 315;
+                    arcAngle = 90;
+                }
+            }
         }
 
-         */
-        /*
-        BufferedImage bi = null;
-
-        try {
-            bi = ImageIO.read(new File("src/main/resources/item/armor/armor_type_chainmail.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (cooldown < 0) {
+            cooldown = 0;
+        } else {
+            cooldown--;
         }
 
-        graph2D.drawImage(bi, playerPosX, playerPosY, NEW_TILE_SIZE, NEW_TILE_SIZE, this);
+
+        game.render(graph2D, this);
+
+
+        int width = 200;
+        int height = 200;
+        graph2D.fillArc(
+                (int) (Math.floorDiv(WINDOW_WIDTH, 2) - Math.floorDiv(width, 2)),
+                (int) (Math.floorDiv(WINDOW_HEIGHT, 2) - Math.floorDiv(height, 2)),
+                width, height,
+                startAngle, arcAngle
+        );
+
+        for (Entity entity : entityArrayList) {
+            try {
+                entity.draw(graph2D, game, this);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         graph2D.dispose();
-
-         */
     }
 
     public static void main(String[] args) {
     }
-
 }

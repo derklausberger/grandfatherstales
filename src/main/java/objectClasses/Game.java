@@ -1,6 +1,7 @@
 package objectClasses;
 
 import GUI.GamePanel;
+import objectClasses.Abstract.Entity;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -9,6 +10,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Game {
-    private Player player; //list???
+    private Player player;
     private List<Level> levels;
     private int currentLevelNumber;
     private static List<TileSet> tileSets;
@@ -80,7 +83,7 @@ public class Game {
         }
     }
 
-    public void render(Graphics2D g) {//} throws IOException {
+    public void render(Graphics2D g, GamePanel gamePanel) {//} throws IOException {
         Level level = getCurrentLevel();
         /*int field;
         int tileSetKey;
@@ -101,12 +104,23 @@ public class Game {
                 field -= tileSetKey;
                 fieldX = (field % tileSet.getWidthTiles()) * 16;
                 fieldY = ((int) (field / tileSet.getWidthTiles())) * 16;*/
-                g.drawImage(level.getMap()[(int) i / 32][i % 32],//ImageIO.read(new File(tileSet.getPngFileName())).getSubimage(fieldX, fieldY, 16, 16),
-                        (GamePanel.NEW_TILE_SIZE * (i % 32)) - player.getPositionX() + (int)(GamePanel.WINDOW_WIDTH / 2),
-                        GamePanel.NEW_TILE_SIZE * (int) (i / 32) - player.getPositionY() + (int)(GamePanel.WINDOW_HEIGHT / 2),
-                        GamePanel.NEW_TILE_SIZE, GamePanel.NEW_TILE_SIZE,
-                        null);
-            //}
+
+            g.drawImage(
+                    level.getMap()[(int) i / 32][i % 32], //ImageIO.read(new File(tileSet.getPngFileName())).getSubimage(fieldX, fieldY, 16, 16),
+                    (GamePanel.NEW_TILE_SIZE * (i % 32)) - this.getPlayer().getPositionX() + (int) (GamePanel.WINDOW_WIDTH / 2),
+                    GamePanel.NEW_TILE_SIZE * (int) (i / 32) - this.getPlayer().getPositionY() + (int) (GamePanel.WINDOW_HEIGHT / 2),
+                    GamePanel.NEW_TILE_SIZE,
+                    GamePanel.NEW_TILE_SIZE,
+                    gamePanel);
+
+            Shape s = new Rectangle2D.Double(
+                    (GamePanel.NEW_TILE_SIZE * (i % 32)) - this.getPlayer().getPositionX() + (int) (GamePanel.WINDOW_WIDTH / 2),
+                    GamePanel.NEW_TILE_SIZE * (int) (i / 32) - this.getPlayer().getPositionY() + (int) (GamePanel.WINDOW_HEIGHT / 2),
+                    GamePanel.NEW_TILE_SIZE,
+                    GamePanel.NEW_TILE_SIZE);
+
+            g.setColor(Color.LIGHT_GRAY);
+            g.draw(s);
         }
     }
 

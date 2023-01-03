@@ -2,12 +2,16 @@ package GUI;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 public class InputHandler implements KeyListener {
 
     protected boolean upPressed, downPressed, leftPressed, rightPressed;
+    protected boolean attackPressed;
+    protected int lastPressed;
+
     Set<Integer> keys = new HashSet<Integer>();
 
     public Set<Integer> getKeys() { return keys;}
@@ -20,46 +24,32 @@ public class InputHandler implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        int eventCode = e.getKeyCode();  // was used with the code that's inactive
-        //keys.add(e.getKeyCode());
-        //multiKeys();
+        int eventCode = e.getKeyCode();
 
         if (eventCode == KeyEvent.VK_W) {
             upPressed = true;
+            lastPressed = KeyEvent.VK_W;
         }
         if (eventCode == KeyEvent.VK_A) {
             leftPressed = true;
+            lastPressed = KeyEvent.VK_A;
         }
         if (eventCode == KeyEvent.VK_S) {
             downPressed = true;
+            lastPressed = KeyEvent.VK_S;
         }
         if (eventCode == KeyEvent.VK_D) {
             rightPressed = true;
+            lastPressed = KeyEvent.VK_D;
         }
-
-
-    }
-
-    /*
-    public void multiKeys() {
-        for(Integer key: keys) {
-            System.out.println(key);
-            switch (key) {
-                // maybe -> save in List and via getter let update do it?
-                case KeyEvent.VK_W -> GamePanel.playerPosY -= GamePanel.playerSpeed;
-                case KeyEvent.VK_S -> GamePanel.playerPosY += GamePanel.playerSpeed;
-                case KeyEvent.VK_A -> GamePanel.playerPosX -= GamePanel.playerSpeed;
-                case KeyEvent.VK_D -> GamePanel.playerPosX += GamePanel.playerSpeed;
-            }
+        if (eventCode == KeyEvent.VK_C) {
+            attackPressed = true;
         }
     }
-
-     */
 
     @Override
     public void keyReleased(KeyEvent e) {
-        int eventCode = e.getKeyCode(); // was used with the code that's inactive
-        //keys.remove(e.getKeyCode());
+        int eventCode = e.getKeyCode();
 
         if (eventCode == KeyEvent.VK_W) {
             upPressed = false;
@@ -73,7 +63,8 @@ public class InputHandler implements KeyListener {
         if (eventCode == KeyEvent.VK_D) {
             rightPressed = false;
         }
-
-
+        if (eventCode == KeyEvent.VK_C) {
+            attackPressed = false;
+        }
     }
 }

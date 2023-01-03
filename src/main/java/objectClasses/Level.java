@@ -1,6 +1,7 @@
 package objectClasses;
 
 import GUI.GamePanel;
+import objectClasses.Abstract.Entity;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -14,13 +15,16 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Random;
 
 public class Level {
     private int id;
     private BufferedImage[][] map;//height width
     private Hashtable<Integer, TileSet> tileSets;
+    private ArrayList<Enemy> enemies = null;
 
     public Level(File mapXMLFile) throws ParserConfigurationException, IOException, SAXException {
         int map_width = 32;
@@ -94,7 +98,9 @@ public class Level {
     public boolean isSolid(int x, int y) {
         int map_y = (int) (y / GamePanel.NEW_TILE_SIZE);
         int map_x = (int) (x / GamePanel.NEW_TILE_SIZE);
-        System.out.println(y + " " + map_y);
+
+        System.out.println(x + " *X Value* " + map_x);
+        System.out.println(y + " *Y Value* " + map_y);
 
         if (y < 0 || x < 0 || map_y > 31 || map_x > 31) {
             return false;
@@ -102,5 +108,34 @@ public class Level {
             return true;
         }
         return false;
+    }
+
+
+    public ArrayList<Enemy> getEnemies() {
+
+        if (enemies != null) {
+            return enemies;
+        }
+
+
+
+
+
+
+
+        enemies = new ArrayList<>();
+        Random random = new Random();
+        // Biome, Level, Number of enemies should be contained in the xml file
+        for (int i = 0; i < 150; i++) {
+            int x, y;
+            do {
+                x = random.nextInt(32) * GamePanel.NEW_TILE_SIZE;
+                y = random.nextInt(32) * GamePanel.NEW_TILE_SIZE;
+
+            } while (!isSolid(x,y));
+            Enemy e = new Enemy(x,y,1,1, null,1);
+            enemies.add(e);
+        }
+        return enemies;
     }
 }
