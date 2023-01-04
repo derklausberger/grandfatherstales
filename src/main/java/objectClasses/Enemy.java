@@ -45,6 +45,7 @@ public class Enemy extends Entity {
         );
 
 
+        /*
         Shape s = new Rectangle2D.Double(
                 (int) (GamePanel.WINDOW_WIDTH / 2) - game.getPlayer().getPositionX() + this.getPositionX(),
                 (int) (GamePanel.WINDOW_HEIGHT / 2) - game.getPlayer().getPositionY() + this.getPositionY(),
@@ -53,6 +54,8 @@ public class Enemy extends Entity {
 
         graph2D.setColor(Color.ORANGE);
         graph2D.draw(s);
+
+         */
     }
 }
 

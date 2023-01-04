@@ -113,6 +113,7 @@ public class Game {
                     GamePanel.NEW_TILE_SIZE,
                     gamePanel);
 
+            /*
             Shape s = new Rectangle2D.Double(
                     (GamePanel.NEW_TILE_SIZE * (i % 32)) - this.getPlayer().getPositionX() + (int) (GamePanel.WINDOW_WIDTH / 2),
                     GamePanel.NEW_TILE_SIZE * (int) (i / 32) - this.getPlayer().getPositionY() + (int) (GamePanel.WINDOW_HEIGHT / 2),
@@ -121,6 +122,8 @@ public class Game {
 
             g.setColor(Color.LIGHT_GRAY);
             g.draw(s);
+
+             */
         }
     }
 

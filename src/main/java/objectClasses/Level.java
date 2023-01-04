@@ -99,8 +99,8 @@ public class Level {
         int map_y = (int) (y / GamePanel.NEW_TILE_SIZE);
         int map_x = (int) (x / GamePanel.NEW_TILE_SIZE);
 
-        System.out.println(x + " *X Value* " + map_x);
-        System.out.println(y + " *Y Value* " + map_y);
+        //System.out.println(x + " *X Value* " + map_x);
+        //System.out.println(y + " *Y Value* " + map_y);
 
         if (y < 0 || x < 0 || map_y > 31 || map_x > 31) {
             return false;
@@ -126,14 +126,14 @@ public class Level {
         enemies = new ArrayList<>();
         Random random = new Random();
         // Biome, Level, Number of enemies should be contained in the xml file
-        for (int i = 0; i < 150; i++) {
+        for (int i = 0; i < 5; i++) {
             int x, y;
             do {
                 x = random.nextInt(32) * GamePanel.NEW_TILE_SIZE;
                 y = random.nextInt(32) * GamePanel.NEW_TILE_SIZE;
 
             } while (!isSolid(x,y));
-            Enemy e = new Enemy(x,y,1,1, null,1);
+            Enemy e = new Enemy(x,y,1,2, null,1);
             enemies.add(e);
         }
         return enemies;

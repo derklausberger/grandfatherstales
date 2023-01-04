@@ -1,5 +1,6 @@
 package GUI;
 
+import com.sun.tools.javac.Main;
 import objectClasses.Abstract.Entity;
 import objectClasses.Enemy;
 import objectClasses.Game;
@@ -11,10 +12,12 @@ import javax.swing.*;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.awt.Shape;
 
 
 public class GamePanel extends JPanel implements Runnable {
@@ -31,6 +34,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     InputHandler keyHandler = new InputHandler(); // own class
     Thread playerThread = null;
+    Image backgroundImage, newBackgroundImage;
 
     int FPS = 60;
     // needed because repaint() is called depending
@@ -39,13 +43,13 @@ public class GamePanel extends JPanel implements Runnable {
 
 
     private final Game game;
-    ArrayList<Entity> entityArrayList = new ArrayList<>();
+    public static ArrayList<Entity> entityArrayList = new ArrayList<>();
 
     public GamePanel() throws IOException, ParserConfigurationException, SAXException {
         game = new Game(new Player((int) ((WINDOW_WIDTH) / 2), (int) ((WINDOW_HEIGHT) / 2), 3, 5, null, 3, 1));
 
         this.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
-        this.setBackground(Color.black);
+        this.setBackground(new Color(39, 105, 195));
         this.addKeyListener(keyHandler); // adds Listener
         this.setDoubleBuffered(true); // improves rendering
         this.setFocusable(true); // GamePanel "focused" to receive key input
@@ -55,6 +59,18 @@ public class GamePanel extends JPanel implements Runnable {
         for (Enemy e : game.getCurrentLevel().getEnemies()) {
             entityArrayList.add(e);
         }
+
+
+        backgroundImage = null;
+        try {
+            backgroundImage = ImageIO.read(new File("src/main/resources/map/4.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        assert backgroundImage != null;
+        newBackgroundImage = backgroundImage.getScaledInstance(512 * SCALE_FACTOR, 512 * SCALE_FACTOR, Image.SCALE_FAST);
+
+
 
         startPlayerThread();
     }
@@ -140,39 +156,76 @@ public class GamePanel extends JPanel implements Runnable {
 
         if (keyHandler.upPressed
                 && game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE, 3)) &&
-                game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE, 3)))
-
-        {
+                game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE, 3))) {
             game.getPlayer().setPositionY(game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed());
             game.getPlayer().setCurrentAppearance(0);
-        }
-
-        else if (keyHandler.downPressed
+        } else if (keyHandler.downPressed
                 && game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE, 3)) &&
-                game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE, 3 )))
-
-        {
+                game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE, 3))) {
             game.getPlayer().setPositionY(game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed());
             game.getPlayer().setCurrentAppearance(1);
-        }
-
-        else if (keyHandler.leftPressed
+        } else if (keyHandler.leftPressed
                 && game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() + Math.floorDiv(NEW_TILE_SIZE, 3)) &&
-                game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() - Math.floorDiv(NEW_TILE_SIZE, 3)))
-
-        {
+                game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() - Math.floorDiv(NEW_TILE_SIZE, 3))) {
             game.getPlayer().setPositionX(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed());
             game.getPlayer().setCurrentAppearance(2);
 
-        }
-
-        else if (keyHandler.rightPressed
+        } else if (keyHandler.rightPressed
                 && game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() - Math.floorDiv(NEW_TILE_SIZE, 3)) &&
-                game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() + Math.floorDiv(NEW_TILE_SIZE, 3)))
-
-        {
+                game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() + Math.floorDiv(NEW_TILE_SIZE, 3))) {
             game.getPlayer().setPositionX(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed());
             game.getPlayer().setCurrentAppearance(3);
+        }
+
+
+        int startAngle = 0;
+        int arcAngle = 0;
+
+        if (keyHandler.attackPressed
+                && cooldown == 0) {
+            switch (keyHandler.lastPressed) {
+                case (KeyEvent.VK_W) -> {
+                    cooldown = 5;
+                    startAngle = 45;
+                    arcAngle = 90;
+
+                    int width = 200;
+                    int height = 200;
+
+                    game.getPlayer().draw((Graphics2D) this.getGraphics(), game, this, width, height, startAngle, arcAngle, entityArrayList);
+
+                }
+                case (KeyEvent.VK_A) -> {
+                    cooldown = 5;
+                    startAngle = 135;
+                    arcAngle = 90;
+
+                    int width = 200;
+                    int height = 200;
+
+                    game.getPlayer().draw((Graphics2D) this.getGraphics(), game, this, width, height, startAngle, arcAngle, entityArrayList);
+                }
+                case (KeyEvent.VK_S) -> {
+                    cooldown = 5;
+                    startAngle = 225;
+                    arcAngle = 90;
+
+                    int width = 200;
+                    int height = 200;
+
+                    game.getPlayer().draw((Graphics2D) this.getGraphics(), game, this, width, height, startAngle, arcAngle, entityArrayList);
+                }
+                case (KeyEvent.VK_D) -> {
+                    cooldown = 5;
+                    startAngle = 315;
+                    arcAngle = 90;
+
+                    int width = 200;
+                    int height = 200;
+
+                    game.getPlayer().draw((Graphics2D) this.getGraphics(), game, this, width, height, startAngle, arcAngle, entityArrayList);
+                }
+            }
         }
     }
 
@@ -184,6 +237,7 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(graph);
         Graphics2D graph2D = (Graphics2D) graph;
 
+        /*
         int startAngle = 0;
         int arcAngle = 0;
 
@@ -213,6 +267,8 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
 
+         */
+
         if (cooldown < 0) {
             cooldown = 0;
         } else {
@@ -221,24 +277,35 @@ public class GamePanel extends JPanel implements Runnable {
 
 
         game.render(graph2D, this);
+        graph2D.drawImage(newBackgroundImage, -game.getPlayer().getPositionX() + (GamePanel.WINDOW_WIDTH / 2), -game.getPlayer().getPositionY() + (GamePanel.WINDOW_HEIGHT / 2),null);
 
 
-        int width = 200;
-        int height = 200;
-        graph2D.fillArc(
-                (int) (Math.floorDiv(WINDOW_WIDTH, 2) - Math.floorDiv(width, 2)),
-                (int) (Math.floorDiv(WINDOW_HEIGHT, 2) - Math.floorDiv(height, 2)),
-                width, height,
-                startAngle, arcAngle
-        );
 
         for (Entity entity : entityArrayList) {
             try {
+                /*
+                if (
+                        game.getPlayer().getPositionX() >= entity.getPositionX() && entity.getPositionX() + NEW_TILE_SIZE >= game.getPlayer().getPositionX()  &&
+                        game.getPlayer().getPositionY() >= entity.getPositionY() && entity.getPositionY()  + NEW_TILE_SIZE >= game.getPlayer().getPositionY()
+                ) {
+                    if (!entity.equals(game.getPlayer())) {
+                        entity.setHealthPoints(entity.getHealthPoints() - 1);
+                    }
+                }
+
+                if (entity.getHealthPoints() <= 0) {
+                    entityArrayList.remove(entity);
+                    break;
+                }
+
+                 */
+
                 entity.draw(graph2D, game, this);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+
         graph2D.dispose();
     }
 

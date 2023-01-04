@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.6" orientation="orthogonal" renderorder="right-down" width="32" height="32"
-tilewidth="16" tileheight="16" infinite="0" nextlayerid="2" nextobjectid="1">
-<tileset firstgid="1" source="../../../../arbitraryResources/tiled/tileBiomPlains.xml"/>
-<tileset firstgid="185" source="../../../../arbitraryResources/tiled/tileAssetsWater.xml"/>
-<layer id="1" name="Ebene1" width="32" height="32">
-<properties>
-<property name="Class" value="solid"/>
-</properties>
-<data encoding="csv">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="1">
+ <tileset firstgid="1" source="../../../../arbitraryResources/tiled/tileBiomPlains.xml"/>
+ <tileset firstgid="185" source="../../../../arbitraryResources/tiled/tileAssetsWater.xml"/>
+ <layer id="2" name="layer" width="32" height="32" locked="1">
+  <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,1,4,2,2,3,4,5,2,3,4,5,2,2,2,3,4,5,2,6,
 0,0,0,0,0,0,0,0,0,0,0,1,3,73,74,74,74,74,51,51,51,74,74,74,74,74,74,74,74,74,74,29,
 0,0,0,0,0,0,0,0,0,1,2,73,51,51,51,51,51,51,74,51,51,74,51,51,51,51,51,51,51,0,51,52,
@@ -41,5 +37,5 @@ tilewidth="16" tileheight="16" infinite="0" nextlayerid="2" nextobjectid="1">
 0,0,0,0,0,0,0,0,0,0,0,0,0,1,73,74,28,0,136,137,137,137,137,137,137,137,137,137,137,137,138,75,
 0,0,0,0,0,0,0,0,0,0,0,0,0,93,94,94,94,94,94,94,94,94,94,94,94,94,94,94,94,94,94,98
 </data>
-</layer>
+ </layer>
 </map>

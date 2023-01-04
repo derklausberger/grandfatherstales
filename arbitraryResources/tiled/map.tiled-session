@@ -3,10 +3,43 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "C:/Users/niklasklausberger/IdeaProjects/grandfatherstales/src/main/resources/map/level/map1.xml",
+    "activeFile": "C:/Users/kilia/Desktop/4.xml",
     "expandedProjectPaths": [
     ],
+    "file.lastUsedOpenFilter": "Alle Dateien (*)",
     "fileStates": {
+        "C:/Users/kilia/Desktop/2.xml": {
+            "scale": 1.67734375,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 256.35770843036795,
+                "y": 256.35770843036795
+            }
+        },
+        "C:/Users/kilia/Desktop/4.xml": {
+            "scale": 3,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 23,
+                "y": -26.333333333333314
+            }
+        },
+        "C:/Users/kilia/Desktop/FH/2022W/Software_Engineering/Game/src/main/resources/map/2.xml": {
+            "scale": 1.67734375,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 256.35770843036795,
+                "y": 256.35770843036795
+            }
+        },
+        "C:/Users/kilia/Desktop/FH/2022W/Software_Engineering/Game/src/main/resources/map/3.xml": {
+            "scale": 1.5,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 203.33333333333331,
+                "y": 272
+            }
+        },
         "C:/Users/kilia/Desktop/FH/2022W/Software_Engineering/Game/src/main/resources/map/level/1.xml": {
             "scale": 1,
             "selectedLayer": 0,
@@ -24,27 +57,28 @@
             }
         },
         "tileAssetsTrees.xml": {
-            "scaleInDock": 1,
+            "scaleInDock": 1.5,
             "scaleInEditor": 1
         },
         "tileAssetsWater.xml": {
-            "scaleInDock": 1,
+            "scaleInDock": 3,
             "scaleInEditor": 1
         },
         "tileBiomCave.xml": {
-            "scaleInDock": 0.75,
+            "scaleInDock": 3,
             "scaleInEditor": 1
         },
         "tileBiomPlains.xml": {
-            "scaleInDock": 1,
+            "scaleInDock": 3,
             "scaleInEditor": 1
         },
         "tileBiomTaiga.xml": {
-            "scaleInDock": 1,
+            "scaleInDock": 2,
             "scaleInEditor": 1
         }
     },
     "last.imagePath": "C:/Users/kilia/Desktop/FH/2022W/Software_Engineering/Game/src/main/resources/map/tile",
+    "map.fixedSize": true,
     "map.height": 32,
     "map.lastUsedFormat": "tmx",
     "map.tileHeight": 16,
@@ -56,7 +90,7 @@
         "tileBiomTaiga.xml",
         "tileAssetsWater.xml",
         "tileAssetsTrees.xml",
-        "C:/Users/niklasklausberger/IdeaProjects/grandfatherstales/src/main/resources/map/level/map1.xml"
+        "C:/Users/kilia/Desktop/4.xml"
     ],
     "project": "map.tiled-project",
     "recentFiles": [
@@ -65,6 +99,8 @@
         "tileBiomTaiga.xml",
         "tileAssetsWater.xml",
         "tileAssetsTrees.xml",
+        "C:/Users/kilia/Desktop/4.xml",
+        "C:/Users/kilia/Desktop/FH/2022W/Software_Engineering/Game/src/main/resources/map/3.xml",
         "C:/Users/niklasklausberger/IdeaProjects/grandfatherstales/src/main/resources/map/level/map1.xml",
         "C:/Users/kilia/Desktop/FH/2022W/Software_Engineering/Game/src/main/resources/map/level/1.xml"
     ],
