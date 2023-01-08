@@ -1,7 +1,6 @@
 package objectClasses;
 
 import GUI.GamePanel;
-import objectClasses.Abstract.Entity;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -10,8 +9,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Game {
-    private Player player;
+    private Player player; //list???
     private List<Level> levels;
     private int currentLevelNumber;
     private static List<TileSet> tileSets;
@@ -83,47 +81,18 @@ public class Game {
         }
     }
 
-    public void render(Graphics2D g, GamePanel gamePanel) {//} throws IOException {
+    public void renderSolid(Graphics2D g) {//} throws IOException {
         Level level = getCurrentLevel();
-        /*int field;
-        int tileSetKey;
-        TileSet tileSet;
-        int fieldX;
-        int fieldY;*/
-        for (int i = 0; i < (32 * 32); i++) {
-            /*field = level.getMap()[(int) i / 32][i % 32];
-            tileSetKey = 0;
-            for(Map.Entry<Integer, TileSet> entry : level.getTileSets().entrySet()) {
-                if (tileSetKey < entry.getKey() && entry.getKey() <= field) {
-                    tileSetKey = entry.getKey();
-                }
+        BufferedImage[][][] map = level.getMap();
+        for (int i = 0; i < map.length - 1; i++) {
+            for (int j = 0; j < 32 * 32; j++) {
+                g.drawImage(map[i][j / 32][j % 32],
+                (GamePanel.NEW_TILE_SIZE * (j % 32)) - player.getPositionX() + (GamePanel.WINDOW_WIDTH / 2),
+                        GamePanel.NEW_TILE_SIZE * (j / 32) - player.getPositionY() + (GamePanel.WINDOW_HEIGHT / 2),
+                        GamePanel.NEW_TILE_SIZE, GamePanel.NEW_TILE_SIZE,
+                        null);
+                //}
             }
-            tileSet = level.getTileSets().get(tileSetKey);
-
-            if (tileSet != null) {
-                field -= tileSetKey;
-                fieldX = (field % tileSet.getWidthTiles()) * 16;
-                fieldY = ((int) (field / tileSet.getWidthTiles())) * 16;*/
-
-            g.drawImage(
-                    level.getMap()[(int) i / 32][i % 32], //ImageIO.read(new File(tileSet.getPngFileName())).getSubimage(fieldX, fieldY, 16, 16),
-                    (GamePanel.NEW_TILE_SIZE * (i % 32)) - this.getPlayer().getPositionX() + (int) (GamePanel.WINDOW_WIDTH / 2),
-                    GamePanel.NEW_TILE_SIZE * (int) (i / 32) - this.getPlayer().getPositionY() + (int) (GamePanel.WINDOW_HEIGHT / 2),
-                    GamePanel.NEW_TILE_SIZE,
-                    GamePanel.NEW_TILE_SIZE,
-                    gamePanel);
-
-            /*
-            Shape s = new Rectangle2D.Double(
-                    (GamePanel.NEW_TILE_SIZE * (i % 32)) - this.getPlayer().getPositionX() + (int) (GamePanel.WINDOW_WIDTH / 2),
-                    GamePanel.NEW_TILE_SIZE * (int) (i / 32) - this.getPlayer().getPositionY() + (int) (GamePanel.WINDOW_HEIGHT / 2),
-                    GamePanel.NEW_TILE_SIZE,
-                    GamePanel.NEW_TILE_SIZE);
-
-            g.setColor(Color.LIGHT_GRAY);
-            g.draw(s);
-
-             */
         }
     }
 
@@ -143,6 +112,19 @@ public class Game {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void renderTrees(Graphics2D graph2D) {
+        Level level = getCurrentLevel();
+        BufferedImage[][][] map = level.getMap();
+        for (int j = 0; j < 32 * 32; j++) {
+            graph2D.drawImage(map[3][j / 32][j % 32],
+                    (GamePanel.NEW_TILE_SIZE * (j % 32)) - player.getPositionX() + (GamePanel.WINDOW_WIDTH / 2),
+                    GamePanel.NEW_TILE_SIZE * (j / 32) - player.getPositionY() + (GamePanel.WINDOW_HEIGHT / 2),
+                    GamePanel.NEW_TILE_SIZE, GamePanel.NEW_TILE_SIZE,
+                    null);
+            //}
         }
     }
 }

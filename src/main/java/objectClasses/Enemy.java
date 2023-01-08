@@ -18,6 +18,7 @@ public class Enemy extends Entity {
                  ArrayList<BufferedImage> entityAppearance, int currentAppearance) {
 
         super(positionX, positionY, movementSpeed, healthPoints, entityAppearance, currentAppearance);
+
     }
 
     @Override
@@ -36,7 +37,7 @@ public class Enemy extends Entity {
         */
 
         graph2D.drawImage(
-                (Image) ImageIO.read(new File("src/main/resources/Enemy2.png")),
+                this.getEntityAppearance().get(0),
                 (int) (GamePanel.WINDOW_WIDTH / 2) - game.getPlayer().getPositionX() + this.getPositionX(),
                 (int) (GamePanel.WINDOW_HEIGHT / 2) - game.getPlayer().getPositionY() + this.getPositionY(),
                 GamePanel.NEW_TILE_SIZE,

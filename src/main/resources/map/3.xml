@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="1">
- <tileset firstgid="1" source="../../../../arbitraryResources/tiled/tileBiomPlains.xml"/>
- <tileset firstgid="185" source="../../../../arbitraryResources/tiled/tileAssetsWater.xml"/>
+<map version="1.8" tiledversion="1.8.6" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="16" tileheight="16" infinite="0" nextlayerid="8" nextobjectid="1">
+ <tileset firstgid="1" source="../../../../../arbitraryResources/tiled/tileBiomPlains.xml"/>
+ <tileset firstgid="185" source="../../../../../arbitraryResources/tiled/tileAssetsWater.xml"/>
  <layer id="2" name="layer" width="32" height="32" locked="1">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,1,4,2,2,3,4,5,2,3,4,5,2,2,2,3,4,5,2,6,

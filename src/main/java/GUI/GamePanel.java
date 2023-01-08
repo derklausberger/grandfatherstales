@@ -61,14 +61,14 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
 
-        backgroundImage = null;
+       /* backgroundImage = null;
         try {
             backgroundImage = ImageIO.read(new File("src/main/resources/map/4.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
         assert backgroundImage != null;
-        newBackgroundImage = backgroundImage.getScaledInstance(512 * SCALE_FACTOR, 512 * SCALE_FACTOR, Image.SCALE_FAST);
+        newBackgroundImage = backgroundImage.getScaledInstance(512 * SCALE_FACTOR, 512 * SCALE_FACTOR, Image.SCALE_FAST);*/
 
 
 
@@ -154,29 +154,33 @@ public class GamePanel extends JPanel implements Runnable {
          */
 
 
-        if (keyHandler.upPressed
-                && game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE, 3)) &&
-                game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE, 3))) {
-            game.getPlayer().setPositionY(game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed());
+        if (keyHandler.upPressed) {
             game.getPlayer().setCurrentAppearance(0);
-        } else if (keyHandler.downPressed
-                && game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE, 3)) &&
-                game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE, 3))) {
-            game.getPlayer().setPositionY(game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed());
+            if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed()) &&
+                    game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed() /*- Math.floorDiv(NEW_TILE_SIZE, 3)*/)) {
+                game.getPlayer().setPositionY(game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed());
+            } else if (game.getCurrentLevel().isChest(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() - Math.floorDiv(NEW_TILE_SIZE, 10))) {
+                System.out.println("kiste");
+            }
+        } else if (keyHandler.downPressed) {
             game.getPlayer().setCurrentAppearance(1);
-        } else if (keyHandler.leftPressed
-                && game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() + Math.floorDiv(NEW_TILE_SIZE, 3)) &&
-                game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() - Math.floorDiv(NEW_TILE_SIZE, 3))) {
-            game.getPlayer().setPositionX(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed());
+            if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE * 4, 10)) &&
+                    game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE * 4, 10))) {
+                game.getPlayer().setPositionY(game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed());
+            }
+        } else if (keyHandler.leftPressed) {
             game.getPlayer().setCurrentAppearance(2);
-
-        } else if (keyHandler.rightPressed
-                && game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() - Math.floorDiv(NEW_TILE_SIZE, 3)) &&
-                game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() + Math.floorDiv(NEW_TILE_SIZE, 3))) {
-            game.getPlayer().setPositionX(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed());
+            if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() + Math.floorDiv(NEW_TILE_SIZE * 4, 10)) &&
+                    game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY()/* - Math.floorDiv(NEW_TILE_SIZE, 3)*/)) {
+                game.getPlayer().setPositionX(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed());
+            }
+        } else if (keyHandler.rightPressed) {
             game.getPlayer().setCurrentAppearance(3);
+            if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY()) &&
+                    game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() + Math.floorDiv(NEW_TILE_SIZE * 4, 10))) {
+                game.getPlayer().setPositionX(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed());
+            }
         }
-
 
         int startAngle = 0;
         int arcAngle = 0;
@@ -276,9 +280,9 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
 
-        game.render(graph2D, this);
-        graph2D.drawImage(newBackgroundImage, -game.getPlayer().getPositionX() + (GamePanel.WINDOW_WIDTH / 2), -game.getPlayer().getPositionY() + (GamePanel.WINDOW_HEIGHT / 2),null);
-
+        game.renderSolid(graph2D);
+        //graph2D.drawImage(newBackgroundImage, -game.getPlayer().getPositionX() + (GamePanel.WINDOW_WIDTH / 2), -game.getPlayer().getPositionY() + (GamePanel.WINDOW_HEIGHT / 2),null);
+        //game.renderTrees(graph2D);
 
 
         for (Entity entity : entityArrayList) {
@@ -305,6 +309,8 @@ public class GamePanel extends JPanel implements Runnable {
                 e.printStackTrace();
             }
         }
+
+        game.renderTrees(graph2D);
 
         graph2D.dispose();
     }

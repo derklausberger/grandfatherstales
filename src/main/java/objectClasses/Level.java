@@ -22,7 +22,7 @@ import java.util.Random;
 
 public class Level {
     private int id;
-    private BufferedImage[][] map;//height width
+    private BufferedImage[][][] map;//height width
     private Hashtable<Integer, TileSet> tileSets;
     private ArrayList<Enemy> enemies = null;
 
@@ -31,7 +31,6 @@ public class Level {
         int map_height = 32;
 
         tileSets = new Hashtable<>();
-        map = new BufferedImage[map_height][map_width];
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.parse(mapXMLFile);
@@ -49,6 +48,9 @@ public class Level {
         }
 
         nodeList = doc.getElementsByTagName("layer");
+
+        map = new BufferedImage[nodeList.getLength()][map_height][map_width];
+        System.out.println(nodeList.getLength());
         for (int i = 0; i < nodeList.getLength(); i++) {
             n = nodeList.item(i);
             e = (Element) n;
@@ -69,9 +71,9 @@ public class Level {
                     field -= tileSetKey;
                     fieldX = (field % tileSet.getWidthTiles()) * 16;
                     fieldY = ((int) (field / tileSet.getWidthTiles())) * 16;
-                    map[(int) (j / map_height)][j % map_width] = ImageIO.read(new File(tileSet.getPngFileName())).getSubimage(fieldX, fieldY, 16, 16);
+                    map[i][(int) (j / map_height)][j % map_width] = ImageIO.read(new File(tileSet.getPngFileName())).getSubimage(fieldX, fieldY, 16, 16);
                 } else {
-                    map[(int) (j / map_height)][j % map_width] = null;
+                    map[i][(int) (j / map_height)][j % map_width] = null;
                 }
 
                 j++;
@@ -87,7 +89,7 @@ public class Level {
         this.id = id;
     }
 
-    public BufferedImage[][] getMap() {
+    public BufferedImage[][][] getMap() {
         return map;
     }
 
@@ -95,16 +97,35 @@ public class Level {
         return tileSets;
     }
 
-    public boolean isSolid(int x, int y) {
-        int map_y = (int) (y / GamePanel.NEW_TILE_SIZE);
-        int map_x = (int) (x / GamePanel.NEW_TILE_SIZE);
 
-        //System.out.println(x + " *X Value* " + map_x);
-        //System.out.println(y + " *Y Value* " + map_y);
+    // return true if player can move onto tile with the coordinates x and y
+    public boolean isSolid(int x, int y) {
+        int map_y = y / GamePanel.NEW_TILE_SIZE;
+        int map_x = x / GamePanel.NEW_TILE_SIZE;
 
         if (y < 0 || x < 0 || map_y > 31 || map_x > 31) {
             return false;
-        } else if (map[map_y][map_x] != null) {
+        } else {
+            if (map[0][map_y][map_x] != null) {
+                for (int i = 1; i < map.length - 1; i++) {
+                    if (map[i][map_y][map_x] != null) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isChest(int x, int y) {
+        int map_y = y / GamePanel.NEW_TILE_SIZE;
+        int map_x = x / GamePanel.NEW_TILE_SIZE;
+
+        if (y < 0 || x < 0 || map_y > 31 || map_x > 31) {
+            return false;
+            //variables für solid/chest/deko/eingang im konstruktor setzen
+        } else if (map[1][map_y][map_x] != null) {
             return true;
         }
         return false;
@@ -112,16 +133,9 @@ public class Level {
 
 
     public ArrayList<Enemy> getEnemies() {
-
         if (enemies != null) {
             return enemies;
         }
-
-
-
-
-
-
 
         enemies = new ArrayList<>();
         Random random = new Random();
