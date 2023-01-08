@@ -25,6 +25,7 @@ public class Level {
     private BufferedImage[][][] map;//height width
     private Hashtable<Integer, TileSet> tileSets;
     private ArrayList<Enemy> enemies = null;
+    private int obstacles = -1, chests = -1, solid = -1, trees = -1;
 
     public Level(File mapXMLFile) throws ParserConfigurationException, IOException, SAXException {
         int map_width = 32;
@@ -50,10 +51,19 @@ public class Level {
         nodeList = doc.getElementsByTagName("layer");
 
         map = new BufferedImage[nodeList.getLength()][map_height][map_width];
-        System.out.println(nodeList.getLength());
         for (int i = 0; i < nodeList.getLength(); i++) {
             n = nodeList.item(i);
             e = (Element) n;
+
+            if (e.getAttribute("name").equals("chests")) {
+                chests = i;
+            } else if (e.getAttribute("name").equals("obstacles")) {
+                obstacles = i;
+            }  else if (e.getAttribute("name").equals("trees")) {
+                trees = i;
+            }  else if (e.getAttribute("name").equals("solid")) {
+                solid = i;
+            }
 
             int j = 0, field, tileSetKey, fieldX, fieldY;
             TileSet tileSet;
@@ -106,10 +116,12 @@ public class Level {
         if (y < 0 || x < 0 || map_y > 31 || map_x > 31) {
             return false;
         } else {
-            if (map[0][map_y][map_x] != null) {
-                for (int i = 1; i < map.length - 1; i++) {
-                    if (map[i][map_y][map_x] != null) {
-                        return false;
+            if (map[solid][map_y][map_x] != null) {
+                for (int i = 0; i < map.length; i++) {
+                    if (i != solid && i != trees) {
+                        if (map[i][map_y][map_x] != null) {
+                            return false;
+                        }
                     }
                 }
                 return true;
@@ -125,7 +137,7 @@ public class Level {
         if (y < 0 || x < 0 || map_y > 31 || map_x > 31) {
             return false;
             //variables für solid/chest/deko/eingang im konstruktor setzen
-        } else if (map[1][map_y][map_x] != null) {
+        } else if (map[chests][map_y][map_x] != null) {
             return true;
         }
         return false;
