@@ -163,7 +163,7 @@ public class Level {
         enemies = new ArrayList<>();
         Random random = new Random();
         // Biome, Level, Number of enemies should be contained in the xml file
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             int x, y;
             do {
                 x = random.nextInt(32) * GamePanel.NEW_TILE_SIZE;

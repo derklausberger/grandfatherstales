@@ -86,7 +86,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
         if (keyHandler.keyPressed) {
 
             // Advance the frame counter
-            //currentFrame++;
+            currentFrame++;
 
             // If we've reached the end of the animation, start over from the beginning
             if (currentFrame >= 9) {
