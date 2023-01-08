@@ -22,6 +22,8 @@ public abstract class Entity {
     private int healthPoints;
     private int currentAppearance;
     private ArrayList<BufferedImage> entityAppearance;
+    private Image[] images;
+    private int currentImage;
 
     public int getPositionX() {
         return positionX;
@@ -67,12 +69,46 @@ public abstract class Entity {
         return entityAppearance;
     }
 
+    public void setCurrentImage(int currentImage) {
+        this.currentImage = currentImage;
+    }
+
+    public int getCurrentImage() {
+        return currentImage;
+    }
+
+    public Image[] getImages() {
+        return images;
+    }
+
     public void setEntityAppearance(ArrayList<BufferedImage> entityAppearance) {
         this.entityAppearance = entityAppearance;
     }
 
     public Entity(int positionX, int positionY, int movementSpeed, int healthPoints,
                   ArrayList<BufferedImage> entityAppearance, int currentAppearance) {
+
+
+        // Set the directory path
+        String dirPath = "src/main/resources/character/walking";
+
+        // Create a File object for the directory
+        File dir = new File(dirPath);
+
+        // Get a list of the PNG files in the directory
+        File[] files = dir.listFiles();
+
+        // Create an array to hold the images
+        images = new Image[files.length];
+
+        // Load the images from the files
+        for (int i = 0; i < files.length; i++) {
+            try {
+                images[i] = ImageIO.read(files[i]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         entityAppearance = new ArrayList<>();
 
@@ -95,6 +131,7 @@ public abstract class Entity {
         entityAppearance.add(bi2);
         entityAppearance.add(bi3);
         entityAppearance.add(bi4);
+
 
         this.positionX = positionX;
         this.positionY = positionY;

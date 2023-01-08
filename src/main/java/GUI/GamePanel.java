@@ -1,26 +1,22 @@
 package GUI;
 
-import com.sun.tools.javac.Main;
+import main.Main;
 import objectClasses.Abstract.Entity;
 import objectClasses.Enemy;
 import objectClasses.Game;
-import objectClasses.Player;
 import org.xml.sax.SAXException;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.geom.Arc2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.awt.Shape;
 
 
-public class GamePanel extends JPanel implements Runnable {
+public class GamePanel extends JPanel implements Runnable, ActionListener {
 
     static final int SCALE_FACTOR = 3; // 16 x 16 won't actually be displayed as 16 x 16
     static final int ORIGINAL_TILE_SIZE = 16; // 16 x 16 pixel
@@ -44,6 +40,12 @@ public class GamePanel extends JPanel implements Runnable {
 
     private final Game game;
     public static ArrayList<Entity> entityArrayList = new ArrayList<>();
+
+    // This variable will keep track of the current frame of the animation
+    public static int currentFrame = 0;
+
+    // This timer will be used to control the frame rate of the animation
+    private Timer timer;
 
     public GamePanel() throws IOException, ParserConfigurationException, SAXException {
         game = new Game();//new Player((int) ((WINDOW_WIDTH) / 2), (int) ((WINDOW_HEIGHT) / 2), 3, 5, null, 3, 1));
@@ -70,9 +72,27 @@ public class GamePanel extends JPanel implements Runnable {
         assert backgroundImage != null;
         newBackgroundImage = backgroundImage.getScaledInstance(512 * SCALE_FACTOR, 512 * SCALE_FACTOR, Image.SCALE_FAST);*/
 
-
-
         startPlayerThread();
+
+
+        // Set up the timer to fire every 100 milliseconds (10 frames per second)
+        timer = new Timer(110, this);
+        timer.start();
+
+    }
+
+    public void actionPerformed(ActionEvent e) {
+
+        if (keyHandler.keyPressed) {
+
+            // Advance the frame counter
+            //currentFrame++;
+
+            // If we've reached the end of the animation, start over from the beginning
+            if (currentFrame >= 9) {
+                currentFrame = 1;
+            }
+        }
     }
 
     public void startPlayerThread() {
@@ -90,6 +110,8 @@ public class GamePanel extends JPanel implements Runnable {
 
             try {
                 update(); // updates: character positions, etc...
+
+                if (Main.currentScreen.equals("Game")) requestFocusInWindow();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -113,32 +135,41 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() throws IOException {
+
         if (keyHandler.upPressed) {
-            game.getPlayer().setCurrentAppearance(0);
+            game.getPlayer().setCurrentImage(currentFrame + 27);
             if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed()) &&
                     game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed() /*- Math.floorDiv(NEW_TILE_SIZE, 3)*/)) {
                 game.getPlayer().setPositionY(game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed());
             } else if (game.getCurrentLevel().isChest(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() - Math.floorDiv(NEW_TILE_SIZE, 10))) {
-                System.out.println("kiste");
+                System.out.println("chest!");
             }
         } else if (keyHandler.downPressed) {
-            game.getPlayer().setCurrentAppearance(1);
+            game.getPlayer().setCurrentImage(currentFrame);
             if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE * 4, 10)) &&
                     game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE * 4, 10))) {
                 game.getPlayer().setPositionY(game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed());
             }
         } else if (keyHandler.leftPressed) {
-            game.getPlayer().setCurrentAppearance(2);
+            game.getPlayer().setCurrentImage(currentFrame + 9);
             if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() + Math.floorDiv(NEW_TILE_SIZE * 4, 10)) &&
                     game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY()/* - Math.floorDiv(NEW_TILE_SIZE, 3)*/)) {
                 game.getPlayer().setPositionX(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed());
             }
         } else if (keyHandler.rightPressed) {
-            game.getPlayer().setCurrentAppearance(3);
+            game.getPlayer().setCurrentImage(currentFrame + 18);
             if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY()) &&
                     game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() + Math.floorDiv(NEW_TILE_SIZE * 4, 10))) {
                 game.getPlayer().setPositionX(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed());
             }
+        } else {
+            game.getPlayer().setCurrentImage(keyHandler.lastDirection);
+            currentFrame = 0;
+        }
+
+        if (keyHandler.menuPressed) {
+            keyHandler.menuPressed = false;
+            Main.showOptionsScreen();
         }
 
         int startAngle = 0;
@@ -148,7 +179,7 @@ public class GamePanel extends JPanel implements Runnable {
                 && cooldown == 0) {
             switch (keyHandler.lastPressed) {
                 case (KeyEvent.VK_W) -> {
-                    cooldown = 5;
+                    cooldown = 20;
                     startAngle = 45;
                     arcAngle = 90;
 
@@ -159,7 +190,7 @@ public class GamePanel extends JPanel implements Runnable {
 
                 }
                 case (KeyEvent.VK_A) -> {
-                    cooldown = 5;
+                    cooldown = 20;
                     startAngle = 135;
                     arcAngle = 90;
 
@@ -169,7 +200,7 @@ public class GamePanel extends JPanel implements Runnable {
                     game.getPlayer().draw((Graphics2D) this.getGraphics(), game, this, width, height, startAngle, arcAngle, entityArrayList);
                 }
                 case (KeyEvent.VK_S) -> {
-                    cooldown = 5;
+                    cooldown = 20;
                     startAngle = 225;
                     arcAngle = 90;
 
@@ -179,7 +210,7 @@ public class GamePanel extends JPanel implements Runnable {
                     game.getPlayer().draw((Graphics2D) this.getGraphics(), game, this, width, height, startAngle, arcAngle, entityArrayList);
                 }
                 case (KeyEvent.VK_D) -> {
-                    cooldown = 5;
+                    cooldown = 20;
                     startAngle = 315;
                     arcAngle = 90;
 
@@ -191,7 +222,6 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
     }
-
 
     int cooldown = 0;
 
@@ -232,6 +262,7 @@ public class GamePanel extends JPanel implements Runnable {
 
          */
 
+        //System.out.println(cooldown);
         if (cooldown < 0) {
             cooldown = 0;
         } else {
@@ -274,6 +305,4 @@ public class GamePanel extends JPanel implements Runnable {
         graph2D.dispose();
     }
 
-    public static void main(String[] args) {
     }
-}

@@ -20,6 +20,15 @@ public class Enemy extends Entity {
         super(positionX, positionY, movementSpeed, healthPoints, entityAppearance, currentAppearance);
 
     }
+    
+    /*
+    
+    
+    onsight()
+
+
+
+    */
 
     @Override
     public void draw(Graphics2D graph2D, Game game, GamePanel gamePanel) throws IOException {

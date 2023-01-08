@@ -58,7 +58,7 @@ public class Player extends Entity {
              */
 
             // arc.intersects(new Rectangle(entity.getPositionX(), entity.getPositionY(), GamePanel.NEW_TILE_SIZE, GamePanel.NEW_TILE_SIZE)
-            if(arc.getX() + arc.getWidth() >= entity.getPositionX() &&
+            if (arc.getX() + arc.getWidth() >= entity.getPositionX() &&
                     arc.getX() <= entity.getPositionX() + GamePanel.NEW_TILE_SIZE &&
                     arc.getY() + arc.getHeight() >= entity.getPositionY() &&
                     arc.getY() <= entity.getPositionY() + GamePanel.NEW_TILE_SIZE)
@@ -80,6 +80,16 @@ public class Player extends Entity {
     public void draw(Graphics2D graph2D, Game game, GamePanel gamePanel) {
 
 
+        graph2D.drawImage(
+                (Image) getImages()[getCurrentImage()],
+                (int) ((gamePanel.WINDOW_WIDTH - gamePanel.NEW_TILE_SIZE) / 2),
+                (int) ((gamePanel.WINDOW_HEIGHT - gamePanel.NEW_TILE_SIZE) / 2),
+                gamePanel.NEW_TILE_SIZE,
+                gamePanel.NEW_TILE_SIZE,
+                gamePanel
+        );
+
+/*
          graph2D.drawImage(
                 (Image) this.getEntityAppearance().get(getCurrentAppearance()),
                 (int) ((gamePanel.WINDOW_WIDTH - gamePanel.NEW_TILE_SIZE) / 2),
@@ -89,7 +99,7 @@ public class Player extends Entity {
                 gamePanel
         );
 
-         /*
+
         Shape s = new Rectangle2D.Double(
                 (int) ((GamePanel.WINDOW_WIDTH - GamePanel.NEW_TILE_SIZE) / 2),
                 (int) ((GamePanel.WINDOW_HEIGHT - GamePanel.NEW_TILE_SIZE) / 2),
