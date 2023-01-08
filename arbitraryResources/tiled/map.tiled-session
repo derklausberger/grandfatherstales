@@ -40,10 +40,10 @@
         },
         "C:/Users/niklasklausberger/IdeaProjects/grandfatherstales/src/main/resources/map/level/map1.xml": {
             "scale": 3,
-            "selectedLayer": 0,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 200,
-                "y": 110.33333333333333
+                "x": 162.83333333333331,
+                "y": 153.66666666666666
             }
         },
         "C:/Users/niklasklausberger/IdeaProjects/grandfatherstales/src/main/tiled/tileBiomCave.tsx": {
@@ -83,17 +83,19 @@
         "tileBiomTaiga.xml",
         "tileAssetsWater.xml",
         "tileAssetsTrees.xml",
-        "C:/Users/niklasklausberger/IdeaProjects/grandfatherstales/src/main/resources/map/level/map1.xml"
+        "C:/Users/niklasklausberger/IdeaProjects/grandfatherstales/src/main/resources/map/level/map1.xml",
+        "C:/Users/niklasklausberger/IdeaProjects/grandfatherstales/src/main/resources/map/level/3.xml"
     ],
     "project": "map.tiled-project",
     "recentFiles": [
-        "C:/Users/niklasklausberger/IdeaProjects/grandfatherstales/src/main/resources/map/1.xml",
         "tileBiomCave.xml",
         "tileBiomPlains.xml",
         "tileBiomTaiga.xml",
         "tileAssetsWater.xml",
         "tileAssetsTrees.xml",
+        "C:/Users/niklasklausberger/IdeaProjects/grandfatherstales/src/main/resources/map/level/3.xml",
         "C:/Users/niklasklausberger/IdeaProjects/grandfatherstales/src/main/resources/map/level/map1.xml",
+        "C:/Users/niklasklausberger/IdeaProjects/grandfatherstales/src/main/resources/map/1.xml",
         "C:/Users/kilia/Desktop/FH/2022W/Software_Engineering/Game/src/main/resources/map/level/1.xml"
     ],
     "tileset.lastUsedFormat": "tsx",

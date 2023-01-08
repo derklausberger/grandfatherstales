@@ -22,11 +22,14 @@ public class Game {
     private int currentLevelNumber;
     private static List<TileSet> tileSets;
 
-    public Game(Player player) throws IOException, ParserConfigurationException, SAXException {
-        this.player = player;
+    public Game() throws IOException, ParserConfigurationException, SAXException {
         loadTileSetsFromFiles();
         loadLevelsFromFile();
         currentLevelNumber = 1;
+
+        int x = (int) ((getCurrentLevel().getEnterPos() % 32 + 0.5) * GamePanel.NEW_TILE_SIZE);
+        int y = (getCurrentLevel().getEnterPos() / 32 + 1) * GamePanel.NEW_TILE_SIZE;
+        this.player = new Player(x, y, 3, 5, null, 3, 1);
     }
 
     public Player getPlayer() {
@@ -84,14 +87,15 @@ public class Game {
     public void renderSolid(Graphics2D g) {//} throws IOException {
         Level level = getCurrentLevel();
         BufferedImage[][][] map = level.getMap();
-        for (int i = 0; i < map.length - 1; i++) {
-            for (int j = 0; j < 32 * 32; j++) {
-                g.drawImage(map[i][j / 32][j % 32],
-                (GamePanel.NEW_TILE_SIZE * (j % 32)) - player.getPositionX() + (GamePanel.WINDOW_WIDTH / 2),
-                        GamePanel.NEW_TILE_SIZE * (j / 32) - player.getPositionY() + (GamePanel.WINDOW_HEIGHT / 2),
-                        GamePanel.NEW_TILE_SIZE, GamePanel.NEW_TILE_SIZE,
-                        null);
-                //}
+        for (int i = 0; i < map.length; i++) {
+            if (i != level.getTrees()) {
+                for (int j = 0; j < 32 * 32; j++) {
+                    g.drawImage(map[i][j / 32][j % 32],
+                            GamePanel.NEW_TILE_SIZE * (j % 32) - player.getPositionX() + (GamePanel.WINDOW_WIDTH / 2),
+                            GamePanel.NEW_TILE_SIZE * (j / 32) - player.getPositionY() + (GamePanel.WINDOW_HEIGHT / 2),
+                            GamePanel.NEW_TILE_SIZE, GamePanel.NEW_TILE_SIZE,
+                            null);
+                }
             }
         }
     }
@@ -119,7 +123,7 @@ public class Game {
         Level level = getCurrentLevel();
         BufferedImage[][][] map = level.getMap();
         for (int j = 0; j < 32 * 32; j++) {
-            graph2D.drawImage(map[3][j / 32][j % 32],
+            graph2D.drawImage(map[level.getTrees()][j / 32][j % 32],
                     (GamePanel.NEW_TILE_SIZE * (j % 32)) - player.getPositionX() + (GamePanel.WINDOW_WIDTH / 2),
                     GamePanel.NEW_TILE_SIZE * (j / 32) - player.getPositionY() + (GamePanel.WINDOW_HEIGHT / 2),
                     GamePanel.NEW_TILE_SIZE, GamePanel.NEW_TILE_SIZE,

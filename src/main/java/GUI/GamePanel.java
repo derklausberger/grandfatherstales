@@ -46,7 +46,7 @@ public class GamePanel extends JPanel implements Runnable {
     public static ArrayList<Entity> entityArrayList = new ArrayList<>();
 
     public GamePanel() throws IOException, ParserConfigurationException, SAXException {
-        game = new Game(new Player((int) ((WINDOW_WIDTH) / 2), (int) ((WINDOW_HEIGHT) / 2), 3, 5, null, 3, 1));
+        game = new Game();//new Player((int) ((WINDOW_WIDTH) / 2), (int) ((WINDOW_HEIGHT) / 2), 3, 5, null, 3, 1));
 
         this.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
         this.setBackground(new Color(39, 105, 195));
@@ -113,47 +113,6 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() throws IOException {
-
-        /*
-        if (keyHandler.upPressed && (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed())
-                && (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed()) ||
-                (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed())))))
-
-        {
-            game.getPlayer().setPositionY(game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed());
-            game.getPlayer().setCurrentAppearance(0);
-        }
-
-        if (keyHandler.downPressed && (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed())
-                && (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed()) ||
-                (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed())))))
-
-        {
-            game.getPlayer().setPositionY(game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed());
-            game.getPlayer().setCurrentAppearance(1);
-        }
-
-        if (keyHandler.leftPressed && (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed(), game.getPlayer().getPositionY())
-                && (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed())) ||
-                (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed()))))
-
-        {
-            game.getPlayer().setPositionX(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed());
-            game.getPlayer().setCurrentAppearance(2);
-
-        }
-
-        if (keyHandler.rightPressed && (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed(), game.getPlayer().getPositionY())
-                && (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed()) ||
-                (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE, 3), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed())))))
-
-        {
-            game.getPlayer().setPositionX(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed());
-            game.getPlayer().setCurrentAppearance(3);
-        }
-         */
-
-
         if (keyHandler.upPressed) {
             game.getPlayer().setCurrentAppearance(0);
             if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed()) &&

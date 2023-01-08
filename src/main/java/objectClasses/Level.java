@@ -22,10 +22,10 @@ import java.util.Random;
 
 public class Level {
     private int id;
-    private BufferedImage[][][] map;//height width
+    private BufferedImage[][][] map;//layers height width
     private Hashtable<Integer, TileSet> tileSets;
     private ArrayList<Enemy> enemies = null;
-    private int obstacles = -1, chests = -1, solid = -1, trees = -1;
+    private int obstacles = -1, chests = -1, solid = -1, trees = -1, enterPos = -1;
 
     public Level(File mapXMLFile) throws ParserConfigurationException, IOException, SAXException {
         int map_width = 32;
@@ -59,9 +59,9 @@ public class Level {
                 chests = i;
             } else if (e.getAttribute("name").equals("obstacles")) {
                 obstacles = i;
-            }  else if (e.getAttribute("name").equals("trees")) {
+            } else if (e.getAttribute("name").equals("trees")) {
                 trees = i;
-            }  else if (e.getAttribute("name").equals("solid")) {
+            } else if (e.getAttribute("name").equals("solid")) {
                 solid = i;
             }
 
@@ -80,8 +80,12 @@ public class Level {
                 if (tileSet != null) {
                     field -= tileSetKey;
                     fieldX = (field % tileSet.getWidthTiles()) * 16;
-                    fieldY = ((int) (field / tileSet.getWidthTiles())) * 16;
-                    map[i][(int) (j / map_height)][j % map_width] = ImageIO.read(new File(tileSet.getPngFileName())).getSubimage(fieldX, fieldY, 16, 16);
+                    fieldY = (field / tileSet.getWidthTiles()) * 16;
+                    map[i][j / map_height][j % map_width] = ImageIO.read(new File(tileSet.getPngFileName())).getSubimage(fieldX, fieldY, 16, 16);
+                    if (e.getAttribute("name").equals("enter")) {
+                        enterPos = j;
+                        System.out.println("enter:" +  j);
+                    }
                 } else {
                     map[i][(int) (j / map_height)][j % map_width] = null;
                 }
@@ -107,6 +111,13 @@ public class Level {
         return tileSets;
     }
 
+    public int getEnterPos() {
+        return enterPos;
+    }
+
+    public int getTrees() {
+        return trees;
+    }
 
     // return true if player can move onto tile with the coordinates x and y
     public boolean isSolid(int x, int y) {
@@ -152,7 +163,7 @@ public class Level {
         enemies = new ArrayList<>();
         Random random = new Random();
         // Biome, Level, Number of enemies should be contained in the xml file
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 50; i++) {
             int x, y;
             do {
                 x = random.nextInt(32) * GamePanel.NEW_TILE_SIZE;
