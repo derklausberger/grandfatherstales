@@ -43,7 +43,7 @@ public class LoadingPanel extends JPanel implements ActionListener {
     private void loadImages() {
 
         // Set the directory path
-        String dirPath = "src/main/resources/character/swordHit";
+        String dirPath = "src/main/resources/character/walking";
 
         // Create a File object for the directory
         File dir = new File(dirPath);
@@ -58,10 +58,10 @@ public class LoadingPanel extends JPanel implements ActionListener {
         int index = 0;
         for (int i = 0; i < files.length; i++) {
             try {
-                //if (i >= 18 && i <= 26) {
+                if (i >= 18 && i <= 26) {
                     images[index] = ImageIO.read(files[i]);
                     index++;
-                //}
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

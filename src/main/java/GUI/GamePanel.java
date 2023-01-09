@@ -22,6 +22,9 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
     static final int ORIGINAL_TILE_SIZE = 16; // 16 x 16 pixel
     public static final int NEW_TILE_SIZE = ORIGINAL_TILE_SIZE * SCALE_FACTOR;
 
+    public static final int CHARACTER_DEFAULT_WIDTH = 30;
+    public static final int CHARACTER_DEFAULT_HEIGHT = 50;
+
     static final int MAX_SCREEN_COL = 16; // max. 16 tiles in x
     static final int MAX_SCREEN_ROW = 12; // max. 12 tiles in y
 
@@ -65,13 +68,14 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
         startPlayerThread();
 
         // Set up the timer to fire every 100 milliseconds (10 frames per second)
-        timer = new Timer(110, this);
+        timer = new Timer(500, this);
         timer.start();
 
     }
 
     public void actionPerformed(ActionEvent e) {
 
+        System.out.println(currentFrame);
         if (keyHandler.keyPressed) {
 
             // Advance the frame counter

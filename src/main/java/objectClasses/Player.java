@@ -98,20 +98,52 @@ public class Player extends Entity {
     @Override
     public void draw(Graphics2D graph2D, Game game, GamePanel gamePanel) {
 
-        int scale = gamePanel.NEW_TILE_SIZE;
+        int width = GamePanel.CHARACTER_DEFAULT_WIDTH, heigth = GamePanel.CHARACTER_DEFAULT_HEIGHT;
+        int x, y;
+        x = (int) ((gamePanel.WINDOW_WIDTH - gamePanel.NEW_TILE_SIZE) / 2);
+        y = (int) ((gamePanel.WINDOW_HEIGHT - gamePanel.NEW_TILE_SIZE) / 2);
 
-        if (getCurrentImage() == 18) {
-            scale *= 2;
+        switch (getCurrentImage()) {
+
+            case 0: width += 10; heigth += 2; x -= 10; break;
+            case 1: width += 18; x -= 18; break;
+            case 2: width += 13; x -= 13; break;
+            case 3: width += 27; x -= 27; break;
+            case 4: width += 51; heigth += 20; x -= 33; break;
+            case 5: width += 43; heigth += 17; x -= 1; break;
+
+            case 9: width += 28; heigth += 3; x -= 28; break;
+            case 18: width += 28; heigth += 3; break;
+
+            case 10: width += 3; x -= 2; break;
+            case 19: width += 3; break;
+
+            case 11: width += 9; break;
+            case 12: width += 27; x -= 10; break;
+
+            case 20: width += 9; x -= 9; break;
+            case 21: width += 27; x -= 17; break;
+
+            case 13: width += 61; x -= 61; break;
+            case 22: width += 61; break;
+
+            case 14: width += 60; x -= 59; break;
+            case 23: width += 60; x -= 2; break;
+
+            case 27: width += 6; x -= 6; break;
+            case 28: width += 18; x -= 18; break;
+            case 29: width += 16; x -= 16; break;
+            case 30: width += 29; x -= 29; break;
+            case 31: width += 51; heigth += 18; x -= 33; y -= 18; break;
+            case 32: width += 46; heigth += 16; x -= 1; y -= 16; break;
         }
+
 
         // Draws the character
         graph2D.drawImage(
                 (Image) getImages()[getCurrentImage()],
-                (int) ((gamePanel.WINDOW_WIDTH - gamePanel.NEW_TILE_SIZE) / 2),
-                (int) ((gamePanel.WINDOW_HEIGHT - gamePanel.NEW_TILE_SIZE) / 2),
-                scale,
-                scale,
-                gamePanel
+                x, y,
+                width, heigth, gamePanel
         );
 
     /*
