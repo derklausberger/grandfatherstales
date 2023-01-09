@@ -2,10 +2,7 @@ package GUI;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.security.Key;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Set;
 
 public class InputHandler implements KeyListener {
@@ -13,12 +10,7 @@ public class InputHandler implements KeyListener {
     protected boolean upPressed, downPressed, leftPressed, rightPressed, keyPressed;
     protected boolean attackPressed, menuPressed;
     protected int lastPressed = 10000, currentPressed = 10000, lastDirection;
-    private ArrayList<Integer> directions = new ArrayList<>();
-
-    Set<Integer> keys = new HashSet<Integer>();
-
-    public Set<Integer> getKeys() { return keys;}
-
+    private ArrayList<Integer> keys = new ArrayList<>();
 
     @Override
     public void keyTyped(KeyEvent e) {}
@@ -29,34 +21,44 @@ public class InputHandler implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int eventCode = e.getKeyCode();
-        currentPressed = eventCode;
 
-        if (!directions.contains(eventCode) && eventCode != KeyEvent.VK_C) {
-            directions.add(eventCode);
-        }
 
-        if (lastPressed == 10000 && eventCode != KeyEvent.VK_C) lastPressed = eventCode;
-        if (currentPressed != 10000) {
-            keyPressed = true;
+        if (!keys.contains(eventCode) && eventCode != KeyEvent.VK_C) {
+            keys.add(eventCode);
         }
 
-        if (eventCode == KeyEvent.VK_W && lastPressed == eventCode) {
-            upPressed = true;
-        }
-        if (eventCode == KeyEvent.VK_A && lastPressed == eventCode) {
-            leftPressed = true;
-        }
-        if (eventCode == KeyEvent.VK_S && lastPressed == eventCode) {
-            downPressed = true;
-        }
-        if (eventCode == KeyEvent.VK_D && lastPressed == eventCode) {
-            rightPressed = true;
-        }
-        if (eventCode == KeyEvent.VK_C) {
-            attackPressed = true;
-        }
-        if (eventCode == KeyEvent.VK_ESCAPE) {
-            menuPressed = true;
+        if (eventCode == KeyEvent.VK_W || eventCode == KeyEvent.VK_A ||
+                eventCode == KeyEvent.VK_S || eventCode == KeyEvent.VK_D ||
+                eventCode == KeyEvent.VK_C || eventCode == KeyEvent.VK_ESCAPE) {
+
+            for (Integer i : keys) {
+                //System.out.println(i);
+            }
+
+            if (lastPressed == 10000 && eventCode != KeyEvent.VK_C) lastPressed = eventCode;
+
+            if (eventCode != KeyEvent.VK_C && eventCode != KeyEvent.VK_ESCAPE) {
+                keyPressed = true;
+            }
+
+            if (eventCode == KeyEvent.VK_W && lastPressed == eventCode) {
+                upPressed = true;
+            }
+            if (eventCode == KeyEvent.VK_A && lastPressed == eventCode) {
+                leftPressed = true;
+            }
+            if (eventCode == KeyEvent.VK_S && lastPressed == eventCode) {
+                downPressed = true;
+            }
+            if (eventCode == KeyEvent.VK_D && lastPressed == eventCode) {
+                rightPressed = true;
+            }
+            if (eventCode == KeyEvent.VK_C) {
+                attackPressed = true;
+            }
+            if (eventCode == KeyEvent.VK_ESCAPE) {
+                menuPressed = true;
+            }
         }
     }
 
@@ -66,25 +68,23 @@ public class InputHandler implements KeyListener {
 
         if (eventCode == KeyEvent.VK_W) {
             upPressed = false;
-            directions.remove(directions.indexOf(eventCode));
         }
         if (eventCode == KeyEvent.VK_A) {
             leftPressed = false;
-            directions.remove(directions.indexOf(eventCode));
         }
         if (eventCode == KeyEvent.VK_S) {
             downPressed = false;
-            directions.remove(directions.indexOf(eventCode));
         }
         if (eventCode == KeyEvent.VK_D) {
             rightPressed = false;
-            directions.remove(directions.indexOf(eventCode));
         }
         if (eventCode == KeyEvent.VK_C) {
             attackPressed = false;
         }
 
-        if (directions.isEmpty()) {
+        if (eventCode != KeyEvent.VK_C) keys.remove(keys.indexOf(eventCode));
+
+        if (keys.isEmpty()) {
             keyPressed = false;
 
             if (lastPressed == KeyEvent.VK_W) {
@@ -97,18 +97,19 @@ public class InputHandler implements KeyListener {
                 lastDirection = 18;
             }
             lastPressed = 10000;
+            currentPressed = 10000;
 
         } else {
-            if (directions.get(0) == KeyEvent.VK_W) {
+            if (keys.get(0) == KeyEvent.VK_W) {
                 upPressed = true;
                 lastPressed = KeyEvent.VK_W;
-            } else if (directions.get(0) == KeyEvent.VK_A) {
+            } else if (keys.get(0) == KeyEvent.VK_A) {
                 leftPressed = true;
                 lastPressed = KeyEvent.VK_A;
-            } else if (directions.get(0) == KeyEvent.VK_S) {
+            } else if (keys.get(0) == KeyEvent.VK_S) {
                 downPressed = true;
                 lastPressed = KeyEvent.VK_S;
-            } else if (directions.get(0) == KeyEvent.VK_D) {
+            } else if (keys.get(0) == KeyEvent.VK_D) {
                 rightPressed = true;
                 lastPressed = KeyEvent.VK_D;
             }

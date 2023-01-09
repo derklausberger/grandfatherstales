@@ -62,18 +62,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
             entityArrayList.add(e);
         }
 
-
-       /* backgroundImage = null;
-        try {
-            backgroundImage = ImageIO.read(new File("src/main/resources/map/4.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        assert backgroundImage != null;
-        newBackgroundImage = backgroundImage.getScaledInstance(512 * SCALE_FACTOR, 512 * SCALE_FACTOR, Image.SCALE_FAST);*/
-
         startPlayerThread();
-
 
         // Set up the timer to fire every 100 milliseconds (10 frames per second)
         timer = new Timer(110, this);
@@ -83,8 +72,10 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
 
     public void actionPerformed(ActionEvent e) {
 
+
         if (keyHandler.keyPressed) {
 
+            System.out.println(currentFrame);
             // Advance the frame counter
             currentFrame++;
 
@@ -164,7 +155,13 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
             }
         } else {
             game.getPlayer().setCurrentImage(keyHandler.lastDirection);
-            currentFrame = 0;
+
+
+            // Prevents the character to "slide" when moving, if a direction key
+            // is spammed really fast
+            if (keyHandler.lastDirection <= 8 || keyHandler.lastDirection >= 27) {
+                currentFrame = 2;
+            } else currentFrame = 1;
         }
 
         if (keyHandler.menuPressed) {
@@ -230,76 +227,21 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
         super.paintComponent(graph);
         Graphics2D graph2D = (Graphics2D) graph;
 
-        /*
-        int startAngle = 0;
-        int arcAngle = 0;
-
-        if (keyHandler.attackPressed
-                && cooldown == 0) {
-            switch (keyHandler.lastPressed) {
-                case (KeyEvent.VK_W) -> {
-                    cooldown = 60;
-                    startAngle = 45;
-                    arcAngle = 90;
-                }
-                case (KeyEvent.VK_A) -> {
-                    cooldown = 60;
-                    startAngle = 135;
-                    arcAngle = 90;
-                }
-                case (KeyEvent.VK_S) -> {
-                    cooldown = 60;
-                    startAngle = 225;
-                    arcAngle = 90;
-                }
-                case (KeyEvent.VK_D) -> {
-                    cooldown = 60;
-                    startAngle = 315;
-                    arcAngle = 90;
-                }
-            }
-        }
-
-         */
-
-        //System.out.println(cooldown);
         if (cooldown < 0) {
             cooldown = 0;
         } else {
             cooldown--;
         }
 
-
         game.renderSolid(graph2D);
-        //graph2D.drawImage(newBackgroundImage, -game.getPlayer().getPositionX() + (GamePanel.WINDOW_WIDTH / 2), -game.getPlayer().getPositionY() + (GamePanel.WINDOW_HEIGHT / 2),null);
-        //game.renderTrees(graph2D);
-
 
         for (Entity entity : entityArrayList) {
             try {
-                /*
-                if (
-                        game.getPlayer().getPositionX() >= entity.getPositionX() && entity.getPositionX() + NEW_TILE_SIZE >= game.getPlayer().getPositionX()  &&
-                        game.getPlayer().getPositionY() >= entity.getPositionY() && entity.getPositionY()  + NEW_TILE_SIZE >= game.getPlayer().getPositionY()
-                ) {
-                    if (!entity.equals(game.getPlayer())) {
-                        entity.setHealthPoints(entity.getHealthPoints() - 1);
-                    }
-                }
-
-                if (entity.getHealthPoints() <= 0) {
-                    entityArrayList.remove(entity);
-                    break;
-                }
-
-                 */
-
                 entity.draw(graph2D, game, this);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
         game.renderTrees(graph2D);
 
         graph2D.dispose();
