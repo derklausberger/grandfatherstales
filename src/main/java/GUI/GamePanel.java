@@ -72,10 +72,8 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
 
     public void actionPerformed(ActionEvent e) {
 
-
         if (keyHandler.keyPressed) {
 
-            System.out.println(currentFrame);
             // Advance the frame counter
             currentFrame++;
 
@@ -154,8 +152,8 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
                 game.getPlayer().setPositionX(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed());
             }
         } else {
-            game.getPlayer().setCurrentImage(keyHandler.lastDirection);
 
+            game.getPlayer().setCurrentImage(keyHandler.lastDirection);
 
             // Prevents the character to "slide" when moving, if a direction key
             // is spammed really fast

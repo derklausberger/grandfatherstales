@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import GUI.GamePanel;
 import objectClasses.Game;
@@ -97,6 +98,7 @@ public abstract class Entity {
 
         // Get a list of the PNG files in the directory
         File[] files = dir.listFiles();
+        Arrays.sort(files);
 
         // Create an array to hold the images
         images = new Image[files.length];
@@ -105,6 +107,7 @@ public abstract class Entity {
         for (int i = 0; i < files.length; i++) {
             try {
                 images[i] = ImageIO.read(files[i]);
+                System.out.println(files[i].getName());
             } catch (IOException e) {
                 e.printStackTrace();
             }

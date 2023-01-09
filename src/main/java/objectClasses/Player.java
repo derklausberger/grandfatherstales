@@ -29,6 +29,7 @@ public class Player extends Entity {
 
     public void draw(Graphics2D graph2D, Game game, GamePanel gamePanel, int width, int height, int startAngle, int arcAngle, ArrayList<Entity> entityArrayList) {
 
+
         Arc2D arc = new Arc2D.Double();
         Thread thread = new Thread(() -> {
             for (int i = 0; i < 5; i++) {
@@ -38,7 +39,7 @@ public class Player extends Entity {
                     e.printStackTrace();
                 }
 
-                System.out.println("Thread Running iteration: " + i + " inside of: " + this.getClass().getSimpleName());
+                //System.out.println("Thread Running iteration: " + i + " inside of: " + this.getClass().getSimpleName());
                 SwingUtilities.invokeLater(new Runnable() {
                     public void run() {
                         arc.setArc((double) (Math.floorDiv(GamePanel.WINDOW_WIDTH, 2) - Math.floorDiv(width, 2)),
@@ -79,8 +80,8 @@ public class Player extends Entity {
                         }
                         TexturePaint tp = new TexturePaint(bi, new Rectangle((Math.floorDiv(GamePanel.WINDOW_WIDTH, 2) - Math.floorDiv(width, 2)),(Math.floorDiv(GamePanel.WINDOW_HEIGHT, 2) - Math.floorDiv(height, 2)),width,height));
                         graph2D.setPaint(tp);
-                         */
 
+*/
                         graph2D.fill(path);
                         gamePanel.repaint();
                     }
@@ -90,23 +91,30 @@ public class Player extends Entity {
         });
 
         thread.start();
+
     }
 
 
     @Override
     public void draw(Graphics2D graph2D, Game game, GamePanel gamePanel) {
 
+        int scale = gamePanel.NEW_TILE_SIZE;
 
+        if (getCurrentImage() == 18) {
+            scale *= 2;
+        }
+
+        // Draws the character
         graph2D.drawImage(
                 (Image) getImages()[getCurrentImage()],
                 (int) ((gamePanel.WINDOW_WIDTH - gamePanel.NEW_TILE_SIZE) / 2),
                 (int) ((gamePanel.WINDOW_HEIGHT - gamePanel.NEW_TILE_SIZE) / 2),
-                gamePanel.NEW_TILE_SIZE,
-                gamePanel.NEW_TILE_SIZE,
+                scale,
+                scale,
                 gamePanel
         );
 
-/*
+    /*
          graph2D.drawImage(
                 (Image) this.getEntityAppearance().get(getCurrentAppearance()),
                 (int) ((gamePanel.WINDOW_WIDTH - gamePanel.NEW_TILE_SIZE) / 2),

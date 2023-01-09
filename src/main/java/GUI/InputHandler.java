@@ -22,8 +22,7 @@ public class InputHandler implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int eventCode = e.getKeyCode();
 
-
-        if (!keys.contains(eventCode) && eventCode != KeyEvent.VK_C) {
+        if (!keys.contains(eventCode) && eventCode != KeyEvent.VK_C && eventCode != KeyEvent.VK_ESCAPE) {
             keys.add(eventCode);
         }
 
@@ -31,11 +30,13 @@ public class InputHandler implements KeyListener {
                 eventCode == KeyEvent.VK_S || eventCode == KeyEvent.VK_D ||
                 eventCode == KeyEvent.VK_C || eventCode == KeyEvent.VK_ESCAPE) {
 
-            for (Integer i : keys) {
+            //for (Integer i : keys) {
                 //System.out.println(i);
-            }
+            //}
 
-            if (lastPressed == 10000 && eventCode != KeyEvent.VK_C) lastPressed = eventCode;
+            if (lastPressed == 10000 && eventCode != KeyEvent.VK_C && eventCode != KeyEvent.VK_ESCAPE) {
+                lastPressed = eventCode;
+            }
 
             if (eventCode != KeyEvent.VK_C && eventCode != KeyEvent.VK_ESCAPE) {
                 keyPressed = true;
@@ -82,7 +83,9 @@ public class InputHandler implements KeyListener {
             attackPressed = false;
         }
 
-        if (eventCode != KeyEvent.VK_C) keys.remove(keys.indexOf(eventCode));
+        if (eventCode != KeyEvent.VK_C && eventCode != KeyEvent.VK_ESCAPE) {
+            keys.remove(keys.indexOf(eventCode));
+        }
 
         if (keys.isEmpty()) {
             keyPressed = false;
