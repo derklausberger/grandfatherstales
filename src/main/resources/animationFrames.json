@@ -1,0 +1,166 @@
+{
+  "character": {
+    "walking": {
+      "down": [
+        { "image": "src/main/resources/character/walking/D1.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/D2.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/D3.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/D4.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/D5.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/D6.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/D7.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/D8.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/D9.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 }
+      ],
+      "left": [
+        { "image": "src/main/resources/character/walking/L1.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/L2.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/L3.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/L4.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/L5.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/L6.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/L7.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/L8.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/L9.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 }
+      ],
+      "right": [
+        { "image": "src/main/resources/character/walking/R1.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/R2.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/R3.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/R4.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/R5.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/R6.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/R7.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/R8.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/R9.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 }
+      ],
+      "up": [
+        { "image": "src/main/resources/character/walking/U1.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/U2.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/U3.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/U4.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/U5.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/U6.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/U7.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/U8.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/U9.png","width": 30, "height": 50, "xOffset": 0, "yOffset": 0 }
+      ]
+    },
+    "attack": {
+      "down": [
+        { "image": "src/main/resources/character/swordHit/D1.png","width": 40, "height": 52, "xOffset": -10, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/D2.png","width": 48, "height": 50, "xOffset": -18, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/D3.png","width": 43, "height": 50, "xOffset": -13, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/D4.png","width": 57, "height": 50, "xOffset": -27, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/D5.png","width": 81, "height": 70, "xOffset": -33, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/D6.png","width": 73, "height": 67, "xOffset": -1, "yOffset": 0 }
+      ],
+      "left": [
+        { "image": "src/main/resources/character/swordHit/L1.png","width": 58, "height": 53, "xOffset": -28, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/L2.png","width": 33, "height": 50, "xOffset": -2, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/L3.png","width": 39, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/L4.png","width": 57, "height": 50, "xOffset": -10, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/L5.png","width": 91, "height": 50, "xOffset": -61, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/L6.png","width": 90, "height": 50, "xOffset": -59, "yOffset": 0 }
+      ],
+      "right": [
+        { "image": "src/main/resources/character/swordHit/R1.png","width": 58, "height": 53, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/R2.png","width": 33, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/R3.png","width": 39, "height": 50, "xOffset": -9, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/R4.png","width": 57, "height": 50, "xOffset": -17, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/R5.png","width": 91, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/R6.png","width": 90, "height": 50, "xOffset": -2, "yOffset": 0 }
+      ],
+      "up": [
+        { "image": "src/main/resources/character/swordHit/U1.png","width": 36, "height": 50, "xOffset": -6, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/U2.png","width": 48, "height": 50, "xOffset": -18, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/U3.png","width": 46, "height": 50, "xOffset": -16, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/U4.png","width": 59, "height": 50, "xOffset": -29, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/U5.png","width": 81, "height": 68, "xOffset": -33, "yOffset": -18 },
+        { "image": "src/main/resources/character/swordHit/U6.png","width": 76, "height": 66, "xOffset": -1, "yOffset": -16 }
+      ]
+    }
+  },
+  "skeletonWarrior": {
+    "walking": {
+      "down": [
+        { "image": "src/main/resources/character/walking/D1.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/D2.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/D3.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/D4.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/D5.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/D6.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/D7.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/D8.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/D9.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 }
+      ],
+      "left": [
+        { "image": "src/main/resources/character/walking/L1.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/L2.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/L3.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/L4.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/L5.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/L6.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/L7.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/L8.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/L9.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 }
+      ],
+      "right": [
+        { "image": "src/main/resources/character/walking/R1.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/R2.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/R3.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/R4.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/R5.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/R6.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/R7.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/R8.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/R9.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 }
+      ],
+      "up": [
+        { "image": "src/main/resources/character/walking/U1.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/U2.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/U3.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/U4.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/U5.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/U6.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/U7.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/U8.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/walking/U9.png","width": 30, "height": 50, "xOffset": 0, "yOffset": 0 }
+      ]
+    },
+    "attack": {
+      "down": [
+        { "image": "src/main/resources/character/swordHit/D1.png","width": 40, "height": 52, "xOffset": -10, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/D2.png","width": 48, "height": 50, "xOffset": -18, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/D3.png","width": 43, "height": 50, "xOffset": -13, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/D4.png","width": 57, "height": 50, "xOffset": -27, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/D5.png","width": 81, "height": 70, "xOffset": -33, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/D6.png","width": 73, "height": 67, "xOffset": -1, "yOffset": 0 }
+      ],
+      "left": [
+        { "image": "src/main/resources/character/swordHit/L1.png","width": 58, "height": 53, "xOffset": -28, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/L2.png","width": 33, "height": 50, "xOffset": -2, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/L3.png","width": 39, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/L4.png","width": 57, "height": 50, "xOffset": -10, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/L5.png","width": 91, "height": 50, "xOffset": -61, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/L6.png","width": 90, "height": 50, "xOffset": -59, "yOffset": 0 }
+      ],
+      "right": [
+        { "image": "src/main/resources/character/swordHit/R1.png","width": 58, "height": 53, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/R2.png","width": 33, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/R3.png","width": 39, "height": 50, "xOffset": -9, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/R4.png","width": 57, "height": 50, "xOffset": -27, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/R5.png","width": 91, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/R6.png","width": 90, "height": 50, "xOffset": -2, "yOffset": 0 }
+      ],
+      "up": [
+        { "image": "src/main/resources/character/swordHit/U1.png","width": 36, "height": 50, "xOffset": -6, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/U2.png","width": 48, "height": 50, "xOffset": -18, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/U3.png","width": 46, "height": 50, "xOffset": -16, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/U4.png","width": 59, "height": 50, "xOffset": -29, "yOffset": 0 },
+        { "image": "src/main/resources/character/swordHit/U5.png","width": 81, "height": 68, "xOffset": -33, "yOffset": -18 },
+        { "image": "src/main/resources/character/swordHit/U6.png","width": 76, "height": 66, "xOffset": -1, "yOffset": -16 }
+      ]
+    }
+  }
+}

@@ -170,7 +170,7 @@ public class Level {
                 y = random.nextInt(32) * GamePanel.NEW_TILE_SIZE;
 
             } while (!isSolid(x,y));
-            Enemy e = new Enemy(x,y,1,2, null,1);
+            Enemy e = new Enemy(x,y,1,2);
             enemies.add(e);
         }
         return enemies;

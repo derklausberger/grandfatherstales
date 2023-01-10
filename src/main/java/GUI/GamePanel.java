@@ -33,7 +33,8 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
 
     InputHandler keyHandler = new InputHandler(); // own class
     Thread playerThread = null;
-    Image backgroundImage, newBackgroundImage;
+
+    int cooldown = 0;
 
     int FPS = 60;
     // needed because repaint() is called depending
@@ -68,15 +69,22 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
         startPlayerThread();
 
         // Set up the timer to fire every 100 milliseconds (10 frames per second)
-        timer = new Timer(500, this);
+        timer = new Timer(110, this);
         timer.start();
 
     }
 
+    // Problem: when timed "badly", the first frame gets cut off
+    // so that the animation jumps at the beginning from the first
+    // to the second frame
+    // Fix: attack animation needs an independent timer that increases
+    // the current attack frame only after attack actually has been pressed
+    // (not implemented yet)
+    int attackFrame = 1;
+
     public void actionPerformed(ActionEvent e) {
 
-        System.out.println(currentFrame);
-        if (keyHandler.keyPressed) {
+        if (!keyHandler.attackPressed) {
 
             // Advance the frame counter
             currentFrame++;
@@ -84,6 +92,22 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
             // If we've reached the end of the animation, start over from the beginning
             if (currentFrame >= 9) {
                 currentFrame = 1;
+            }
+        } else {
+            attackFrame++;
+
+            System.out.println(attackFrame);
+            if (attackFrame >= 6) {
+                System.out.println(attackFrame);
+                keyHandler.attackPressed = false;
+                currentFrame = 1;
+                attackFrame = 1;
+
+                // Necessary, because e.g. the player moves upwards and attacks:
+                // While the attack animation is executed, W is released
+                // If any direction other than upwards is attempted, it will not move
+                // until any key was released first
+                keyHandler.lastPressed = 10000;
             }
         }
     }
@@ -129,51 +153,90 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
 
     public void update() throws IOException {
 
-        if (keyHandler.upPressed) {
-            game.getPlayer().setCurrentImage(currentFrame + 27);
-            if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed()) &&
-                    game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed() /*- Math.floorDiv(NEW_TILE_SIZE, 3)*/)) {
-                game.getPlayer().setPositionY(game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed());
-            } else if (game.getCurrentLevel().isChest(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() - Math.floorDiv(NEW_TILE_SIZE, 10))) {
-                System.out.println("chest!");
-            }
-        } else if (keyHandler.downPressed) {
-            game.getPlayer().setCurrentImage(currentFrame);
-            if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE * 4, 10)) &&
-                    game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE * 4, 10))) {
-                game.getPlayer().setPositionY(game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed());
-            }
-        } else if (keyHandler.leftPressed) {
-            game.getPlayer().setCurrentImage(currentFrame + 9);
-            if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() + Math.floorDiv(NEW_TILE_SIZE * 4, 10)) &&
-                    game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY()/* - Math.floorDiv(NEW_TILE_SIZE, 3)*/)) {
-                game.getPlayer().setPositionX(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed());
-            }
-        } else if (keyHandler.rightPressed) {
-            game.getPlayer().setCurrentImage(currentFrame + 18);
-            if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY()) &&
-                    game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() + Math.floorDiv(NEW_TILE_SIZE * 4, 10))) {
-                game.getPlayer().setPositionX(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed());
-            }
-        } else {
-
-            game.getPlayer().setCurrentImage(keyHandler.lastDirection);
-
-            // Prevents the character to "slide" when moving, if a direction key
-            // is spammed really fast
-            if (keyHandler.lastDirection <= 8 || keyHandler.lastDirection >= 27) {
-                currentFrame = 2;
-            } else currentFrame = 1;
-        }
-
         if (keyHandler.menuPressed) {
             keyHandler.menuPressed = false;
             Main.showOptionsScreen();
         }
 
+        if (!keyHandler.attackPressed) {
+            game.getPlayer().setCurrentAnimationType("walking");
+
+            if (keyHandler.upPressed) {
+                game.getPlayer().setCurrentFrame(currentFrame + 27);
+
+                if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed()) &&
+                        game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed() /*- Math.floorDiv(NEW_TILE_SIZE, 3)*/)) {
+                    game.getPlayer().setPositionY(game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed());
+                } else if (game.getCurrentLevel().isChest(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() - Math.floorDiv(NEW_TILE_SIZE, 10))) {
+                    System.out.println("chest!");
+                }
+            } else if (keyHandler.downPressed) {
+                game.getPlayer().setCurrentFrame(currentFrame);
+
+                if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE * 4, 10)) &&
+                        game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE * 4, 10))) {
+                    game.getPlayer().setPositionY(game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed());
+                }
+            } else if (keyHandler.leftPressed) {
+                game.getPlayer().setCurrentFrame(currentFrame + 9);
+
+                if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() + Math.floorDiv(NEW_TILE_SIZE * 4, 10)) &&
+                        game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY()/* - Math.floorDiv(NEW_TILE_SIZE, 3)*/)) {
+                    game.getPlayer().setPositionX(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed());
+                }
+            } else if (keyHandler.rightPressed) {
+                game.getPlayer().setCurrentFrame(currentFrame + 18);
+
+                if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY()) &&
+                        game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() + Math.floorDiv(NEW_TILE_SIZE * 4, 10))) {
+                    game.getPlayer().setPositionX(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed());
+                }
+            } else {
+
+                int i = switch (keyHandler.lastDirection) {
+                    case KeyEvent.VK_A -> 9;
+                    case KeyEvent.VK_D -> 18;
+                    case KeyEvent.VK_W -> 27;
+                    default -> 0;
+                };
+                game.getPlayer().setCurrentFrame(i);
+
+                // Prevents the character to "slide" when moving, if a direction key
+                // is spammed really fast
+                if (keyHandler.lastDirection == KeyEvent.VK_W || keyHandler.lastDirection == KeyEvent.VK_S) {
+                    currentFrame = 2;
+                } else currentFrame = 1;
+            }
+        }
+
+
+        if (keyHandler.attackPressed) {
+
+            game.getPlayer().setCurrentAnimationType("attack");
+
+            switch (keyHandler.lastDirection) {
+                case (KeyEvent.VK_W) -> {  //Up
+
+                    game.getPlayer().setCurrentFrame(attackFrame + 18);
+                }
+                case (KeyEvent.VK_A) -> {   //Left
+
+                    game.getPlayer().setCurrentFrame(attackFrame + 6);
+                }
+                case (KeyEvent.VK_S) -> {   //Down
+
+                    game.getPlayer().setCurrentFrame(attackFrame);
+                }
+                case (KeyEvent.VK_D) -> {  //Right
+
+                    game.getPlayer().setCurrentFrame(attackFrame + 12);
+                }
+            }
+        }
+
         int startAngle = 0;
         int arcAngle = 0;
-
+        /*
         if (keyHandler.attackPressed
                 && cooldown == 0) {
             switch (keyHandler.lastPressed) {
@@ -220,9 +283,9 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
                 }
             }
         }
-    }
 
-    int cooldown = 0;
+         */
+    }
 
     @Override
     public void paint(Graphics graph) {
@@ -249,4 +312,4 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
         graph2D.dispose();
     }
 
-    }
+}

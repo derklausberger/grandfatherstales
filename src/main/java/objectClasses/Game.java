@@ -29,7 +29,7 @@ public class Game {
 
         int x = (int) ((getCurrentLevel().getEnterPos() % 32 + 0.5) * GamePanel.NEW_TILE_SIZE);
         int y = (getCurrentLevel().getEnterPos() / 32 + 1) * GamePanel.NEW_TILE_SIZE;
-        this.player = new Player(x, y, 3, 5, null, 3, 1);
+        this.player = new Player(x, y, 3, 5, 3);
     }
 
     public Player getPlayer() {

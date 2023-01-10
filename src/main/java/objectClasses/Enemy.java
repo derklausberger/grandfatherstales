@@ -14,19 +14,16 @@ import java.util.ArrayList;
 
 public class Enemy extends Entity {
 
-    public Enemy(int positionX, int positionY, int movementSpeed, int healthPoints,
-                 ArrayList<BufferedImage> entityAppearance, int currentAppearance) {
+    public Enemy(int positionX, int positionY, int movementSpeed, int healthPoints) {
 
-        super(positionX, positionY, movementSpeed, healthPoints, entityAppearance, currentAppearance);
+        super(positionX, positionY, movementSpeed, healthPoints);
 
+        super.loadAnimationFrames("skeletonWarrior");
     }
-    
+
     /*
-    
-    
+
     onsight()
-
-
 
     */
 
