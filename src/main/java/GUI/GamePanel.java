@@ -234,9 +234,10 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
             }
         }
 
+        /*
         int startAngle = 0;
         int arcAngle = 0;
-        /*
+
         if (keyHandler.attackPressed
                 && cooldown == 0) {
             switch (keyHandler.lastPressed) {

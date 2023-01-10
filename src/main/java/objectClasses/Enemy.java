@@ -1,5 +1,6 @@
 package objectClasses;
 
+import GUI.AnimationFrame;
 import GUI.GamePanel;
 import objectClasses.Abstract.Entity;
 
@@ -28,19 +29,24 @@ public class Enemy extends Entity {
     */
 
     @Override
-    public void draw(Graphics2D graph2D, Game game, GamePanel gamePanel) throws IOException {
+    public void draw(Graphics2D graph2D, Game game, GamePanel gamePanel) {
 
-        /*
-         graph2D.drawImage(
-                (Image) this.entityAppearance.get(getCurrentAppearance()),
-                (int) ((gamePanel.WINDOW_WIDTH - gamePanel.NEW_TILE_SIZE) / 2),
-                (int) ((gamePanel.WINDOW_HEIGHT - gamePanel.NEW_TILE_SIZE) / 2),
-                gamePanel.NEW_TILE_SIZE,
-                gamePanel.NEW_TILE_SIZE,
-                gamePanel
+
+        int x = (int) ((gamePanel.WINDOW_WIDTH - gamePanel.NEW_TILE_SIZE) / 2),
+                y = (int) ((gamePanel.WINDOW_HEIGHT - gamePanel.NEW_TILE_SIZE) / 2);
+
+        // The current frame
+        AnimationFrame frame = getEntityFrames(getCurrentAnimationType())[getCurrentFrame()];
+
+        // Draws the character
+        graph2D.drawImage(
+                frame.getImage(),
+                x + frame.getXOffset() - game.getPlayer().getPositionX() + this.getPositionX(),
+                y  + frame.getYOffset() - game.getPlayer().getPositionY() + this.getPositionY(),
+                frame.getWidth(), frame.getHeight(), gamePanel
         );
 
-        */
+       /*
 
         graph2D.drawImage(
                 this.getEntityAppearance().get(0),
@@ -50,6 +56,7 @@ public class Enemy extends Entity {
                 GamePanel.NEW_TILE_SIZE,
                 gamePanel
         );
+*/
 
 
         /*

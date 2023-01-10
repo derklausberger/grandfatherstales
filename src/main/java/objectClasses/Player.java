@@ -101,13 +101,13 @@ public class Player extends Entity {
 
 
         // The current frame
-        AnimationFrame[] frames = getEntityFrames(getCurrentAnimationType());
+        AnimationFrame frame = getEntityFrames(getCurrentAnimationType())[getCurrentFrame()];
 
         // Draws the character
         graph2D.drawImage(
-                frames[getCurrentFrame()].getImage(),
-                x + frames[getCurrentFrame()].getXOffset(), y  + frames[getCurrentFrame()].getYOffset(),
-                frames[getCurrentFrame()].getWidth(), frames[getCurrentFrame()].getHeight(), gamePanel
+                frame.getImage(),
+                x + frame.getXOffset(), y  + frame.getYOffset(),
+                frame.getWidth(), frame.getHeight(), gamePanel
         );
 
     /*
