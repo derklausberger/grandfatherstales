@@ -31,9 +31,8 @@ public class Enemy extends Entity {
     @Override
     public void draw(Graphics2D graph2D, Game game, GamePanel gamePanel) {
 
-
-        int x = (int) ((gamePanel.WINDOW_WIDTH - gamePanel.NEW_TILE_SIZE) / 2),
-                y = (int) ((gamePanel.WINDOW_HEIGHT - gamePanel.NEW_TILE_SIZE) / 2);
+        int x = (int) ((GamePanel.WINDOW_WIDTH) / 2),
+                y = (int) ((GamePanel.WINDOW_HEIGHT) / 2);
 
         // The current frame
         AnimationFrame frame = getEntityFrames(getCurrentAnimationType())[getCurrentFrame()];
@@ -42,32 +41,42 @@ public class Enemy extends Entity {
         graph2D.drawImage(
                 frame.getImage(),
                 x + frame.getXOffset() - game.getPlayer().getPositionX() + this.getPositionX(),
-                y  + frame.getYOffset() - game.getPlayer().getPositionY() + this.getPositionY(),
+                y + frame.getYOffset() - game.getPlayer().getPositionY() + this.getPositionY(),
                 frame.getWidth(), frame.getHeight(), gamePanel
         );
 
-       /*
 
-        graph2D.drawImage(
-                this.getEntityAppearance().get(0),
-                (int) (GamePanel.WINDOW_WIDTH / 2) - game.getPlayer().getPositionX() + this.getPositionX(),
-                (int) (GamePanel.WINDOW_HEIGHT / 2) - game.getPlayer().getPositionY() + this.getPositionY(),
-                GamePanel.NEW_TILE_SIZE,
-                GamePanel.NEW_TILE_SIZE,
-                gamePanel
-        );
-*/
+        if(this.getCurrentHealthPoints() < this.getMaxHealthPoints()) {
+            Shape healthBarOutside = new Rectangle2D.Double(
+                    (int) (GamePanel.WINDOW_WIDTH / 2) - game.getPlayer().getPositionX() + this.getPositionX() - 1,
+                    (int) (GamePanel.WINDOW_HEIGHT / 2) - game.getPlayer().getPositionY() + this.getPositionY() - 11,
+                    (GamePanel.NEW_TILE_SIZE + 2) * 0.6,
+                    3);
 
+
+            graph2D.setPaint(Color.black);
+            graph2D.draw(healthBarOutside);
+
+            Shape healthBarInside = new Rectangle2D.Double(
+                    (int) (GamePanel.WINDOW_WIDTH / 2) - game.getPlayer().getPositionX() + this.getPositionX(),
+                    (int) (GamePanel.WINDOW_HEIGHT / 2) - game.getPlayer().getPositionY() + this.getPositionY() - 10,
+                    ((double) GamePanel.NEW_TILE_SIZE / (double) this.getMaxHealthPoints() * (double) this.getCurrentHealthPoints()) * 0.6,
+                    3);
+
+
+            graph2D.setPaint(Color.RED);
+            graph2D.fill(healthBarInside);
+        }
 
         /*
-        Shape s = new Rectangle2D.Double(
+        Shape offsetCollision = new Rectangle2D.Double(
                 (int) (GamePanel.WINDOW_WIDTH / 2) - game.getPlayer().getPositionX() + this.getPositionX(),
                 (int) (GamePanel.WINDOW_HEIGHT / 2) - game.getPlayer().getPositionY() + this.getPositionY(),
                 GamePanel.NEW_TILE_SIZE,
                 GamePanel.NEW_TILE_SIZE);
 
         graph2D.setColor(Color.ORANGE);
-        graph2D.draw(s);
+        graph2D.draw(offsetCollision);
 
          */
     }

@@ -26,7 +26,9 @@ public abstract class Entity {
     private int positionX;
     private int positionY;
     private int movementSpeed;
-    private int healthPoints;
+    private int currentHealthPoints;
+    private int maxHealthPoints;
+
 
     private ArrayList<BufferedImage> entityAppearance;
 
@@ -54,7 +56,16 @@ public abstract class Entity {
         this.positionX = positionX;
         this.positionY = positionY;
         this.movementSpeed = movementSpeed;
-        this.healthPoints = healthPoints;
+        this.currentHealthPoints = healthPoints;
+        this.maxHealthPoints = healthPoints;
+    }
+
+    public int getMaxHealthPoints() {
+        return maxHealthPoints;
+    }
+
+    public void setMaxHealthPoints(int maxHealthPoints) {
+        this.maxHealthPoints = maxHealthPoints;
     }
 
     public int getPositionX() {
@@ -81,12 +92,12 @@ public abstract class Entity {
         this.movementSpeed = movementSpeed;
     }
 
-    public int getHealthPoints() {
-        return healthPoints;
+    public int getCurrentHealthPoints() {
+        return currentHealthPoints;
     }
 
-    public void setHealthPoints(int healthPoints) {
-        this.healthPoints = healthPoints;
+    public void setCurrentHealthPoints(int healthPoints) {
+        this.currentHealthPoints = healthPoints;
     }
 
     public ArrayList<BufferedImage> getEntityAppearance() {
@@ -170,7 +181,6 @@ public abstract class Entity {
             }
             entityFrames.put(animationName, animationFrames);
         }
-
         setCurrentAnimationType("walking");
     }
 

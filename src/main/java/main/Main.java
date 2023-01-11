@@ -8,8 +8,8 @@ import java.awt.*;
 public class Main {
 
     private static final int
-            STARTSCREEN_WIDTH = 990,    // image is 1000px - 990
-            STARTSCREEN_HEIGTH = 553;   // image is 563px - 553
+            STARTSCREEN_WIDTH = GamePanel.WINDOW_WIDTH,    // image is 1000px - 990
+            STARTSCREEN_HEIGTH = GamePanel.WINDOW_HEIGHT;   // image is 563px - 553
 
     public static String currentScreen, previousScreen;
     private static JPanel rootPanel, optionsPanel;

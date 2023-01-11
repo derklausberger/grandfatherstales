@@ -12,6 +12,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Arc2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -233,60 +236,8 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
                 }
             }
         }
-
-        /*
-        int startAngle = 0;
-        int arcAngle = 0;
-
-        if (keyHandler.attackPressed
-                && cooldown == 0) {
-            switch (keyHandler.lastPressed) {
-                case (KeyEvent.VK_W) -> {
-                    cooldown = 20;
-                    startAngle = 45;
-                    arcAngle = 90;
-
-                    int width = 200;
-                    int height = 200;
-
-                    game.getPlayer().draw((Graphics2D) this.getGraphics(), game, this, width, height, startAngle, arcAngle, entityArrayList);
-
-                }
-                case (KeyEvent.VK_A) -> {
-                    cooldown = 20;
-                    startAngle = 135;
-                    arcAngle = 90;
-
-                    int width = 200;
-                    int height = 200;
-
-                    game.getPlayer().draw((Graphics2D) this.getGraphics(), game, this, width, height, startAngle, arcAngle, entityArrayList);
-                }
-                case (KeyEvent.VK_S) -> {
-                    cooldown = 20;
-                    startAngle = 225;
-                    arcAngle = 90;
-
-                    int width = 200;
-                    int height = 200;
-
-                    game.getPlayer().draw((Graphics2D) this.getGraphics(), game, this, width, height, startAngle, arcAngle, entityArrayList);
-                }
-                case (KeyEvent.VK_D) -> {
-                    cooldown = 20;
-                    startAngle = 315;
-                    arcAngle = 90;
-
-                    int width = 200;
-                    int height = 200;
-
-                    game.getPlayer().draw((Graphics2D) this.getGraphics(), game, this, width, height, startAngle, arcAngle, entityArrayList);
-                }
-            }
-        }
-
-         */
     }
+
 
     @Override
     public void paint(Graphics graph) {
@@ -299,8 +250,52 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
             cooldown--;
         }
 
-        game.renderSolid(graph2D);
+        int startAngle = 0;
+        int arcAngle = 0;
+        int radius = 0;
 
+        if (keyHandler.attackPressed
+                && cooldown == 0) {
+            switch (keyHandler.lastPressed) {
+                case (KeyEvent.VK_W) -> {
+                    cooldown = 20;
+                    startAngle = 45;
+                    arcAngle = 90;
+                    radius = 100;
+
+                    System.out.println("W");
+                    game.getPlayer().draw((Graphics2D) this.getGraphics(), game, this, radius, startAngle, arcAngle, entityArrayList);
+                }
+                case (KeyEvent.VK_A) -> {
+                    cooldown = 20;
+                    startAngle = 135;
+                    arcAngle = 90;
+                    radius = 90;
+
+                    System.out.println("A");
+                    game.getPlayer().draw((Graphics2D) this.getGraphics(), game, this, radius, startAngle, arcAngle, entityArrayList);
+                }
+                case (KeyEvent.VK_S) -> {
+                    cooldown = 20;
+                    startAngle = 225;
+                    arcAngle = 90;
+                    radius = 100;
+
+                    System.out.println("S");
+                    game.getPlayer().draw((Graphics2D) this.getGraphics(), game, this, radius, startAngle, arcAngle, entityArrayList);
+                }
+                case (KeyEvent.VK_D) -> {
+                    cooldown = 20;
+                    startAngle = 315;
+                    arcAngle = 90;
+                    radius = 90;
+
+                    System.out.println("D");
+                    game.getPlayer().draw((Graphics2D) this.getGraphics(), game, this, radius, startAngle, arcAngle, entityArrayList);
+                }
+            }
+        }
+        game.renderSolid(graph2D);
         for (Entity entity : entityArrayList) {
             try {
                 entity.draw(graph2D, game, this);
@@ -309,7 +304,6 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
             }
         }
         game.renderTrees(graph2D);
-
         graph2D.dispose();
     }
 
