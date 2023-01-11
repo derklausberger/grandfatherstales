@@ -46,7 +46,7 @@ public class Enemy extends Entity {
         );
 
 
-        if(this.getCurrentHealthPoints() < this.getMaxHealthPoints()) {
+        if (this.getCurrentHealthPoints() < this.getMaxHealthPoints()) {
             Shape healthBarOutside = new Rectangle2D.Double(
                     (int) (GamePanel.WINDOW_WIDTH / 2) - game.getPlayer().getPositionX() + this.getPositionX() - 1,
                     (int) (GamePanel.WINDOW_HEIGHT / 2) - game.getPlayer().getPositionY() + this.getPositionY() - 11,

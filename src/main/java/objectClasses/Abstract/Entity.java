@@ -29,29 +29,12 @@ public abstract class Entity {
     private int currentHealthPoints;
     private int maxHealthPoints;
 
-
-    private ArrayList<BufferedImage> entityAppearance;
-
-
     private Map<String, AnimationFrame[]> entityFrames = new HashMap<>();
     private String currentAnimationType;
     private int currentFrame;
 
 
     public Entity(int positionX, int positionY, int movementSpeed, int healthPoints) {
-
-        entityAppearance = new ArrayList<>();
-
-        BufferedImage bi = null;
-
-        try {
-            bi = ImageIO.read(new File("src/main/resources/playerUp.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        assert false;
-        entityAppearance.add(bi);
 
         this.positionX = positionX;
         this.positionY = positionY;
@@ -98,10 +81,6 @@ public abstract class Entity {
 
     public void setCurrentHealthPoints(int healthPoints) {
         this.currentHealthPoints = healthPoints;
-    }
-
-    public ArrayList<BufferedImage> getEntityAppearance() {
-        return entityAppearance;
     }
 
     public void setCurrentAnimationType (String currentAnimationType) {

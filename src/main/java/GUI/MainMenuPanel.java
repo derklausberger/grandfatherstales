@@ -128,12 +128,9 @@ public class MainMenuPanel extends JPanel {
         AudioManager.init();
         // Loads the audio files
         AudioManager.load("src/main/resources/audio/music/Main Theme.wav", "M - mainTheme");
-        AudioManager.load("src/main/resources/audio/sounds/Sword Swipe 1.wav", "S - ssw1");
-        AudioManager.load("src/main/resources/audio/sounds/Sword Swipe 2.wav", "S - ssw2");
-        AudioManager.load("src/main/resources/audio/sounds/Sword Hit 1.wav", "S - sh1");
-        AudioManager.load("src/main/resources/audio/sounds/Hover 1.wav", "S - h1");
-        AudioManager.load("src/main/resources/audio/sounds/Click 1.wav", "S - c1");
-        AudioManager.load("src/main/resources/audio/sounds/Click 2.wav", "S - c2");
+        AudioManager.load("src/main/resources/audio/sounds/GUI/Hover 1.wav", "S - h1");
+        AudioManager.load("src/main/resources/audio/sounds/GUI/Click 1.wav", "S - c1");
+        AudioManager.load("src/main/resources/audio/sounds/GUI/Click 2.wav", "S - c2");
 
         AudioManager.setMusicVolume(1.0f);
         AudioManager.setSoundVolume(1.0f);
@@ -148,12 +145,6 @@ public class MainMenuPanel extends JPanel {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
-
-                // Creates an array of the sound names
-                String[] sounds = {"S - ssw1", "S - ssw1", "S - sh1"};
-                // Generates a random index
-                int index = (int)(Math.random() * sounds.length);
-                AudioManager.play(sounds[index]);
 
                 if (menuButtons.isVisible()) {
                     logo.setVisible(true);

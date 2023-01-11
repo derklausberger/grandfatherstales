@@ -157,7 +157,7 @@ public class AudioManager {
         // If the sound does not exist, does nothing
         if (c == null) return;
         // If the sound is already playing, stops it
-        if (c.isRunning()) c.stop();
+        if (c.isRunning()) return;
 
         // Sets the volume, loop points, position and then loops the sound continuously
         if (name.startsWith("S")) {

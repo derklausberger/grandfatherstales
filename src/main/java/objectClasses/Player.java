@@ -1,6 +1,7 @@
 package objectClasses;
 
 import GUI.AnimationFrame;
+import GUI.AudioManager;
 import GUI.GamePanel;
 import objectClasses.Abstract.Entity;
 import objectClasses.Abstract.Item;
@@ -46,6 +47,7 @@ public class Player extends Entity {
                     arc2D.contains(entity.getPositionX(), entity.getPositionY() + GamePanel.NEW_TILE_SIZE) ||
                     arc2D.contains(entity.getPositionX() + GamePanel.NEW_TILE_SIZE, entity.getPositionY() + GamePanel.NEW_TILE_SIZE)) {
                 if (!entity.equals(game.getPlayer())) {
+                    AudioManager.play("S - d");
                     entity.setCurrentHealthPoints(entity.getCurrentHealthPoints() - 1);
                     System.out.println("HIT HIT HIT HIT");
                 }

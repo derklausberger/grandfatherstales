@@ -6,10 +6,9 @@ import java.util.ArrayList;
 
 public class InputHandler implements KeyListener {
 
-    protected boolean upPressed, downPressed, leftPressed, rightPressed;
     protected boolean attackPressed, menuPressed;
-    protected int lastPressed = 10000, currentPressed, lastDirection;
-    public ArrayList<Integer> keys = new ArrayList<>();
+    protected int hitDirection = 10000, currentPressed, lastDirection;
+    public ArrayList<Integer> movementKeys = new ArrayList<>();
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -22,100 +21,66 @@ public class InputHandler implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int eventCode = e.getKeyCode();
 
-        if (!keys.contains(eventCode) && eventCode != KeyEvent.VK_C && eventCode != KeyEvent.VK_ESCAPE) {
-            keys.add(eventCode);
+        if (eventCode == KeyEvent.VK_ESCAPE) {
+            menuPressed = true;
+        } else if (eventCode == KeyEvent.VK_C) {
+            attackPressed = true;
         }
 
-        if (eventCode == KeyEvent.VK_W || eventCode == KeyEvent.VK_A ||
-                eventCode == KeyEvent.VK_S || eventCode == KeyEvent.VK_D ||
-                eventCode == KeyEvent.VK_C || eventCode == KeyEvent.VK_ESCAPE) {
-
-
-            if (lastPressed == 10000 && eventCode != KeyEvent.VK_C && eventCode != KeyEvent.VK_ESCAPE && !attackPressed) {
-                lastPressed = eventCode;
-
-                // Necessary, because e.g. the player moves upwards and attacks, he attacks upwards
-                // But, when moving in any other direction after that, not releasing that movement key
-                // and attacking again, it will attack facing the previous direction (upwards)
-                // instead of the current direction
-                lastDirection = eventCode;
+        // Only allows specified keys to be added to the key array
+        if (!movementKeys.contains(eventCode) && isMovementKey(eventCode)) {
+            if (movementKeys.size() < 2) {
+                movementKeys.add(eventCode);
             }
-
-            if (eventCode == KeyEvent.VK_W && lastPressed == eventCode) {
-                upPressed = true;
-            }
-            if (eventCode == KeyEvent.VK_A && lastPressed == eventCode) {
-                leftPressed = true;
-            }
-            if (eventCode == KeyEvent.VK_S && lastPressed == eventCode) {
-                downPressed = true;
-            }
-            if (eventCode == KeyEvent.VK_D && lastPressed == eventCode) {
-                rightPressed = true;
-            }
-
-            if (eventCode == KeyEvent.VK_ESCAPE) {
-                menuPressed = true;
-            }
-            if (eventCode == KeyEvent.VK_C) {
-
-                attackPressed = true;
-            }
-
         }
+
+        if (attackPressed && hitDirection == 10000) {
+            if (currentPressed == 10000) {
+                hitDirection = lastDirection;
+            } else {
+                hitDirection = currentPressed;
+            }
+        }
+
+        // If one key is pressed at a time, walks that direction
+        // If a second key is pressed additionally, overwrites the
+        // previous direction to that key
+        currentPressed = switch (movementKeys.size()) {
+            case 1 -> movementKeys.get(0);
+            case 2 -> movementKeys.get(1);
+            default -> 10000;
+        };
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         int eventCode = e.getKeyCode();
 
-        if (eventCode == KeyEvent.VK_W) {
-            upPressed = false;
-        }
-        if (eventCode == KeyEvent.VK_A) {
-            leftPressed = false;
-        }
-        if (eventCode == KeyEvent.VK_S) {
-            downPressed = false;
-        }
-        if (eventCode == KeyEvent.VK_D) {
-            rightPressed = false;
+        // Removes the movement key from the list
+        if (movementKeys.contains(eventCode)) {
+            movementKeys.remove(movementKeys.indexOf(eventCode));
         }
 
-        if (eventCode != KeyEvent.VK_C && eventCode != KeyEvent.VK_ESCAPE) {
-            keys.remove(keys.indexOf(eventCode));
-        }
+        // Changes the walking direction to the
+        // last direction or releases it
+        if (movementKeys.size() == 1) {
+            currentPressed = movementKeys.get(0);
+        } else if (movementKeys.size() == 0) {
 
-        if (eventCode == KeyEvent.VK_W || eventCode == KeyEvent.VK_A ||
-                eventCode == KeyEvent.VK_S || eventCode == KeyEvent.VK_D) {
-
-            if (keys.isEmpty()) {
-
-                if (!attackPressed) {
-
-                    lastDirection = lastPressed;
-                    lastPressed = 10000;
-                    //currentPressed = 10000;
-                }
-
-            } else {
-
-                if (keys.get(0) == KeyEvent.VK_W) {
-                    upPressed = true;
-                    lastPressed = KeyEvent.VK_W;
-                } else if (keys.get(0) == KeyEvent.VK_A) {
-                    leftPressed = true;
-                    lastPressed = KeyEvent.VK_A;
-                } else if (keys.get(0) == KeyEvent.VK_S) {
-                    downPressed = true;
-                    lastPressed = KeyEvent.VK_S;
-                } else if (keys.get(0) == KeyEvent.VK_D) {
-                    rightPressed = true;
-                    lastPressed = KeyEvent.VK_D;
-                }
-            }
-
+            lastDirection = currentPressed;
+            currentPressed = 10000;
         }
     }
 
+    private boolean isMovementKey(int eventCode) {
+
+        // Could read a file to check whether the movement
+        // keys are (W-A-S-D) or e.g. arrow keys
+        switch (eventCode) {
+            case KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D -> {
+                return true;
+            }
+        }
+        return false;
+    }
 }
