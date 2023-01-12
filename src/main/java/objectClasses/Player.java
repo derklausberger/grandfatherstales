@@ -47,7 +47,7 @@ public class Player extends Entity {
 
         this.life = life;
         this.weapon = new Weapon("Sword", RarityType.Common, null, 10, 100);
-        this.armor = new Armor("Armor", RarityType.Common, null, 5);
+        this.armor = new Armor("Armor", RarityType.Common, null, 10);
     }
 
     @Override

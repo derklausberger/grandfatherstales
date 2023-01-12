@@ -160,7 +160,12 @@ public class Enemy extends Entity {
                     arc2D.contains(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() + GamePanel.NEW_TILE_SIZE) ||
                     arc2D.contains(game.getPlayer().getPositionX() + GamePanel.NEW_TILE_SIZE, game.getPlayer().getPositionY() + GamePanel.NEW_TILE_SIZE)) {
 
-                game.getPlayer().setCurrentHealthPoints(game.getPlayer().getCurrentHealthPoints() - game.getPlayer().getArmor().getBlockAmount() - 10);
+                if(game.getPlayer().getArmor().getBlockAmount() >= 10) {
+                    System.out.println("was hit but no damage received");
+                } else {
+                    game.getPlayer().setCurrentHealthPoints(game.getPlayer().getCurrentHealthPoints() + game.getPlayer().getArmor().getBlockAmount() - 10);
+                }
+
                 System.out.println("Player was HIT");
                 if (game.getPlayer().getCurrentHealthPoints() <= 0) {
                     if (game.getPlayer().getLife() >= 1) {
