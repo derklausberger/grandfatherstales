@@ -20,6 +20,8 @@ public class Enemy extends Entity {
     private int cooldown = 0;
     private int duration = 35;
 
+    private int radiusOfPursuit;
+
     public Enemy(int positionX, int positionY, int movementSpeed, int healthPoints) {
 
         super(positionX, positionY, movementSpeed, healthPoints);
@@ -37,112 +39,112 @@ public class Enemy extends Entity {
     }
 
     public void detectPlayer(Game game) {
-        Ellipse2D detectPlayerCircle = getCircleByCenter(new Point2D.Double(getPositionX() + GamePanel.NEW_TILE_SIZE, getPositionY() + GamePanel.NEW_TILE_SIZE), 100);
+        Ellipse2D detectPlayerCircle =
+                getCircleByCenter(new Point2D.Double(
+                                getPositionX() + Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2),
+                                getPositionY() + Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2)),
+                        100);
 
-        if (detectPlayerCircle.contains(game.getPlayer().getPositionX(), game.getPlayer().getPositionY()) ||
-                detectPlayerCircle.contains(game.getPlayer().getPositionX() + GamePanel.NEW_TILE_SIZE, game.getPlayer().getPositionY()) ||
-                detectPlayerCircle.contains(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() + GamePanel.NEW_TILE_SIZE) ||
-                detectPlayerCircle.contains(game.getPlayer().getPositionX() + GamePanel.NEW_TILE_SIZE, game.getPlayer().getPositionY() + GamePanel.NEW_TILE_SIZE)) {
+        if (
+                detectPlayerCircle.contains(game.getPlayer().getPositionX(), game.getPlayer().getPositionY()) ||
+                        detectPlayerCircle.contains(game.getPlayer().getPositionX() + GamePanel.NEW_TILE_SIZE, game.getPlayer().getPositionY()) ||
+                        detectPlayerCircle.contains(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() + GamePanel.NEW_TILE_SIZE) ||
+                        detectPlayerCircle.contains(game.getPlayer().getPositionX() + GamePanel.NEW_TILE_SIZE, game.getPlayer().getPositionY() + GamePanel.NEW_TILE_SIZE)) {
             followPlayer(game);
         }
     }
 
     public void followPlayer(Game game) {
+
+        boolean up = false, down = false, left = false, right = false;
+
         Point2D playerMiddle = new Point2D.Double(game.getPlayer().getPositionX() + Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2), game.getPlayer().getPositionY() + Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2));
-        Point2D enemyMiddle = new Point2D.Double(getPositionX() - Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2), getPositionY() + Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2));
-        double distance = playerMiddle.distance(enemyMiddle);
+        Point2D enemyMiddle = new Point2D.Double(getPositionX() + Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2), getPositionY() + Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2));
 
-        if(distance <= 100) {
-            boolean up = false, down = false, left = false, right = false;
-            distance = playerMiddle.distance(enemyMiddle);
+        double angle = 0;
+        double theta = Math.atan2(playerMiddle.getY() - enemyMiddle.getY(), playerMiddle.getX() - enemyMiddle.getX());
+        double distance = enemyMiddle.distance(playerMiddle);
+        String bo = "";
 
-            ArrayList<String> toGO = new ArrayList<String>();
+        theta += Math.PI / 2.0;
+        angle = Math.toDegrees(theta);
 
-            toGO.clear();
+        if (angle < 0) {
+            angle += 360;
+        }
 
-            if (distance <= 30) {
-                attackPlayer(game);
+        if (angle >= 315 && angle < 359 || angle >= 0 && angle < 45) { // -> von 315 bis 45
+            up = true;
+            bo = "up";
+        } else if (angle >= 45 && angle < 135) { // -> von 45 bis 135
+            right = true;
+            bo = "right";
+        } else if (angle >= 135 && angle < 225) { // -> von 135 bis 225
+            down = true;
+            bo = "down";
+        } else if (angle >= 225 && angle < 315) { // -> von 225 bis 315
+            left = true;
+            bo = "left";
+        }
+
+        if (distance <= 80) {
+            attackPlayer(game, bo);
+        }
+
+        if (up) {
+            if (game.getCurrentLevel().isSolid(getPositionX() + Math.floorDiv(GamePanel.NEW_TILE_SIZE * 3, 10), getPositionY() - getMovementSpeed()) &&
+                    game.getCurrentLevel().isSolid(getPositionX() - Math.floorDiv(GamePanel.NEW_TILE_SIZE * 3, 10), getPositionY() - getMovementSpeed())) {
+                setPositionY(getPositionY() - getMovementSpeed());
             }
-
-            if (distance <= 100 && distance > 30) {
-                if (
-                        playerMiddle.getX() - enemyMiddle.getX() <= 0 &&
-                                playerMiddle.getY() - enemyMiddle.getY() <= 0
-                ) {
-                    toGO.add("up");
-                    toGO.add("left");
-                } else if (
-                        playerMiddle.getX() - enemyMiddle.getX() <= 0 &&
-                                playerMiddle.getY() - enemyMiddle.getY() >= 0
-                ) {
-                    toGO.add("down");
-                    toGO.add("left");
-                } else if (
-                        playerMiddle.getX() - enemyMiddle.getX() >= 0 &&
-                                playerMiddle.getY() - enemyMiddle.getY() <= 0
-                ) {
-                    toGO.add("up");
-                    toGO.add("right");
-                } else if (
-                        playerMiddle.getX() - enemyMiddle.getX() >= 0 &&
-                                playerMiddle.getY() - enemyMiddle.getY() >= 0
-                ) {
-                    toGO.add("down");
-                    toGO.add("right");
-                }
-
-
-                for (String string : toGO
-                ) {
-                    switch (string) {
-                        case "up" -> setPositionY(getPositionY() - 1);
-                        case "down" -> setPositionY(getPositionY() + 1);
-                        case "left" -> setPositionX(getPositionX() - 1);
-                        case "right" -> setPositionX(getPositionX() + 1);
-                    }
-                }
+        } else if (down) {
+            if (game.getCurrentLevel().isSolid(getPositionX() - Math.floorDiv(GamePanel.NEW_TILE_SIZE * 3, 10), getPositionY() + getMovementSpeed() + Math.floorDiv(GamePanel.NEW_TILE_SIZE * 4, 10)) &&
+                    game.getCurrentLevel().isSolid(getPositionX() + Math.floorDiv(GamePanel.NEW_TILE_SIZE * 3, 10), getPositionY() + getMovementSpeed() + Math.floorDiv(GamePanel.NEW_TILE_SIZE * 4, 10))) {
+                setPositionY(getPositionY() + getMovementSpeed());
+            }
+        } else if (left) {
+            if (game.getCurrentLevel().isSolid(getPositionX() - getMovementSpeed() - Math.floorDiv(GamePanel.NEW_TILE_SIZE * 3, 10), getPositionY() + Math.floorDiv(GamePanel.NEW_TILE_SIZE * 4, 10)) &&
+                    game.getCurrentLevel().isSolid(getPositionX() - getMovementSpeed() - Math.floorDiv(GamePanel.NEW_TILE_SIZE * 3, 10), getPositionY())) {
+                setPositionX(getPositionX() - getMovementSpeed());
+            }
+        } else if (right) {
+            if (game.getCurrentLevel().isSolid(getPositionX() + getMovementSpeed() + Math.floorDiv(GamePanel.NEW_TILE_SIZE * 3, 10), getPositionY()) &&
+                    game.getCurrentLevel().isSolid(getPositionX() + getMovementSpeed() + Math.floorDiv(GamePanel.NEW_TILE_SIZE * 3, 10), getPositionY() + Math.floorDiv(GamePanel.NEW_TILE_SIZE * 4, 10))) {
+                setPositionX(getPositionX() + getMovementSpeed());
             }
         }
     }
 
-    public void attackPlayer(Game game) {
+    public void attackPlayer(Game game, String bo) {
 
         Point2D playerMiddle = new Point2D.Double(game.getPlayer().getPositionX() + Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2), game.getPlayer().getPositionY() + Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2));
-        Point2D enemyMiddle = new Point2D.Double(getPositionX() - Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2), getPositionY() + Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2));
+        Point2D enemyMiddle = new Point2D.Double(getPositionX() + Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2), getPositionY() + Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2));
 
         int startAngle = 0;
         int arcAngle = 0;
 
 
         if (cooldown == 0) {
-            if (
-                    playerMiddle.getX() - enemyMiddle.getX() <= 0 &&
-                            playerMiddle.getY() - enemyMiddle.getY() <= 0
-            ) {
-                startAngle = 45;
-                arcAngle = 90;
-                System.out.println("enemy up attack");
-            } else if (
-                    playerMiddle.getX() - enemyMiddle.getX() <= 0 &&
-                            playerMiddle.getY() - enemyMiddle.getY() >= 0
-            ) {
-                startAngle = 135;
-                arcAngle = 90;
-                System.out.println("enemy left attack");
-            } else if (
-                    playerMiddle.getX() - enemyMiddle.getX() >= 0 &&
-                            playerMiddle.getY() - enemyMiddle.getY() <= 0
-            ) {
-                startAngle = 315;
-                arcAngle = 90;
-                System.out.println("enemy right attack");
-            } else if (
-                    playerMiddle.getX() - enemyMiddle.getX() >= 0 &&
-                            playerMiddle.getY() - enemyMiddle.getY() >= 0
-            ) {
-                startAngle = 225;
-                arcAngle = 90;
-                System.out.println("enemy down attack");
+            switch (bo) {
+                case "up" -> {
+                    startAngle = 45;
+                    arcAngle = 90;
+                    System.out.println("enemy up attack");
+                }
+                case "left" -> {
+                    startAngle = 135;
+                    arcAngle = 90;
+                    System.out.println("enemy left attack");
+                }
+                case "right" -> {
+                    startAngle = 315;
+                    arcAngle = 90;
+                    System.out.println("enemy right attack");
+                }
+                case "down" -> {
+                    startAngle = 225;
+                    arcAngle = 90;
+                    System.out.println("enemy down attack");
+                }
             }
 
             cooldown = duration;
@@ -160,7 +162,7 @@ public class Enemy extends Entity {
                     arc2D.contains(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() + GamePanel.NEW_TILE_SIZE) ||
                     arc2D.contains(game.getPlayer().getPositionX() + GamePanel.NEW_TILE_SIZE, game.getPlayer().getPositionY() + GamePanel.NEW_TILE_SIZE)) {
 
-                if(game.getPlayer().getArmor().getBlockAmount() >= 10) {
+                if (game.getPlayer().getArmor().getBlockAmount() >= 10) {
                     System.out.println("was hit but no damage received");
                 } else {
                     game.getPlayer().setCurrentHealthPoints(game.getPlayer().getCurrentHealthPoints() + game.getPlayer().getArmor().getBlockAmount() - 10);
