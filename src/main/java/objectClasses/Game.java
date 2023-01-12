@@ -1,6 +1,10 @@
 package objectClasses;
 
+import GUI.AudioManager;
 import GUI.GamePanel;
+import objectClasses.Abstract.Entity;
+import objectClasses.Abstract.Item;
+import objectClasses.Enum.RarityType;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -9,6 +13,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
+import java.awt.geom.Arc2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +34,7 @@ public class Game {
 
         int x = (int) ((getCurrentLevel().getEnterPos() % 32 + 0.5) * GamePanel.NEW_TILE_SIZE);
         int y = (getCurrentLevel().getEnterPos() / 32 + 1) * GamePanel.NEW_TILE_SIZE;
-        this.player = new Player(x, y, 3, 5, 3);
+        this.player = new Player(x, y, 3, 100, 3);
     }
 
     public Player getPlayer() {
@@ -129,6 +134,47 @@ public class Game {
                     GamePanel.NEW_TILE_SIZE, GamePanel.NEW_TILE_SIZE,
                     null);
             //}
+        }
+    }
+
+    public void checkPlayerAttack(int startAngle, int arcAngle) {
+
+        /*
+        Arc2D arc = new Arc2D.Double();
+        arc.setArcByCenter((Math.floorDiv(GamePanel.WINDOW_WIDTH, 2)),
+                (Math.floorDiv(GamePanel.WINDOW_HEIGHT, 2)),
+                radius, startAngle, arcAngle, Arc2D.PIE);
+
+        graph2D.setColor(Color.red);
+        graph2D.draw(arc);
+         */
+
+        Arc2D arc2D = new Arc2D.Double();
+        arc2D.setArcByCenter(
+                getPlayer().getPositionX(),
+                getPlayer().getPositionY(),
+                player.getWeapon().getAttackRange(),
+                startAngle, arcAngle,
+                Arc2D.PIE);
+
+        ArrayList<Enemy> alreadyHit = new ArrayList<>();
+        for (Enemy enemy : GamePanel.enemyArrayList) {
+            if (arc2D.contains(enemy.getPositionX(), enemy.getPositionY()) ||
+                    arc2D.contains(enemy.getPositionX() + GamePanel.NEW_TILE_SIZE, enemy.getPositionY()) ||
+                    arc2D.contains(enemy.getPositionX(), enemy.getPositionY() + GamePanel.NEW_TILE_SIZE) ||
+                    arc2D.contains(enemy.getPositionX() + GamePanel.NEW_TILE_SIZE, enemy.getPositionY() + GamePanel.NEW_TILE_SIZE)) {
+                if(!alreadyHit.contains(enemy)) {
+                    alreadyHit.add(enemy);
+                    System.out.println(alreadyHit.contains(enemy));
+                    for (Enemy enemy2 : alreadyHit) {System.out.println(enemy2);}
+                    AudioManager.play("S - d");
+                    enemy.setCurrentHealthPoints(enemy.getCurrentHealthPoints() - player.getWeapon().getAttackAmount());
+                    if (enemy.getCurrentHealthPoints() <= 0) {
+                        GamePanel.enemyArrayList.remove(enemy);
+                        break;
+                    }
+                }
+            }
         }
     }
 }

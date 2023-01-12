@@ -4,6 +4,7 @@ import main.Main;
 import objectClasses.Abstract.Entity;
 import objectClasses.Enemy;
 import objectClasses.Game;
+import objectClasses.Player;
 import org.xml.sax.SAXException;
 
 import javax.swing.*;
@@ -43,7 +44,8 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
 
 
     private final Game game;
-    public static ArrayList<Entity> entityArrayList = new ArrayList<>();
+    public static ArrayList<Enemy> enemyArrayList = new ArrayList<Enemy>();
+    public static ArrayList<Player> playerArrayList = new ArrayList<Player>();
 
     // This variable will keep track of the current frame of the animation
     public static int currentFrame = 0;
@@ -62,18 +64,14 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
 
         loadAudio();
 
-        entityArrayList.add(game.getPlayer());
-
-        for (Enemy e : game.getCurrentLevel().getEnemies()) {
-            entityArrayList.add(e);
-        }
+        playerArrayList.add(game.getPlayer());
+        enemyArrayList.addAll(game.getCurrentLevel().getEnemies());
 
         startPlayerThread();
 
         // Set up the timer to fire every 100 milliseconds (10 frames per second)
         timer = new Timer(110, this);
         timer.start();
-
     }
 
     // Problem: when timed "badly", the first frame gets cut off
@@ -256,57 +254,49 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
 
         int startAngle = 0;
         int arcAngle = 0;
-        int radius = 0;
+        int duration = 35;
+        // -> Seems like 35 is the edge for not hitting twice
+        // below 35 it does hit twice??
 
         if (keyHandler.attackPressed
                 && cooldown == 0) {
-            switch (keyHandler.hitDirection) {
+            switch (keyHandler.lastDirection) {
                 case (KeyEvent.VK_W) -> {
-                    cooldown = 20;
+                    cooldown = duration;
                     startAngle = 45;
                     arcAngle = 90;
-                    radius = 100;
-
-                    System.out.println("W");
-                    game.getPlayer().draw((Graphics2D) this.getGraphics(), game, this, radius, startAngle, arcAngle, entityArrayList);
+                    game.checkPlayerAttack(startAngle, arcAngle);
                 }
                 case (KeyEvent.VK_A) -> {
-                    cooldown = 20;
+                    cooldown = duration;
                     startAngle = 135;
                     arcAngle = 90;
-                    radius = 90;
-
-                    System.out.println("A");
-                    game.getPlayer().draw((Graphics2D) this.getGraphics(), game, this, radius, startAngle, arcAngle, entityArrayList);
+                    game.checkPlayerAttack(startAngle, arcAngle);
                 }
                 case (KeyEvent.VK_S) -> {
-                    cooldown = 20;
+                    cooldown = duration;
                     startAngle = 225;
                     arcAngle = 90;
-                    radius = 100;
-
-                    System.out.println("S");
-                    game.getPlayer().draw((Graphics2D) this.getGraphics(), game, this, radius, startAngle, arcAngle, entityArrayList);
+                    game.checkPlayerAttack(startAngle, arcAngle);
                 }
                 case (KeyEvent.VK_D) -> {
-                    cooldown = 20;
+                    cooldown = duration;
                     startAngle = 315;
                     arcAngle = 90;
-                    radius = 90;
-
-                    System.out.println("D");
-                    game.getPlayer().draw((Graphics2D) this.getGraphics(), game, this, radius, startAngle, arcAngle, entityArrayList);
+                    game.checkPlayerAttack(startAngle, arcAngle);
                 }
             }
         }
-        game.renderSolid(graph2D);
-        for (Entity entity : entityArrayList) {
-            try {
-                entity.draw(graph2D, game, this);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+        for (Enemy enemy: enemyArrayList) {
+            enemy.reduceCooldown();
+            enemy.detectPlayer(game);
+
         }
+
+        game.renderSolid(graph2D);
+        for (Player player : playerArrayList) { player.draw(graph2D, game, this);}
+        for (Enemy enemy : enemyArrayList) { enemy.draw(graph2D, game, this);}
         game.renderTrees(graph2D);
         graph2D.dispose();
     }

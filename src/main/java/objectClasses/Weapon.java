@@ -3,25 +3,31 @@ package objectClasses;
 import objectClasses.Abstract.Item;
 import objectClasses.Enum.RarityType;
 
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+import java.awt.*;
 
 public class Weapon extends Item {
     private int attackAmount;
     private int attackRange;
 
-    private ArrayList<BufferedImage> entityAnimationAppearance;
-    private int entityAnimationDuration;
+    public int getAttackAmount() {
+        return attackAmount;
+    }
 
-    public Weapon(String name, RarityType rarity, BufferedImage entityAppearance, int attackAmount,
-                  int attackRange, ArrayList<BufferedImage> entityAnimationAppearance,
-                  int entityAnimationDuration) {
+    public void setAttackAmount(int attackAmount) {
+        this.attackAmount = attackAmount;
+    }
 
-        super(name, rarity, entityAppearance);
+    public int getAttackRange() {
+        return attackRange;
+    }
 
+    public void setAttackRange(int attackRange) {
+        this.attackRange = attackRange;
+    }
+
+    public Weapon(String name, RarityType rarity, Image image, int attackAmount, int attackRange) {
+        super(name, rarity, image);
         this.attackAmount = attackAmount;
         this.attackRange = attackRange;
-        this.entityAnimationAppearance = entityAnimationAppearance;
-        this.entityAnimationDuration = entityAnimationDuration;
     }
 }

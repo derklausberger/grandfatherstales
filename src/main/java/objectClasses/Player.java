@@ -5,16 +5,40 @@ import GUI.AudioManager;
 import GUI.GamePanel;
 import objectClasses.Abstract.Entity;
 import objectClasses.Abstract.Item;
+import objectClasses.Enum.RarityType;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.*;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Player extends Entity {
     private int life;
-    private ArrayList<Item> items;
+    private Weapon weapon;
+    private Armor armor;
+
+    public int getLife() {
+        return life;
+    }
+
+    public void setLife(int life) {
+        this.life = life;
+    }
+
+    public Weapon getWeapon() {
+        return weapon;
+    }
+
+    public void setWeapon(Weapon weapon) {
+        this.weapon = weapon;
+    }
+
+    public Armor getArmor() {
+        return armor;
+    }
+
+    public void setArmor(Armor armor) {
+        this.armor = armor;
+    }
 
     public Player(int positionX, int positionY, int movementSpeed, int healthPoints, int life) {
 
@@ -22,44 +46,9 @@ public class Player extends Entity {
         super.loadAnimationFrames("character");
 
         this.life = life;
+        this.weapon = new Weapon("Sword", RarityType.Common, null, 10, 100);
+        this.armor = new Armor("Armor", RarityType.Common, null, 5);
     }
-
-    public void draw(Graphics2D graph2D, Game game, GamePanel gamePanel, int radius, int startAngle, int arcAngle, ArrayList<Entity> entityArrayList) {
-
-        /*
-        Arc2D arc = new Arc2D.Double();
-        arc.setArcByCenter((Math.floorDiv(GamePanel.WINDOW_WIDTH, 2)),
-                (Math.floorDiv(GamePanel.WINDOW_HEIGHT, 2)),
-                radius, startAngle, arcAngle, Arc2D.PIE);
-
-        graph2D.setColor(Color.red);
-        graph2D.draw(arc);
-
-         */
-
-        Arc2D arc2D = new Arc2D.Double();
-        arc2D.setArcByCenter(game.getPlayer().getPositionX(), game.getPlayer().getPositionY(), radius, startAngle, arcAngle, Arc2D.PIE);
-
-
-        for (Entity entity : entityArrayList) {
-            if (arc2D.contains(entity.getPositionX(), entity.getPositionY()) ||
-                    arc2D.contains(entity.getPositionX() + GamePanel.NEW_TILE_SIZE, entity.getPositionY()) ||
-                    arc2D.contains(entity.getPositionX(), entity.getPositionY() + GamePanel.NEW_TILE_SIZE) ||
-                    arc2D.contains(entity.getPositionX() + GamePanel.NEW_TILE_SIZE, entity.getPositionY() + GamePanel.NEW_TILE_SIZE)) {
-                if (!entity.equals(game.getPlayer())) {
-                    AudioManager.play("S - d");
-                    entity.setCurrentHealthPoints(entity.getCurrentHealthPoints() - 1);
-                    System.out.println("HIT HIT HIT HIT");
-                }
-                if (entity.getCurrentHealthPoints() <= 0) {
-                    System.out.println("was deleted");
-                    GamePanel.entityArrayList.remove(entity);
-                    break; // -> Move to game then remove break;
-                }
-            }
-        }
-    }
-
 
     @Override
     public void draw(Graphics2D graph2D, Game game, GamePanel gamePanel) {
@@ -67,14 +56,42 @@ public class Player extends Entity {
         int x = (int) ((GamePanel.WINDOW_WIDTH - GamePanel.NEW_TILE_SIZE) / 2),
                 y = (int) ((GamePanel.WINDOW_HEIGHT - GamePanel.NEW_TILE_SIZE) / 2);
 
+        Rectangle2D rec = new Rectangle((GamePanel.WINDOW_WIDTH - GamePanel.NEW_TILE_SIZE) / 2, (GamePanel.WINDOW_HEIGHT - GamePanel.NEW_TILE_SIZE) / 2, GamePanel.NEW_TILE_SIZE, GamePanel.NEW_TILE_SIZE);
+        graph2D.setPaint(Color.CYAN);
+        graph2D.draw(rec);
+
+        if (this.getCurrentHealthPoints() < this.getMaxHealthPoints()) {
+            Shape healthBarOutside = new Rectangle2D.Double(
+                    (int) (GamePanel.WINDOW_WIDTH - GamePanel.NEW_TILE_SIZE)/ 2 - 1,
+                    (int) (GamePanel.WINDOW_HEIGHT - GamePanel.NEW_TILE_SIZE)/ 2 - 11,
+                    (GamePanel.NEW_TILE_SIZE + 2),
+                    3);
+
+
+            graph2D.setPaint(Color.black);
+            graph2D.draw(healthBarOutside);
+
+            Shape healthBarInside = new Rectangle2D.Double(
+                    (int) (GamePanel.WINDOW_WIDTH - GamePanel.NEW_TILE_SIZE)/ 2,
+                    (int) (GamePanel.WINDOW_HEIGHT - GamePanel.NEW_TILE_SIZE)/ 2 - 10,
+                    ((double) GamePanel.NEW_TILE_SIZE / (double) this.getMaxHealthPoints() * (double) this.getCurrentHealthPoints()),
+                    3);
+
+
+            graph2D.setPaint(Color.RED);
+            graph2D.fill(healthBarInside);
+        }
+
         // The current frame
         AnimationFrame frame = getEntityFrames(getCurrentAnimationType())[getCurrentFrame()];
 
         // Draws the character
-        graph2D.drawImage(
-                frame.getImage(),
-                x + frame.getXOffset(), y + frame.getYOffset(),
-                frame.getWidth(), frame.getHeight(), gamePanel
+        graph2D.drawImage(frame.getImage(),
+                x + frame.getXOffset(),
+                y + frame.getYOffset(),
+                frame.getWidth(),
+                frame.getHeight(),
+                gamePanel
         );
     }
 }
