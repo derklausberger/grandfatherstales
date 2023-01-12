@@ -2,6 +2,7 @@ package objectClasses;
 
 import GUI.GamePanel;
 import objectClasses.Abstract.Entity;
+import objectClasses.Enum.EntityTypes;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -167,7 +168,7 @@ public class Level {
                 y = random.nextInt(32) * GamePanel.NEW_TILE_SIZE;
 
             } while (!isSolid(x,y));
-            Enemy e = new Enemy(x,y,1,52);
+            Enemy e = new Enemy(x,y,1,52, EntityTypes.skeletonWarrior);
             enemies.add(e);
         }
         return enemies;

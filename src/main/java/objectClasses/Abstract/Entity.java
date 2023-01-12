@@ -17,7 +17,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import objectClasses.Armor;
+import objectClasses.Enum.EntityTypes;
+import objectClasses.Enum.RarityType;
 import objectClasses.Game;
+import objectClasses.Weapon;
 
 import javax.imageio.ImageIO;
 
@@ -26,21 +30,89 @@ public abstract class Entity {
     private int positionX;
     private int positionY;
     private int movementSpeed;
-    private int currentHealthPoints;
+
+    private EntityTypes entityType;
+
+    private Weapon weapon;
+    private Armor armor;
+
+    private int cooldown;
+    private int duration;
+
     private int maxHealthPoints;
+    private int currentHealthPoints;
 
     private Map<String, AnimationFrame[]> entityFrames = new HashMap<>();
     private String currentAnimationType;
     private int currentFrame;
 
-
-    public Entity(int positionX, int positionY, int movementSpeed, int healthPoints) {
+    public Entity(int positionX, int positionY, int movementSpeed, int healthPoints, EntityTypes entityType) {
 
         this.positionX = positionX;
         this.positionY = positionY;
         this.movementSpeed = movementSpeed;
+
         this.currentHealthPoints = healthPoints;
         this.maxHealthPoints = healthPoints;
+        this.entityType = entityType;
+
+        loadAnimationFrames(entityType.toString());
+    }
+
+    public void reduceCooldown() {
+        if (cooldown < 0) {
+            cooldown = 0;
+        } else {
+            cooldown--;
+        }
+    }
+
+    public EntityTypes getEntityType() {
+        return entityType;
+    }
+
+    public void setEntityType(EntityTypes entityType) {
+        this.entityType = entityType;
+    }
+
+    public int getCooldown() {
+        return cooldown;
+    }
+
+    public void setCooldown(int cooldown) {
+        this.cooldown = cooldown;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public Weapon getWeapon() {
+        if(this.weapon == null) {
+            this.weapon = new Weapon("Sword", RarityType.Common, null, 5, 100);
+            return this.weapon;
+        }
+        return this.weapon;
+    }
+
+    public void setWeapon(Weapon weapon) {
+        this.weapon = weapon;
+    }
+
+    public Armor getArmor() {
+        if (this.armor == null) {
+            this.setArmor(new Armor("Armor", RarityType.Common, null, 3));
+            return this.armor;
+        }
+        return this.armor;
+    }
+
+    public void setArmor(Armor armor) {
+        this.armor = armor;
     }
 
     public int getMaxHealthPoints() {
@@ -83,11 +155,11 @@ public abstract class Entity {
         this.currentHealthPoints = healthPoints;
     }
 
-    public void setCurrentAnimationType (String currentAnimationType) {
+    public void setCurrentAnimationType(String currentAnimationType) {
         this.currentAnimationType = currentAnimationType;
     }
 
-    public String getCurrentAnimationType () {
+    public String getCurrentAnimationType() {
         return currentAnimationType;
     }
 

@@ -4,6 +4,7 @@ import GUI.AudioManager;
 import GUI.GamePanel;
 import objectClasses.Abstract.Entity;
 import objectClasses.Abstract.Item;
+import objectClasses.Enum.EntityTypes;
 import objectClasses.Enum.RarityType;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -13,7 +14,9 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.geom.Arc2D;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +37,7 @@ public class Game {
 
         int x = (int) ((getCurrentLevel().getEnterPos() % 32 + 0.5) * GamePanel.NEW_TILE_SIZE);
         int y = (getCurrentLevel().getEnterPos() / 32 + 1) * GamePanel.NEW_TILE_SIZE;
-        this.player = new Player(x, y, 3, 100, 3);
+        this.player = new Player(x, y, 3, 100, 3, EntityTypes.character);
     }
 
     public Player getPlayer() {
@@ -137,41 +140,63 @@ public class Game {
         }
     }
 
-    public void checkPlayerAttack(int startAngle, int arcAngle) {
+    public void checkPlayerAttack() {
+        int startAngle = 0, arcAngle = 0;
 
-        /*
-        Arc2D arc = new Arc2D.Double();
-        arc.setArcByCenter((Math.floorDiv(GamePanel.WINDOW_WIDTH, 2)),
-                (Math.floorDiv(GamePanel.WINDOW_HEIGHT, 2)),
-                radius, startAngle, arcAngle, Arc2D.PIE);
+        if (player.getKeyHandler().attackPressed
+                && player.getCooldown() == 0) {
+            switch (player.getKeyHandler().lastDirection) {
+                case (KeyEvent.VK_W) -> {
+                    startAngle = 45;
+                    arcAngle = 90;
+                }
+                case (KeyEvent.VK_A) -> {
+                    startAngle = 135;
+                    arcAngle = 90;
+                }
+                case (KeyEvent.VK_S) -> {
+                    startAngle = 225;
+                    arcAngle = 90;
+                }
+                case (KeyEvent.VK_D) -> {
+                    startAngle = 315;
+                    arcAngle = 90;
+                }
+            }
 
-        graph2D.setColor(Color.red);
-        graph2D.draw(arc);
-         */
+            player.setCooldown(player.getDuration());
 
-        Arc2D arc2D = new Arc2D.Double();
-        arc2D.setArcByCenter(
-                getPlayer().getPositionX(),
-                getPlayer().getPositionY(),
-                player.getWeapon().getAttackRange(),
-                startAngle, arcAngle,
-                Arc2D.PIE);
+            Point2D point2D = new Point2D.Double(getPlayer().getPositionX() + GamePanel.NEW_TILE_SIZE / 2, getPlayer().getPositionY() + GamePanel.NEW_TILE_SIZE / 2);
 
-        ArrayList<Enemy> alreadyHit = new ArrayList<>();
-        for (Enemy enemy : GamePanel.enemyArrayList) {
-            if (arc2D.contains(enemy.getPositionX(), enemy.getPositionY()) ||
-                    arc2D.contains(enemy.getPositionX() + GamePanel.NEW_TILE_SIZE, enemy.getPositionY()) ||
-                    arc2D.contains(enemy.getPositionX(), enemy.getPositionY() + GamePanel.NEW_TILE_SIZE) ||
-                    arc2D.contains(enemy.getPositionX() + GamePanel.NEW_TILE_SIZE, enemy.getPositionY() + GamePanel.NEW_TILE_SIZE)) {
-                if(!alreadyHit.contains(enemy)) {
-                    alreadyHit.add(enemy);
-                    System.out.println(alreadyHit.contains(enemy));
-                    for (Enemy enemy2 : alreadyHit) {System.out.println(enemy2);}
-                    AudioManager.play("S - d");
-                    enemy.setCurrentHealthPoints(enemy.getCurrentHealthPoints() - player.getWeapon().getAttackAmount());
-                    if (enemy.getCurrentHealthPoints() <= 0) {
-                        GamePanel.enemyArrayList.remove(enemy);
-                        break;
+            Arc2D arc2D = new Arc2D.Double();
+            arc2D.setArcByCenter(
+                    point2D.getX(),
+                    point2D.getY(),
+                    player.getWeapon().getAttackRange(),
+                    startAngle, arcAngle,
+                    Arc2D.PIE);
+
+            ArrayList<Enemy> alreadyHit = new ArrayList<>();
+            for (Enemy enemy : GamePanel.enemyArrayList) {
+                if (arc2D.contains(enemy.getPositionX(), enemy.getPositionY()) ||
+                        arc2D.contains(enemy.getPositionX() + GamePanel.NEW_TILE_SIZE, enemy.getPositionY()) ||
+                        arc2D.contains(enemy.getPositionX(), enemy.getPositionY() + GamePanel.NEW_TILE_SIZE) ||
+                        arc2D.contains(enemy.getPositionX() + GamePanel.NEW_TILE_SIZE, enemy.getPositionY() + GamePanel.NEW_TILE_SIZE)) {
+                    if (!alreadyHit.contains(enemy)) {
+                        alreadyHit.add(enemy);
+
+                        AudioManager.play("S - d");
+
+                        if (enemy.getArmor().getBlockAmount() >= player.getWeapon().getAttackAmount()) {
+
+                        } else {
+                            enemy.setCurrentHealthPoints(enemy.getCurrentHealthPoints() + enemy.getArmor().getBlockAmount() - player.getWeapon().getAttackAmount());
+                            System.out.println("hier");
+                        }
+                        if (enemy.getCurrentHealthPoints() <= 0) {
+                            GamePanel.enemyArrayList.remove(enemy);
+                            break;
+                        }
                     }
                 }
             }

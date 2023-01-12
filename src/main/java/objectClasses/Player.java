@@ -3,8 +3,10 @@ package objectClasses;
 import GUI.AnimationFrame;
 import GUI.AudioManager;
 import GUI.GamePanel;
+import GUI.InputHandler;
 import objectClasses.Abstract.Entity;
 import objectClasses.Abstract.Item;
+import objectClasses.Enum.EntityTypes;
 import objectClasses.Enum.RarityType;
 
 import java.awt.*;
@@ -13,8 +15,39 @@ import java.util.ArrayList;
 
 public class Player extends Entity {
     private int life;
-    private Weapon weapon;
-    private Armor armor;
+    private InputHandler keyHandler;
+    private boolean invincibility;
+    private int invincibilityCooldown;
+    private int invincibilityDuration;
+
+    public void triggerInvincibility() {
+        this.invincibility = false; // -> he is safe just protection shield is gone
+        this.invincibilityCooldown = 55;
+        this.invincibilityDuration = 10; // -> safe for 20
+    }
+
+    public void reduceInvincibilityCooldown() {
+        if (this.invincibilityDuration > 0) {
+            this.invincibilityDuration--;
+        } else {
+            this.invincibilityDuration = 0;
+            if (this.invincibilityCooldown <= 0) {
+                this.invincibilityCooldown = 0;
+                this.invincibility = true;
+            } else {
+                this.invincibilityCooldown--;
+            }
+        }
+    }
+
+    public boolean isInvincibility() {
+        return invincibility;
+    }
+
+    public int getInvincibilityCooldown() {
+        return invincibilityCooldown;
+    }
+
 
     public int getLife() {
         return life;
@@ -24,60 +57,46 @@ public class Player extends Entity {
         this.life = life;
     }
 
-    public Weapon getWeapon() {
-        return weapon;
+    public InputHandler getKeyHandler() {
+        return this.keyHandler;
     }
 
-    public void setWeapon(Weapon weapon) {
-        this.weapon = weapon;
-    }
+    public Player(int positionX, int positionY, int movementSpeed, int healthPoints, int life, EntityTypes entityTypes) {
 
-    public Armor getArmor() {
-        return armor;
-    }
-
-    public void setArmor(Armor armor) {
-        this.armor = armor;
-    }
-
-    public Player(int positionX, int positionY, int movementSpeed, int healthPoints, int life) {
-
-        super(positionX, positionY, movementSpeed, healthPoints);
-        super.loadAnimationFrames("character");
-
+        super(positionX, positionY, movementSpeed, healthPoints, entityTypes);
         this.life = life;
-        this.weapon = new Weapon("Sword", RarityType.Common, null, 10, 100);
-        this.armor = new Armor("Armor", RarityType.Common, null, 10);
+        this.invincibility = true;
+        this.invincibilityCooldown = 0;
+        this.keyHandler = new InputHandler();
+
+        super.setWeapon(new Weapon("Sword", RarityType.Common, null, 10, 100));
+        super.setArmor(new Armor("Armor", RarityType.Common, null, 3));
+
+        super.setDuration(15);
+
     }
 
     @Override
     public void draw(Graphics2D graph2D, Game game, GamePanel gamePanel) {
 
-        int x = (int) ((GamePanel.WINDOW_WIDTH - GamePanel.NEW_TILE_SIZE) / 2),
-                y = (int) ((GamePanel.WINDOW_HEIGHT - GamePanel.NEW_TILE_SIZE) / 2);
-
-        Rectangle2D rec = new Rectangle((GamePanel.WINDOW_WIDTH - GamePanel.NEW_TILE_SIZE) / 2, (GamePanel.WINDOW_HEIGHT - GamePanel.NEW_TILE_SIZE) / 2, GamePanel.NEW_TILE_SIZE, GamePanel.NEW_TILE_SIZE);
-        graph2D.setPaint(Color.CYAN);
-        graph2D.draw(rec);
+        int x = (int) ((GamePanel.WINDOW_WIDTH - GamePanel.NEW_TILE_SIZE) / 2);
+        int y = (int) ((GamePanel.WINDOW_HEIGHT - GamePanel.NEW_TILE_SIZE) / 2);
 
         if (this.getCurrentHealthPoints() < this.getMaxHealthPoints()) {
             Shape healthBarOutside = new Rectangle2D.Double(
-                    (int) (GamePanel.WINDOW_WIDTH - GamePanel.NEW_TILE_SIZE)/ 2 - 1,
-                    (int) (GamePanel.WINDOW_HEIGHT - GamePanel.NEW_TILE_SIZE)/ 2 - 11,
-                    (GamePanel.NEW_TILE_SIZE + 2),
+                    (double) Math.floorDiv(GamePanel.WINDOW_WIDTH - GamePanel.NEW_TILE_SIZE, 2) - 1,
+                    (double) Math.floorDiv(GamePanel.WINDOW_HEIGHT - GamePanel.NEW_TILE_SIZE, 2) - 11,
+                    GamePanel.NEW_TILE_SIZE + 2,
                     3);
 
+            Shape healthBarInside = new Rectangle2D.Double(
+                    (double) (GamePanel.WINDOW_WIDTH - GamePanel.NEW_TILE_SIZE) / 2,
+                    (double) (GamePanel.WINDOW_HEIGHT - GamePanel.NEW_TILE_SIZE) / 2 - 10,
+                    (double) GamePanel.NEW_TILE_SIZE / (double) this.getMaxHealthPoints() * (double) this.getCurrentHealthPoints(),
+                    3);
 
             graph2D.setPaint(Color.black);
             graph2D.draw(healthBarOutside);
-
-            Shape healthBarInside = new Rectangle2D.Double(
-                    (int) (GamePanel.WINDOW_WIDTH - GamePanel.NEW_TILE_SIZE)/ 2,
-                    (int) (GamePanel.WINDOW_HEIGHT - GamePanel.NEW_TILE_SIZE)/ 2 - 10,
-                    ((double) GamePanel.NEW_TILE_SIZE / (double) this.getMaxHealthPoints() * (double) this.getCurrentHealthPoints()),
-                    3);
-
-
             graph2D.setPaint(Color.RED);
             graph2D.fill(healthBarInside);
         }

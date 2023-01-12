@@ -32,10 +32,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
     public static final int WINDOW_WIDTH = NEW_TILE_SIZE * MAX_SCREEN_COL; // 768 pixel
     public static final int WINDOW_HEIGHT = NEW_TILE_SIZE * MAX_SCREEN_ROW; // 576 pixel
 
-    InputHandler keyHandler = new InputHandler(); // own class
     Thread playerThread = null;
-
-    int cooldown = 0;
 
     int FPS = 60;
     // needed because repaint() is called depending
@@ -58,7 +55,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
 
         this.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
         this.setBackground(new Color(39, 105, 195));
-        this.addKeyListener(keyHandler); // adds Listener
+        this.addKeyListener(game.getPlayer().getKeyHandler()); // adds Listener
         this.setDoubleBuffered(true); // improves rendering
         this.setFocusable(true); // GamePanel "focused" to receive key input
 
@@ -84,7 +81,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
 
     public void actionPerformed(ActionEvent e) {
 
-        if (!keyHandler.attackPressed) {
+        if (!game.getPlayer().getKeyHandler().attackPressed) {
             currentFrame++;
 
             // End of walking animation
@@ -101,11 +98,11 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
 
                 // Sets last direction so the character faces the same
                 // direction after attacking as during the animation
-                keyHandler.lastDirection = keyHandler.hitDirection;
+                game.getPlayer().getKeyHandler().lastDirection = game.getPlayer().getKeyHandler().hitDirection;
 
                 // Releases hit direction to be newly assigned when attacking again
-                keyHandler.hitDirection = 10000;
-                keyHandler.attackPressed = false;
+                game.getPlayer().getKeyHandler().hitDirection = 10000;
+                game.getPlayer().getKeyHandler().attackPressed = false;
                 game.getPlayer().setCurrentAnimationType("walking");
             }
         }
@@ -162,17 +159,17 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
 
     public void update() throws IOException {
 
-        if (keyHandler.menuPressed) {
-            keyHandler.menuPressed = false;
+        if (game.getPlayer().getKeyHandler().menuPressed) {
+            game.getPlayer().getKeyHandler().menuPressed = false;
             Main.showOptionsScreen();
         }
 
-        if (!keyHandler.attackPressed) {
+        if (!game.getPlayer().getKeyHandler().attackPressed) {
 
             AudioManager.loop("S - w");
             game.getPlayer().setCurrentAnimationType("walking");
 
-            if (keyHandler.currentPressed == KeyEvent.VK_W) {
+            if (game.getPlayer().getKeyHandler().currentPressed == KeyEvent.VK_W) {
                 game.getPlayer().setCurrentFrame(currentFrame + 27);
 
                 if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed()) &&
@@ -181,21 +178,21 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
                 } else if (game.getCurrentLevel().isChest(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() - Math.floorDiv(NEW_TILE_SIZE, 10))) {
                     System.out.println("chest!");
                 }
-            } else if (keyHandler.currentPressed == KeyEvent.VK_S) {
+            } else if (game.getPlayer().getKeyHandler().currentPressed == KeyEvent.VK_S) {
                 game.getPlayer().setCurrentFrame(currentFrame);
 
                 if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE * 4, 10)) &&
                         game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE * 4, 10))) {
                     game.getPlayer().setPositionY(game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed());
                 }
-            } else if (keyHandler.currentPressed == KeyEvent.VK_A) {
+            } else if (game.getPlayer().getKeyHandler().currentPressed == KeyEvent.VK_A) {
                 game.getPlayer().setCurrentFrame(currentFrame + 9);
 
                 if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() + Math.floorDiv(NEW_TILE_SIZE * 4, 10)) &&
                         game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY()/* - Math.floorDiv(NEW_TILE_SIZE, 3)*/)) {
                     game.getPlayer().setPositionX(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed());
                 }
-            } else if (keyHandler.currentPressed == KeyEvent.VK_D) {
+            } else if (game.getPlayer().getKeyHandler().currentPressed == KeyEvent.VK_D) {
                 game.getPlayer().setCurrentFrame(currentFrame + 18);
 
                 if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY()) &&
@@ -204,7 +201,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
                 }
             } else {
                 AudioManager.stop("S - w");
-                int frame = switch (keyHandler.lastDirection) {
+                int frame = switch (game.getPlayer().getKeyHandler().lastDirection) {
                     case KeyEvent.VK_A -> 9;
                     case KeyEvent.VK_D -> 18;
                     case KeyEvent.VK_W -> 27;
@@ -214,13 +211,13 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
 
                 // Prevents the character to "slide" when moving, if a direction key
                 // is spammed really fast
-                if (keyHandler.lastDirection == KeyEvent.VK_W || keyHandler.lastDirection == KeyEvent.VK_S) {
+                if (game.getPlayer().getKeyHandler().lastDirection == KeyEvent.VK_W || game.getPlayer().getKeyHandler().lastDirection == KeyEvent.VK_S) {
                     currentFrame = 2;
                 } else currentFrame = 1;
             }
         }
 
-        if (keyHandler.attackPressed) {
+        if (game.getPlayer().getKeyHandler().attackPressed) {
             if (game.getPlayer().getCurrentAnimationType() == "walking") {
                 // Creates an array of the sound names
                 String[] sounds = {"S - ssw1", "S - ssw2", "S - ssw3"};
@@ -231,7 +228,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
             }
             game.getPlayer().setCurrentAnimationType("attack");
 
-            switch (keyHandler.hitDirection) {
+            switch (game.getPlayer().getKeyHandler().hitDirection) {
                 case (KeyEvent.VK_W) -> game.getPlayer().setCurrentFrame(attackFrame + 18);
                 case (KeyEvent.VK_A) -> game.getPlayer().setCurrentFrame(attackFrame + 6);
                 case (KeyEvent.VK_D) -> game.getPlayer().setCurrentFrame(attackFrame + 12);
@@ -246,52 +243,13 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
         super.paintComponent(graph);
         Graphics2D graph2D = (Graphics2D) graph;
 
-        if (cooldown < 0) {
-            cooldown = 0;
-        } else {
-            cooldown--;
-        }
+        game.getPlayer().reduceInvincibilityCooldown();
+        game.checkPlayerAttack();
 
-        int startAngle = 0;
-        int arcAngle = 0;
-        int duration = 35;
-        // -> Seems like 35 is the edge for not hitting twice
-        // below 35 it does hit twice??
-
-        if (keyHandler.attackPressed
-                && cooldown == 0) {
-            switch (keyHandler.lastDirection) {
-                case (KeyEvent.VK_W) -> {
-                    cooldown = duration;
-                    startAngle = 45;
-                    arcAngle = 90;
-                    game.checkPlayerAttack(startAngle, arcAngle);
-                }
-                case (KeyEvent.VK_A) -> {
-                    cooldown = duration;
-                    startAngle = 135;
-                    arcAngle = 90;
-                    game.checkPlayerAttack(startAngle, arcAngle);
-                }
-                case (KeyEvent.VK_S) -> {
-                    cooldown = duration;
-                    startAngle = 225;
-                    arcAngle = 90;
-                    game.checkPlayerAttack(startAngle, arcAngle);
-                }
-                case (KeyEvent.VK_D) -> {
-                    cooldown = duration;
-                    startAngle = 315;
-                    arcAngle = 90;
-                    game.checkPlayerAttack(startAngle, arcAngle);
-                }
-            }
-        }
-
+        playerArrayList.get(0).reduceCooldown();
         for (Enemy enemy: enemyArrayList) {
             enemy.reduceCooldown();
             enemy.detectPlayer(game);
-
         }
 
         game.renderSolid(graph2D);

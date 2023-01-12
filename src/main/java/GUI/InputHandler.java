@@ -6,8 +6,11 @@ import java.util.ArrayList;
 
 public class InputHandler implements KeyListener {
 
-    protected boolean attackPressed, menuPressed;
-    protected int hitDirection = 10000, currentPressed, lastDirection;
+    public boolean attackPressed;
+    protected boolean menuPressed;
+    protected int hitDirection = 10000;
+    protected int currentPressed;
+    public int lastDirection;
     public ArrayList<Integer> movementKeys = new ArrayList<>();
 
     @Override
