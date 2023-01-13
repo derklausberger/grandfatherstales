@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="GUI.MainMenuPanel">
-  <grid id="27dc6" binding="textContainer" layout-manager="GridBagLayout">
+  <grid id="27dc6" layout-manager="GridBagLayout">
     <constraints>
       <xy x="-1" y="-6" width="1310" height="768"/>
     </constraints>

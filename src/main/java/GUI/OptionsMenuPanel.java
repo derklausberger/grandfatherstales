@@ -1,101 +1,127 @@
 package GUI;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
 import main.Main;
-
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.IOException;
 
 public class OptionsMenuPanel extends JPanel {
 
-    private Image backgroundImage;
+    private final JLabel
+            backLabel = new JLabel();
 
-    private JPanel container;
+    private final JSlider
+            musicVolumeSlider = new JSlider(),
+            soundVolumeSlider = new JSlider();
+
+    private final JCheckBox
+            muteBox = new JCheckBox();
 
     public OptionsMenuPanel() {
 
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setLayout(new GridBagLayout());
+
         init();
     }
 
     private void init() {
 
-        try {
-            backgroundImage = new ImageIcon(ImageIO.read(new File("src/main/resources/screen/mainMenuPanel/mainMenu.png"))).getImage();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        JPanel test = new JPanel();
-        test.setOpaque(false);
-        //test.setLayout(null);
-
-        JPanel optionContainer = new JPanel();
-        optionContainer.setPreferredSize(new Dimension(500, 300));
-        optionContainer.setOpaque(false);
-        optionContainer.setLayout(new BoxLayout(optionContainer, BoxLayout.X_AXIS));
-
-        JLabel backButton = new JLabel("Back");
-        test.add(backButton);
-
-        container.add(test);
-
-        Box verticalLeft = Box.createVerticalBox();
-        //verticalLeft.setBackground(Color.red);
-        //verticalLeft.setOpaque(true);
-        verticalLeft.setPreferredSize(new Dimension(200, 300));
-
-        Box verticalRight = Box.createVerticalBox();
-        //verticalRight.setBackground(Color.green);
-        //verticalRight.setOpaque(true);
-
-
-        JLabel muteLabel = new JLabel("Mute");
-        muteLabel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-        JCheckBox muteBox = new JCheckBox();
         muteBox.setOpaque(false);
-        muteBox.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-
-        JLabel musicVolumeLabel = new JLabel("Music");
-        musicVolumeLabel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-        JLabel soundVolumeLabel = new JLabel("Sound");
-        soundVolumeLabel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-        JSlider musicVolumeSlider = new JSlider();
         musicVolumeSlider.setOpaque(false);
         musicVolumeSlider.setValue(100);
-        musicVolumeSlider.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-        JSlider soundVolumeSlider = new JSlider();
         soundVolumeSlider.setOpaque(false);
         soundVolumeSlider.setValue(100);
-        soundVolumeSlider.setAlignmentX(JComponent.CENTER_ALIGNMENT);
 
-        verticalLeft.add(muteLabel);
-        verticalLeft.add(Box.createVerticalStrut(25));
-        verticalLeft.add(musicVolumeLabel);
-        verticalLeft.add(Box.createVerticalStrut(25));
-        verticalLeft.add(soundVolumeLabel);
+        // Create and add "X" label
+        backLabel.setText("Back");
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 0;
+        c.weightx = 0;
+        c.weighty = 0;
+        c.insets = new Insets(20, 20, 0, 0);
+        c.anchor = GridBagConstraints.NORTHWEST;
+        add(backLabel, c);
 
-        verticalRight.add(muteBox);
-        verticalRight.add(Box.createVerticalStrut(22));
-        verticalRight.add(musicVolumeSlider);
-        verticalRight.add(Box.createVerticalStrut(23));
-        verticalRight.add(soundVolumeSlider);
+        // Create and add container for options
+        JPanel optionsContainer = new JPanel();
+        optionsContainer.setOpaque(false);
+        optionsContainer.setLayout(new GridBagLayout());
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 1;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.gridheight = GridBagConstraints.REMAINDER;
+        c.weightx = 1.0;
+        c.weighty = 1.0;
+        c.insets = new Insets(0, 20, 40, 20);
+        c.anchor = GridBagConstraints.CENTER;
+        add(optionsContainer, c);
 
-        optionContainer.add(verticalLeft);
-        optionContainer.add(Box.createHorizontalStrut(10));
-        optionContainer.add(verticalRight);
+        // Create and add mute label and checkbox
+        JLabel muteLabel = new JLabel("Mute");
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weightx = 0;
+        c.weighty = 0;
+        c.insets = new Insets(10, 100, 10, 100);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.anchor = GridBagConstraints.CENTER;
+        optionsContainer.add(muteLabel, c);
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 0;
+        c.weightx = 0;
+        c.weighty = 0;
+        c.insets = new Insets(10, 0, 10, 40);
+        c.anchor = GridBagConstraints.CENTER;
+        optionsContainer.add(muteBox, c);
 
-        container.add(optionContainer);
-        container.setPreferredSize(new Dimension(990, 553));
+        // Create and add "music" label and volume slider
+        JLabel musicLabel = new JLabel("Music");
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 1;
+        c.weightx = 0;
+        c.weighty = 0;
+        c.insets = new Insets(10, 40, 10, 40);
+        c.anchor = GridBagConstraints.CENTER;
+        optionsContainer.add(musicLabel, c);
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 1;
+        c.weightx = 0;
+        c.weighty = 0;
+        c.insets = new Insets(10, 0, 10, 40);
+        c.anchor = GridBagConstraints.CENTER;
+        optionsContainer.add(musicVolumeSlider, c);
 
-        this.add(container);
+        // Create and add "music" label and volume slider
+        JLabel soundLabel = new JLabel("Sound");
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 2;
+        c.weightx = 0;
+        c.weighty = 0;
+        c.insets = new Insets(10, 40, 10, 40);
+        c.anchor = GridBagConstraints.CENTER;
+        optionsContainer.add(soundLabel, c);
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 2;
+        c.weightx = 0;
+        c.weighty = 0;
+        c.insets = new Insets(10, 0, 10, 40);
+        c.anchor = GridBagConstraints.CENTER;
+        optionsContainer.add(soundVolumeSlider, c);
 
+        createListeners();
+    }
+
+    private void createListeners() {
 
         musicVolumeSlider.addChangeListener(new ChangeListener() {
             @Override
@@ -124,7 +150,7 @@ public class OptionsMenuPanel extends JPanel {
             }
         });
 
-        backButton.addMouseListener(new MouseAdapter() {
+        backLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
@@ -136,7 +162,9 @@ public class OptionsMenuPanel extends JPanel {
     }
 
     public void paintComponent(Graphics g) {
-        g.drawImage(backgroundImage, 0, 0, null);
+        g.drawImage(MainMenuPanel.backgroundImage, 0, 0,
+                (int) (Main.DEFAULT_WINDOW_WIDTH * Main.SCALING_FACTOR),
+                (int) (Main.DEFAULT_WINDOW_HEIGHT * Main.SCALING_FACTOR),
+                null);
     }
-
 }

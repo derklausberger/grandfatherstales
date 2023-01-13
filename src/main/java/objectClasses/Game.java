@@ -2,14 +2,10 @@ package objectClasses;
 
 import GUI.AudioManager;
 import GUI.GamePanel;
-import objectClasses.Abstract.Entity;
-import objectClasses.Abstract.Item;
 import objectClasses.Enum.EntityTypes;
-import objectClasses.Enum.RarityType;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -22,7 +18,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class Game {
     private Player player; //list???
@@ -140,11 +135,12 @@ public class Game {
         }
     }
 
-    public void checkPlayerAttack() {
+    public void checkPlayerAttack(int attackFrame) {
         int startAngle = 0, arcAngle = 0;
 
+        //System.out.println(attackFrame);
         if (player.getKeyHandler().attackPressed
-                && player.getCooldown() == 0) {
+                && player.getCooldown() == 0) {     //&& attackFrame == 4
             switch (player.getKeyHandler().lastDirection) {
                 case (KeyEvent.VK_W) -> {
                     startAngle = 45;
@@ -164,7 +160,7 @@ public class Game {
                 }
             }
 
-            player.setCooldown(player.getDuration());
+            player.setCooldown(player.getAttackDelay());
 
             Point2D point2D = new Point2D.Double(getPlayer().getPositionX() + GamePanel.NEW_TILE_SIZE / 2, getPlayer().getPositionY() + GamePanel.NEW_TILE_SIZE / 2);
 
@@ -183,13 +179,13 @@ public class Game {
                         arc2D.contains(enemy.getPositionX(), enemy.getPositionY() + GamePanel.NEW_TILE_SIZE) ||
                         arc2D.contains(enemy.getPositionX() + GamePanel.NEW_TILE_SIZE, enemy.getPositionY() + GamePanel.NEW_TILE_SIZE)) {
                     if (!alreadyHit.contains(enemy)) {
-                        alreadyHit.add(enemy);
 
-                        AudioManager.play("S - d");
+                        alreadyHit.add(enemy);
 
                         if (enemy.getArmor().getBlockAmount() >= player.getWeapon().getAttackAmount()) {
 
                         } else {
+                            AudioManager.play("S - d");
                             enemy.setCurrentHealthPoints(enemy.getCurrentHealthPoints() + enemy.getArmor().getBlockAmount() - player.getWeapon().getAttackAmount());
                             System.out.println("hier");
                         }

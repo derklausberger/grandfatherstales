@@ -1,13 +1,10 @@
 package objectClasses.Abstract;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,8 +33,16 @@ public abstract class Entity {
     private Weapon weapon;
     private Armor armor;
 
+    // cooldown -> time between attacks
+    // For enemies, cooldown also determines
+    // when it can move again after attacking
+    // Value is actively set and reduced
     private int cooldown;
-    private int duration;
+
+    // attackDelay -> time between attacks
+    // A value for the cooldown to refer to,
+    // that is set for all entities after creation
+    private int attackDelay;
 
     private int maxHealthPoints;
     private int currentHealthPoints;
@@ -60,6 +65,7 @@ public abstract class Entity {
     }
 
     public void reduceCooldown() {
+
         if (cooldown < 0) {
             cooldown = 0;
         } else {
@@ -83,18 +89,17 @@ public abstract class Entity {
         this.cooldown = cooldown;
     }
 
-    public int getDuration() {
-        return duration;
+    public int getAttackDelay() {
+        return attackDelay;
     }
 
-    public void setDuration(int duration) {
-        this.duration = duration;
+    public void setAttackDelay(int attackDelay) {
+        this.attackDelay = attackDelay;
     }
 
     public Weapon getWeapon() {
-        if(this.weapon == null) {
+        if (this.weapon == null) {
             this.weapon = new Weapon("Sword", RarityType.Common, null, 5, 100);
-            return this.weapon;
         }
         return this.weapon;
     }
@@ -106,7 +111,6 @@ public abstract class Entity {
     public Armor getArmor() {
         if (this.armor == null) {
             this.setArmor(new Armor("Armor", RarityType.Common, null, 3));
-            return this.armor;
         }
         return this.armor;
     }

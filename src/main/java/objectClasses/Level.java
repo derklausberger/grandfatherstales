@@ -161,14 +161,14 @@ public class Level {
         enemies = new ArrayList<>();
         Random random = new Random();
         // Biome, Level, Number of enemies should be contained in the xml file
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 5; i++) {
             int x, y;
             do {
                 x = random.nextInt(32) * GamePanel.NEW_TILE_SIZE;
                 y = random.nextInt(32) * GamePanel.NEW_TILE_SIZE;
 
             } while (!isSolid(x,y));
-            Enemy e = new Enemy(x,y,1,52, EntityTypes.skeletonWarrior);
+            Enemy e = new Enemy(x, y,1,52, EntityTypes.skeletonWarrior);
             enemies.add(e);
         }
         return enemies;

@@ -8,14 +8,21 @@ import java.awt.*;
 
 public class Main {
 
-    private static final int
-            STARTSCREEN_WIDTH = GamePanel.WINDOW_WIDTH,    // image is 1000px - 990
-            STARTSCREEN_HEIGTH = GamePanel.WINDOW_HEIGHT;   // image is 563px - 553
+    // Window size for all screens
+    public static final int
+            DEFAULT_WINDOW_WIDTH = 1000,
+            DEFAULT_WINDOW_HEIGHT = 563;
+
+    // Only change the scaling factor for a smaller screen
+    public static final float
+            SCALING_FACTOR = 1f;
 
     public static String currentScreen, previousScreen;
-    private static JPanel rootPanel, optionsPanel;
-    private static final CardLayout cardLayout = new CardLayout();
+    private static JPanel rootPanel;
+    private static JLayeredPane layeredPane;
 
+    // CardLayout to switch between screens
+    private static final CardLayout cardLayout = new CardLayout();
 
     public static void showMainScreen() {
 
@@ -29,7 +36,6 @@ public class Main {
         cardLayout.show(rootPanel, "Options");
         previousScreen = currentScreen;
         currentScreen = "Options";
-        optionsPanel.requestFocusInWindow();
     }
 
     public static void showLoadingScreen() {
@@ -38,11 +44,39 @@ public class Main {
 
     public static void showGameScreen(JPanel gamePanel) {
 
-        // Switches to the game panel when created and called
-        rootPanel.add(gamePanel, "Game");
+        gamePanel.setBounds(0, 0,
+                (int)(DEFAULT_WINDOW_WIDTH * SCALING_FACTOR),
+                (int)(DEFAULT_WINDOW_HEIGHT * SCALING_FACTOR));
+
+        InventoryPanel inventoryPanel = new InventoryPanel();
+        inventoryPanel.setSize(inventoryPanel.getPreferredSize());
+
+        // Creates the layered pane to hold the game and inventory panels
+        layeredPane = new JLayeredPane();
+        layeredPane.setPreferredSize(new Dimension(
+                (int) (DEFAULT_WINDOW_WIDTH * SCALING_FACTOR),
+                (int) (DEFAULT_WINDOW_HEIGHT * SCALING_FACTOR)));
+        layeredPane.setSize(layeredPane.getPreferredSize());
+
+        // Still doesn't center the inventory perfectly vertically,
+        // Therefore, moved 20px upwards
+        int x = (layeredPane.getWidth() - inventoryPanel.getWidth()) / 2;
+        int y = (layeredPane.getHeight() - inventoryPanel.getHeight()) / 2;
+        inventoryPanel.setLocation(x, y - 20);
+
+        layeredPane.add(gamePanel, JLayeredPane.DEFAULT_LAYER);
+        layeredPane.add(inventoryPanel, JLayeredPane.PALETTE_LAYER);
+
+        rootPanel.add(layeredPane, "Game");
         cardLayout.show(rootPanel, "Game");
         previousScreen = currentScreen;
         currentScreen = "Game";
+
+    }
+
+    public static void toggleInventory() {
+
+        layeredPane.getComponent(0).setVisible(!layeredPane.getComponent(0).isVisible());
     }
 
     public static void showPreviousScreen() {
@@ -56,26 +90,33 @@ public class Main {
 
     public static void main(String[] args) {
 
+        // Create the main window
         JFrame window = new JFrame("Grandfather's Tales");
-        window.setPreferredSize(new Dimension(STARTSCREEN_WIDTH, STARTSCREEN_HEIGTH));
+        window.setPreferredSize(new Dimension(
+                (int) (DEFAULT_WINDOW_WIDTH * SCALING_FACTOR),
+                (int) (DEFAULT_WINDOW_HEIGHT * SCALING_FACTOR)));
 
         // "Main" panel that acts as the foundation
         rootPanel = new JPanel();
+        rootPanel.setPreferredSize(new Dimension(
+                (int) (DEFAULT_WINDOW_WIDTH * SCALING_FACTOR),
+                (int) (DEFAULT_WINDOW_HEIGHT * SCALING_FACTOR)));
+
         rootPanel.setLayout(cardLayout);
 
-        // Creates the start, options and loading panel and adds it to the root panel
-        MainMenuPanel mainPanel = new MainMenuPanel();
-        rootPanel.add(mainPanel, "Main Menu");
+        // Creates the main menu screen
+        MainMenuPanel mainMenuPanel = new MainMenuPanel();
+        rootPanel.add(mainMenuPanel, "Main Menu");
 
-        optionsPanel = new OptionsMenuPanel();
+        OptionsMenuPanel optionsPanel = new OptionsMenuPanel();
         rootPanel.add(optionsPanel, "Options");
 
         LoadingPanel loadingPanel = new LoadingPanel();
         rootPanel.add(loadingPanel, "Loading");
 
-        window.add(rootPanel);
         showMainScreen();
-        //showLoadingScreen();
+
+        window.add(rootPanel);
 
         // window image at the top left (very small and unreadable at the moment)
         window.setIconImage(new ImageIcon("src/main/resources/screen/mainMenuPanel/logo.png").getImage());
@@ -85,7 +126,5 @@ public class Main {
         window.setLocationRelativeTo(null);
         window.setVisible(true);
 
-        System.out.println(AudioManager.getFrames("M - mainTheme"));
     }
 }
-

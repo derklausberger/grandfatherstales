@@ -7,10 +7,9 @@ import java.util.ArrayList;
 public class InputHandler implements KeyListener {
 
     public boolean attackPressed;
-    protected boolean menuPressed;
-    protected int hitDirection = 10000;
-    protected int currentPressed;
+    protected boolean menuPressed, inventoryPressed;
     public int lastDirection;
+    protected int hitDirection = 10000, currentPressed;
     public ArrayList<Integer> movementKeys = new ArrayList<>();
 
     @Override
@@ -28,6 +27,8 @@ public class InputHandler implements KeyListener {
             menuPressed = true;
         } else if (eventCode == KeyEvent.VK_C) {
             attackPressed = true;
+        } else if (eventCode == KeyEvent.VK_E) {
+            inventoryPressed = true;
         }
 
         // Only allows specified keys to be added to the key array

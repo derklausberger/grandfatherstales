@@ -1,17 +1,14 @@
 package objectClasses;
 
 import GUI.AnimationFrame;
-import GUI.AudioManager;
 import GUI.GamePanel;
 import GUI.InputHandler;
 import objectClasses.Abstract.Entity;
-import objectClasses.Abstract.Item;
 import objectClasses.Enum.EntityTypes;
 import objectClasses.Enum.RarityType;
 
 import java.awt.*;
 import java.awt.geom.*;
-import java.util.ArrayList;
 
 public class Player extends Entity {
     private int life;
@@ -20,8 +17,22 @@ public class Player extends Entity {
     private int invincibilityCooldown;
     private int invincibilityDuration;
 
+    public Player(int positionX, int positionY, int movementSpeed, int healthPoints, int life, EntityTypes entityTypes) {
+
+        super(positionX, positionY, movementSpeed, healthPoints, entityTypes);
+        this.life = life;
+        this.invincibility = true;
+        this.invincibilityCooldown = 0;
+        this.keyHandler = new InputHandler();
+
+        super.setWeapon(new Weapon("Sword", RarityType.Common, null, 10, 100));
+        super.setArmor(new Armor("Armor", RarityType.Common, null, 3));
+
+        super.setAttackDelay(15);
+
+    }
+
     public void triggerInvincibility() {
-        this.invincibility = false; // -> he is safe just protection shield is gone
         this.invincibilityCooldown = 55;
         this.invincibilityDuration = 10; // -> safe for 20
     }
@@ -33,21 +44,20 @@ public class Player extends Entity {
             this.invincibilityDuration = 0;
             if (this.invincibilityCooldown <= 0) {
                 this.invincibilityCooldown = 0;
-                this.invincibility = true;
+                this.invincibility = false;
             } else {
                 this.invincibilityCooldown--;
             }
         }
     }
 
-    public boolean isInvincibility() {
+    public boolean isInvincible() {
         return invincibility;
     }
 
     public int getInvincibilityCooldown() {
         return invincibilityCooldown;
     }
-
 
     public int getLife() {
         return life;
@@ -61,20 +71,6 @@ public class Player extends Entity {
         return this.keyHandler;
     }
 
-    public Player(int positionX, int positionY, int movementSpeed, int healthPoints, int life, EntityTypes entityTypes) {
-
-        super(positionX, positionY, movementSpeed, healthPoints, entityTypes);
-        this.life = life;
-        this.invincibility = true;
-        this.invincibilityCooldown = 0;
-        this.keyHandler = new InputHandler();
-
-        super.setWeapon(new Weapon("Sword", RarityType.Common, null, 10, 100));
-        super.setArmor(new Armor("Armor", RarityType.Common, null, 3));
-
-        super.setDuration(15);
-
-    }
 
     @Override
     public void draw(Graphics2D graph2D, Game game, GamePanel gamePanel) {

@@ -46,7 +46,7 @@
         { "image": "src/main/resources/character/walking/U9.png","width": 30, "height": 50, "xOffset": 0, "yOffset": 0 }
       ]
     },
-    "attack": {
+    "attacking": {
       "down": [
         { "image": "src/main/resources/character/swordHit/D1.png","width": 40, "height": 52, "xOffset": -10, "yOffset": 0 },
         { "image": "src/main/resources/character/swordHit/D2.png","width": 48, "height": 50, "xOffset": -18, "yOffset": 0 },
@@ -128,7 +128,7 @@
         { "image": "src/main/resources/enemy/skeletonWarrior/walking/U9.png", "width": 36, "height": 51, "xOffset": 0, "yOffset": -4 }
       ]
     },
-    "attack": {
+    "attacking": {
       "down": [
         { "image": "src/main/resources/enemy/skeletonWarrior/swordHit/D1.png", "width": 40, "height": 50, "xOffset": -10, "yOffset": 0 },
         { "image": "src/main/resources/enemy/skeletonWarrior/swordHit/D2.png", "width": 48, "height": 47, "xOffset": -18, "yOffset": 0 },

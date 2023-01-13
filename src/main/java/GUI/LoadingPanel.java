@@ -1,6 +1,8 @@
 package GUI;
 
 
+import main.Main;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -31,13 +33,13 @@ public class LoadingPanel extends JPanel implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
 
-            currentFrame++;
+        currentFrame++;
 
-            // If we've reached the end of the animation, start over from the beginning
-            if (currentFrame >= 9) {
-                currentFrame = 0;
-            }
-            character.setIcon(new ImageIcon(Objects.requireNonNull(images[currentFrame])));
+        // If we've reached the end of the animation, start over from the beginning
+        if (currentFrame >= 9) {
+            currentFrame = 0;
+        }
+        character.setIcon(new ImageIcon(Objects.requireNonNull(images[currentFrame])));
     }
 
     private void loadImages() {
@@ -78,7 +80,7 @@ public class LoadingPanel extends JPanel implements ActionListener {
         content2.setOpaque(false);
 
         JLabel logo = new JLabel();
-        logo.setIcon(new ImageIcon(Objects.requireNonNull(MainMenuPanel.bufferedLogo).getScaledInstance(600, 330, Image.SCALE_SMOOTH)));
+        //logo.setIcon(new ImageIcon(Objects.requireNonNull(MainMenuPanel.bufferedLogo).getScaledInstance(600, 330, Image.SCALE_SMOOTH)));
         logo.setOpaque(false);
 
         character = new JLabel();
@@ -97,6 +99,9 @@ public class LoadingPanel extends JPanel implements ActionListener {
     }
 
     public void paintComponent(Graphics g) {
-        g.drawImage(MainMenuPanel.backgroundImage, 0, 0, null);
+        g.drawImage(MainMenuPanel.backgroundImage, 0, 0,
+                (int) (Main.DEFAULT_WINDOW_WIDTH * Main.SCALING_FACTOR),
+                (int) (Main.DEFAULT_WINDOW_HEIGHT * Main.SCALING_FACTOR),
+                null);
     }
 }

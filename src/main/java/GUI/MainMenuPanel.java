@@ -14,20 +14,18 @@ import java.util.Objects;
 
 public class MainMenuPanel extends JPanel {
 
+    private final int
+            LOGO_WIDTH = (int) (1274 * Main.SCALING_FACTOR / 2),
+            LOGO_HEIGHT = (int) (735 * Main.SCALING_FACTOR / 2);
+
     public static Image backgroundImage = null;
-    public static BufferedImage bufferedLogo = null;
 
-    private static final int
-            STARTSCREEN_WIDTH = 990,    // image is 1000px
-            STARTSCREEN_HEIGTH = 553;   // image is 563px
+    private final Map<String, ImageIcon> buttonImages = new HashMap<>();
 
-    private Map<String, ImageIcon> buttonImages = new HashMap<>();
-
-    private JPanel
-            textContainer,
+    private final JPanel
             menuButtons = new JPanel();
 
-    private JLabel
+    private final JLabel
             startButton = new JLabel(),
             optionsButton = new JLabel(),
             quitButton = new JLabel(),
@@ -36,41 +34,54 @@ public class MainMenuPanel extends JPanel {
 
     public MainMenuPanel() {
 
-        // centers the container
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setLayout(new GridBagLayout());
+        this.setPreferredSize(new Dimension(
+                (int) (Main.DEFAULT_WINDOW_WIDTH * Main.SCALING_FACTOR),
+                (int) (Main.DEFAULT_WINDOW_HEIGHT * Main.SCALING_FACTOR)));
 
-        loadImages();
-        loadAudio();
-        createListeners();
+        init();
     }
 
-    private void loadImages() {
+    private void init() {
 
-        // sets static background image
-        //backgroundImage = new ImageIcon("src/main/resources/screen/mainMenuPanel/mainMenu.png").getImage();
+        // Loads static background image
         try {
             backgroundImage = new ImageIcon(ImageIO.read(new File("src/main/resources/screen/mainMenuPanel/mainMenu.png"))).getImage();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        // reads GFT-logo
-        // buffered images can be rescaled
+        // Loads the logo image and adds it to the main menu screen
+        logo.setPreferredSize(new Dimension(LOGO_WIDTH, LOGO_HEIGHT));
+
         try {
-            bufferedLogo = ImageIO.read(new File("src/main/resources/screen/mainMenuPanel/logo.png"));
-            logo.setIcon(new ImageIcon(Objects.requireNonNull(bufferedLogo).getScaledInstance(640, 370, Image.SCALE_SMOOTH)));
+            BufferedImage bufferedLogo = ImageIO.read(new File("src/main/resources/screen/mainMenuPanel/logo.png"));
+            logo.setIcon(new ImageIcon(
+                    Objects.requireNonNull(bufferedLogo)
+                            .getScaledInstance(LOGO_WIDTH, LOGO_HEIGHT, Image.SCALE_SMOOTH)));
         } catch (IOException e) {
             e.printStackTrace();
         }
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridwidth = 1;
+        c.gridheight = 1;
+        c.insets = new Insets(10, 10, 10, 10);
+        c.anchor = GridBagConstraints.CENTER;
+
+        logo.setVisible(true);
+        this.add(logo, c);
+
 
         // reads menu button images and saves them to a map
         // to not have to reload a file for every mouse event
-        BufferedImage bufferedNew = null;
-        BufferedImage bufferedOptions = null;
-        BufferedImage bufferedQuit = null;
-        BufferedImage bufferedNewHover = null;
-        BufferedImage bufferedOptionsHover = null;
-        BufferedImage bufferedQuitHover = null;
+        BufferedImage bufferedNew;
+        BufferedImage bufferedOptions;
+        BufferedImage bufferedQuit;
+        BufferedImage bufferedNewHover;
+        BufferedImage bufferedOptionsHover;
+        BufferedImage bufferedQuitHover;
         try {
             bufferedNew = ImageIO.read(new File("src/main/resources/screen/optionsMenuPanel/new.png"));
             bufferedOptions = ImageIO.read(new File("src/main/resources/screen/optionsMenuPanel/options.png"));
@@ -80,46 +91,60 @@ public class MainMenuPanel extends JPanel {
             bufferedOptionsHover = ImageIO.read(new File("src/main/resources/screen/optionsMenuPanel/optionsShadow.png"));
             bufferedQuitHover = ImageIO.read(new File("src/main/resources/screen/optionsMenuPanel/quitShadow.png"));
 
-            buttonImages.put("new", new ImageIcon(bufferedNew));
-            buttonImages.put("options", new ImageIcon(bufferedOptions));
-            buttonImages.put("quit", new ImageIcon(bufferedQuit));
-            buttonImages.put("newHover", new ImageIcon(bufferedNewHover));
-            buttonImages.put("optionsHover", new ImageIcon(bufferedOptionsHover));
-            buttonImages.put("quitHover", new ImageIcon(bufferedQuitHover));
+            buttonImages.put("new", new ImageIcon(
+                    bufferedNew.getScaledInstance(
+                            (int) (bufferedNew.getWidth() * Main.SCALING_FACTOR),
+                            -1, Image.SCALE_SMOOTH)));
+            buttonImages.put("options", new ImageIcon(
+                    bufferedOptions.getScaledInstance(
+                            (int) (bufferedOptions.getWidth() * Main.SCALING_FACTOR),
+                            -1, Image.SCALE_SMOOTH)));
+            buttonImages.put("quit", new ImageIcon(
+                    bufferedQuit.getScaledInstance(
+                            (int) (bufferedQuit.getWidth() * Main.SCALING_FACTOR),
+                            -1, Image.SCALE_SMOOTH)));
+            buttonImages.put("newHover", new ImageIcon(
+                    bufferedNewHover.getScaledInstance(
+                            (int) (bufferedNewHover.getWidth() * Main.SCALING_FACTOR), -1, Image.SCALE_SMOOTH)));
+            buttonImages.put("optionsHover", new ImageIcon(
+                    bufferedOptionsHover.getScaledInstance(
+                            (int) (bufferedOptionsHover.getWidth() * Main.SCALING_FACTOR), -1, Image.SCALE_SMOOTH)));
+            buttonImages.put("quitHover", new ImageIcon(
+                    bufferedQuitHover.getScaledInstance(
+                            (int) (bufferedQuitHover.getWidth() * Main.SCALING_FACTOR), -1, Image.SCALE_SMOOTH)));
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        // adds all buttons and a gap between them to the container
+        // Sets icons and centers horizontally inside the container
+        startButton.setIcon(buttonImages.get("new"));
+        startButton.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+
+        optionsButton.setIcon(buttonImages.get("options"));
+        optionsButton.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+
+        quitButton.setIcon(buttonImages.get("quit"));
+        quitButton.setAlignmentX(JComponent.CENTER_ALIGNMENT);
+
+        // Centers vertically
+        menuButtons.setLayout(new BoxLayout(menuButtons, BoxLayout.Y_AXIS));
+
+        // At first, sets all buttons and background color to be invisible
+        menuButtons.setVisible(false);
+        menuButtons.setOpaque(false);
+
+        // Adds all buttons and a gap between them to the container
         menuButtons.add(startButton);
         menuButtons.add(Box.createVerticalStrut(15));
         menuButtons.add(optionsButton);
         menuButtons.add(Box.createVerticalStrut(15));
         menuButtons.add(quitButton);
 
-        // first, sets all buttons and background color to be invisible
-        menuButtons.setVisible(false);
-        menuButtons.setOpaque(false);
+        this.add(menuButtons, c);
 
-        // centers vertically
-        menuButtons.setLayout(new BoxLayout(menuButtons, BoxLayout.Y_AXIS));
-
-        // sets icons and centers horizontally inside the container
-        startButton.setIcon(new ImageIcon(Objects.requireNonNull(bufferedNew)));
-        startButton.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-
-        optionsButton.setIcon(new ImageIcon(Objects.requireNonNull(bufferedOptions)));
-        optionsButton.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-
-        quitButton.setIcon(new ImageIcon(Objects.requireNonNull(bufferedQuit)));
-        quitButton.setAlignmentX(JComponent.CENTER_ALIGNMENT);
-
-        // adds GFT-logo and buttons to text and outer container
-        textContainer.add(logo);
-        textContainer.add(menuButtons);
-
-        this.add(textContainer);
+        loadAudio();
+        createListeners();
     }
 
     private void loadAudio() {
@@ -141,20 +166,16 @@ public class MainMenuPanel extends JPanel {
 
     private void createListeners() {
 
-        textContainer.addMouseListener(new MouseAdapter() {
+        this.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
 
-                if (menuButtons.isVisible()) {
-                    logo.setVisible(true);
-                    menuButtons.setVisible(false);
-                } else {
-                    logo.setVisible(false);
-                    menuButtons.setVisible(true);
-                }
+                menuButtons.setVisible(!menuButtons.isVisible());
+                logo.setVisible(!logo.isVisible());
             }
         });
+
 
         startButton.addMouseListener(new MouseAdapter() {
             @Override
@@ -177,7 +198,6 @@ public class MainMenuPanel extends JPanel {
                         }
                     }
                 }).start();
-
             }
         });
         startButton.addMouseListener(new MouseAdapter() {
@@ -234,8 +254,6 @@ public class MainMenuPanel extends JPanel {
                 JComponent comp = (JComponent) e.getSource();
                 Window window = SwingUtilities.getWindowAncestor(comp);
                 window.dispose();
-                // stops the runtime application
-                System.exit(0);
             }
         });
         quitButton.addMouseListener(new MouseAdapter() {
@@ -258,7 +276,9 @@ public class MainMenuPanel extends JPanel {
     }
 
     public void paintComponent(Graphics g) {
-        g.drawImage(backgroundImage, 0, 0, null);
+        g.drawImage(backgroundImage, 0, 0,
+                (int) (Main.DEFAULT_WINDOW_WIDTH * Main.SCALING_FACTOR),
+                (int) (Main.DEFAULT_WINDOW_HEIGHT * Main.SCALING_FACTOR),
+                null);
     }
-
 }

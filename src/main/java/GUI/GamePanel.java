@@ -1,7 +1,6 @@
 package GUI;
 
 import main.Main;
-import objectClasses.Abstract.Entity;
 import objectClasses.Enemy;
 import objectClasses.Game;
 import objectClasses.Player;
@@ -13,9 +12,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.awt.geom.Arc2D;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -29,8 +25,8 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
     static final int MAX_SCREEN_COL = 16; // max. 16 tiles in x
     static final int MAX_SCREEN_ROW = 12; // max. 12 tiles in y
 
-    public static final int WINDOW_WIDTH = NEW_TILE_SIZE * MAX_SCREEN_COL; // 768 pixel
-    public static final int WINDOW_HEIGHT = NEW_TILE_SIZE * MAX_SCREEN_ROW; // 576 pixel
+    public static final int WINDOW_WIDTH = (int)(Main.DEFAULT_WINDOW_WIDTH * Main.SCALING_FACTOR);      //NEW_TILE_SIZE * MAX_SCREEN_COL; // 768 pixel
+    public static final int WINDOW_HEIGHT = (int)(Main.DEFAULT_WINDOW_HEIGHT * Main.SCALING_FACTOR);    //NEW_TILE_SIZE * MAX_SCREEN_ROW; // 576 pixel
 
     Thread playerThread = null;
 
@@ -53,7 +49,11 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
     public GamePanel() throws IOException, ParserConfigurationException, SAXException {
         game = new Game();//new Player((int) ((WINDOW_WIDTH) / 2), (int) ((WINDOW_HEIGHT) / 2), 3, 5, null, 3, 1));
 
-        this.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
+        this.setLayout(new BorderLayout());
+        this.setPreferredSize(new Dimension(
+                (int) (Main.DEFAULT_WINDOW_WIDTH * Main.SCALING_FACTOR),
+                (int) (Main.DEFAULT_WINDOW_HEIGHT * Main.SCALING_FACTOR)));
+
         this.setBackground(new Color(39, 105, 195));
         this.addKeyListener(game.getPlayer().getKeyHandler()); // adds Listener
         this.setDoubleBuffered(true); // improves rendering
@@ -95,6 +95,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
             if (attackFrame >= 6) {
                 currentFrame = 1;
                 attackFrame = 1;
+                game.getPlayer().setCooldown(0);
 
                 // Sets last direction so the character faces the same
                 // direction after attacking as during the animation
@@ -163,6 +164,10 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
             game.getPlayer().getKeyHandler().menuPressed = false;
             Main.showOptionsScreen();
         }
+        if (game.getPlayer().getKeyHandler().inventoryPressed) {
+            game.getPlayer().getKeyHandler().inventoryPressed = false;
+            Main.toggleInventory();
+        }
 
         if (!game.getPlayer().getKeyHandler().attackPressed) {
 
@@ -226,7 +231,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
                 AudioManager.play(sounds[index]);
                 AudioManager.stop("S - w");
             }
-            game.getPlayer().setCurrentAnimationType("attack");
+            game.getPlayer().setCurrentAnimationType("attacking");
 
             switch (game.getPlayer().getKeyHandler().hitDirection) {
                 case (KeyEvent.VK_W) -> game.getPlayer().setCurrentFrame(attackFrame + 18);
@@ -244,11 +249,11 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
         Graphics2D graph2D = (Graphics2D) graph;
 
         game.getPlayer().reduceInvincibilityCooldown();
-        game.checkPlayerAttack();
+        game.checkPlayerAttack(attackFrame);
 
-        playerArrayList.get(0).reduceCooldown();
+        //playerArrayList.get(0).reduceCooldown();
         for (Enemy enemy: enemyArrayList) {
-            enemy.reduceCooldown();
+            //enemy.reduceCooldown();
             enemy.detectPlayer(game);
         }
 
