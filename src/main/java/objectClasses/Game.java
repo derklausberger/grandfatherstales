@@ -184,10 +184,10 @@ public class Game {
 
                         if (enemy.getArmor().getBlockAmount() >= player.getWeapon().getAttackAmount()) {
 
+                            // Implement block sound effect
                         } else {
                             AudioManager.play("S - d");
                             enemy.setCurrentHealthPoints(enemy.getCurrentHealthPoints() + enemy.getArmor().getBlockAmount() - player.getWeapon().getAttackAmount());
-                            System.out.println("hier");
                         }
                         if (enemy.getCurrentHealthPoints() <= 0) {
                             GamePanel.enemyArrayList.remove(enemy);

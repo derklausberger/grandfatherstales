@@ -2,9 +2,12 @@ package main;
 
 import GUI.*;
 import objectClasses.Game;
+import org.xml.sax.SAXException;
 
 import javax.swing.*;
+import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
+import java.io.IOException;
 
 public class Main {
 
@@ -69,7 +72,7 @@ public class Main {
 
         rootPanel.add(layeredPane, "Game");
         cardLayout.show(rootPanel, "Game");
-        previousScreen = currentScreen;
+        //previousScreen = currentScreen;
         currentScreen = "Game";
 
     }
@@ -113,6 +116,17 @@ public class Main {
 
         LoadingPanel loadingPanel = new LoadingPanel();
         rootPanel.add(loadingPanel, "Loading");
+
+        currentScreen = "Game";
+        GamePanel game = null;
+        try {
+            game = new GamePanel();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //showGameScreen(game);
+        //InventoryPanel panel = new InventoryPanel();
+
 
         showMainScreen();
 

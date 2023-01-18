@@ -6,50 +6,72 @@ import java.util.ArrayList;
 
 public class InputHandler implements KeyListener {
 
+    protected static int upKey, leftKey, downKey, rightKey, attackKey, inventoryKey;
     public boolean attackPressed;
     protected boolean menuPressed, inventoryPressed;
     public int lastDirection;
-    protected int hitDirection = 10000, currentPressed;
+    protected int attackDirection = 10000, walkingDirection;
     public ArrayList<Integer> movementKeys = new ArrayList<>();
 
-    @Override
-    public void keyTyped(KeyEvent e) {
+    public InputHandler() {
+
+        loadKeyBindings();
     }
+
+    // In this method, a file containing the saved key
+    // bindings would be loaded to update possible changes
+    private void loadKeyBindings() {
+
+        // Arrow keys are "VK_UP" / "VK_DOWN"/..
+        upKey = KeyEvent.VK_W;
+        leftKey = KeyEvent.VK_A;
+        downKey = KeyEvent.VK_S;
+        rightKey = KeyEvent.VK_D;
+        attackKey = KeyEvent.VK_C;
+        inventoryKey = KeyEvent.VK_E;
+    }
+
+    private boolean isMovementKey(int key) {
+
+        return key == upKey || key == leftKey || key == downKey || key == rightKey;
+    }
+
+
     // all 3 are required by KeyListener,
     // however we don't use this specific one
-
+    public void keyTyped(KeyEvent e) {}
 
     @Override
     public void keyPressed(KeyEvent e) {
-        int eventCode = e.getKeyCode();
+        int key = e.getKeyCode();
 
-        if (eventCode == KeyEvent.VK_ESCAPE) {
+        if (key == KeyEvent.VK_ESCAPE) {
             menuPressed = true;
-        } else if (eventCode == KeyEvent.VK_C) {
+        } else if (key == attackKey) {
             attackPressed = true;
-        } else if (eventCode == KeyEvent.VK_E) {
+        } else if (key == inventoryKey) {
             inventoryPressed = true;
         }
 
-        // Only allows specified keys to be added to the key array
-        if (!movementKeys.contains(eventCode) && isMovementKey(eventCode)) {
+        // Only allows movement keys to be added to the key array
+        if (!movementKeys.contains(key) && isMovementKey(key)) {
             if (movementKeys.size() < 2) {
-                movementKeys.add(eventCode);
+                movementKeys.add(key);
             }
         }
 
-        if (attackPressed && hitDirection == 10000) {
-            if (currentPressed == 10000) {
-                hitDirection = lastDirection;
+        if (attackPressed && attackDirection == 10000) {
+            if (walkingDirection == 10000) {
+                attackDirection = lastDirection;
             } else {
-                hitDirection = currentPressed;
+                attackDirection = walkingDirection;
             }
         }
 
         // If one key is pressed at a time, walks that direction
         // If a second key is pressed additionally, overwrites the
         // previous direction to that key
-        currentPressed = switch (movementKeys.size()) {
+        walkingDirection = switch (movementKeys.size()) {
             case 1 -> movementKeys.get(0);
             case 2 -> movementKeys.get(1);
             default -> 10000;
@@ -58,33 +80,21 @@ public class InputHandler implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        int eventCode = e.getKeyCode();
+        int key = e.getKeyCode();
 
         // Removes the movement key from the list
-        if (movementKeys.contains(eventCode)) {
-            movementKeys.remove(movementKeys.indexOf(eventCode));
+        if (movementKeys.contains(key)) {
+            movementKeys.remove((Integer) key);
         }
 
         // Changes the walking direction to the
         // last direction or releases it
         if (movementKeys.size() == 1) {
-            currentPressed = movementKeys.get(0);
+            walkingDirection = movementKeys.get(0);
         } else if (movementKeys.size() == 0) {
 
-            lastDirection = currentPressed;
-            currentPressed = 10000;
+            lastDirection = walkingDirection;
+            walkingDirection = 10000;
         }
-    }
-
-    private boolean isMovementKey(int eventCode) {
-
-        // Could read a file to check whether the movement
-        // keys are (W-A-S-D) or e.g. arrow keys
-        switch (eventCode) {
-            case KeyEvent.VK_W, KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D -> {
-                return true;
-            }
-        }
-        return false;
     }
 }

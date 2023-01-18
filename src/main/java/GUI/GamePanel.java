@@ -99,10 +99,10 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
 
                 // Sets last direction so the character faces the same
                 // direction after attacking as during the animation
-                game.getPlayer().getKeyHandler().lastDirection = game.getPlayer().getKeyHandler().hitDirection;
+                game.getPlayer().getKeyHandler().lastDirection = game.getPlayer().getKeyHandler().attackDirection;
 
                 // Releases hit direction to be newly assigned when attacking again
-                game.getPlayer().getKeyHandler().hitDirection = 10000;
+                game.getPlayer().getKeyHandler().attackDirection = 10000;
                 game.getPlayer().getKeyHandler().attackPressed = false;
                 game.getPlayer().setCurrentAnimationType("walking");
             }
@@ -174,7 +174,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
             AudioManager.loop("S - w");
             game.getPlayer().setCurrentAnimationType("walking");
 
-            if (game.getPlayer().getKeyHandler().currentPressed == KeyEvent.VK_W) {
+            if (game.getPlayer().getKeyHandler().walkingDirection == InputHandler.upKey) {
                 game.getPlayer().setCurrentFrame(currentFrame + 27);
 
                 if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed()) &&
@@ -183,21 +183,21 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
                 } else if (game.getCurrentLevel().isChest(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() - Math.floorDiv(NEW_TILE_SIZE, 10))) {
                     System.out.println("chest!");
                 }
-            } else if (game.getPlayer().getKeyHandler().currentPressed == KeyEvent.VK_S) {
+            } else if (game.getPlayer().getKeyHandler().walkingDirection == InputHandler.downKey) {
                 game.getPlayer().setCurrentFrame(currentFrame);
 
                 if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE * 4, 10)) &&
                         game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE * 4, 10))) {
                     game.getPlayer().setPositionY(game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed());
                 }
-            } else if (game.getPlayer().getKeyHandler().currentPressed == KeyEvent.VK_A) {
+            } else if (game.getPlayer().getKeyHandler().walkingDirection == InputHandler.leftKey) {
                 game.getPlayer().setCurrentFrame(currentFrame + 9);
 
                 if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() + Math.floorDiv(NEW_TILE_SIZE * 4, 10)) &&
                         game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY()/* - Math.floorDiv(NEW_TILE_SIZE, 3)*/)) {
                     game.getPlayer().setPositionX(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed());
                 }
-            } else if (game.getPlayer().getKeyHandler().currentPressed == KeyEvent.VK_D) {
+            } else if (game.getPlayer().getKeyHandler().walkingDirection == InputHandler.rightKey) {
                 game.getPlayer().setCurrentFrame(currentFrame + 18);
 
                 if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY()) &&
@@ -206,42 +206,53 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
                 }
             } else {
                 AudioManager.stop("S - w");
-                int frame = switch (game.getPlayer().getKeyHandler().lastDirection) {
-                    case KeyEvent.VK_A -> 9;
-                    case KeyEvent.VK_D -> 18;
-                    case KeyEvent.VK_W -> 27;
-                    default -> 0;
-                };
+                int frame, lastDirection = game.getPlayer().getKeyHandler().lastDirection;
+
+                if (lastDirection == InputHandler.leftKey) {
+                    frame = 9;
+                } else if (lastDirection == InputHandler.rightKey) {
+                    frame = 18;
+                } else if (lastDirection == InputHandler.upKey) {
+                    frame = 27;
+                } else {
+                    frame = 0;
+                }
                 game.getPlayer().setCurrentFrame(frame);
 
                 // Prevents the character to "slide" when moving, if a direction key
                 // is spammed really fast
-                if (game.getPlayer().getKeyHandler().lastDirection == KeyEvent.VK_W || game.getPlayer().getKeyHandler().lastDirection == KeyEvent.VK_S) {
+                if (game.getPlayer().getKeyHandler().lastDirection == InputHandler.upKey
+                        || game.getPlayer().getKeyHandler().lastDirection == InputHandler.downKey) {
                     currentFrame = 2;
                 } else currentFrame = 1;
             }
         }
 
         if (game.getPlayer().getKeyHandler().attackPressed) {
-            if (game.getPlayer().getCurrentAnimationType() == "walking") {
+            if (game.getPlayer().getCurrentAnimationType().equals("walking")) {
                 // Creates an array of the sound names
                 String[] sounds = {"S - ssw1", "S - ssw2", "S - ssw3"};
                 // Generates a random index
-                int index = (int)(Math.random() * sounds.length);
+                int index = (int) (Math.random() * sounds.length);
                 AudioManager.play(sounds[index]);
                 AudioManager.stop("S - w");
             }
             game.getPlayer().setCurrentAnimationType("attacking");
 
-            switch (game.getPlayer().getKeyHandler().hitDirection) {
-                case (KeyEvent.VK_W) -> game.getPlayer().setCurrentFrame(attackFrame + 18);
-                case (KeyEvent.VK_A) -> game.getPlayer().setCurrentFrame(attackFrame + 6);
-                case (KeyEvent.VK_D) -> game.getPlayer().setCurrentFrame(attackFrame + 12);
-                default -> game.getPlayer().setCurrentFrame(attackFrame);
-            }
+            int attackDirection = game.getPlayer().getKeyHandler().attackDirection;
+
+            if (attackDirection == InputHandler.upKey) {
+                game.getPlayer().setCurrentFrame(attackFrame + 18);
+
+            } else if (attackDirection == InputHandler.leftKey) {
+                game.getPlayer().setCurrentFrame(attackFrame + 6);
+
+            } else if (attackDirection == InputHandler.rightKey) {
+                game.getPlayer().setCurrentFrame(attackFrame + 12);
+
+            } else game.getPlayer().setCurrentFrame(attackFrame);
         }
     }
-
 
     @Override
     public void paint(Graphics graph) {
