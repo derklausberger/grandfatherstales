@@ -100,6 +100,9 @@ public class AudioManager {
         // If the sound is already playing, stops it
         if (c.isRunning()) c.stop();
 
+        //FloatControl floatControl = (FloatControl) c.getControl(FloatControl.Type.MASTER_GAIN);
+
+
         // Sets the volume and position and starts the sound
         if (name.startsWith("S")) {
             setVolume(c, soundVolume);

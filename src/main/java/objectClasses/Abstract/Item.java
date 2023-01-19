@@ -9,11 +9,19 @@ import java.util.ArrayList;
 public abstract class Item {
     private String name;
     private RarityType rarity;
-    private Image image;
+    private BufferedImage image;
 
-    public Item(String name, RarityType rarity, Image image) {
+    public Item(String name, RarityType rarity, BufferedImage image) {
         this.name = name;
         this.rarity = rarity;
         this.image = image;
+    }
+
+    public BufferedImage getImage() {
+        return image;
+    }
+
+    public String getName() {
+        return name;
     }
 }

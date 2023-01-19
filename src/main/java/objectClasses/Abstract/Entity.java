@@ -10,13 +10,13 @@ import java.util.Map;
 
 import GUI.AnimationFrame;
 import GUI.GamePanel;
+import GUI.MissingItemException;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import objectClasses.Armor;
 import objectClasses.Enum.EntityTypes;
-import objectClasses.Enum.RarityType;
 import objectClasses.Game;
 import objectClasses.Weapon;
 
@@ -30,8 +30,9 @@ public abstract class Entity {
 
     private EntityTypes entityType;
 
-    private Weapon weapon;
-    private Armor armor;
+    // damage and amount store the combined value of all items
+    // -> Easier to implement possible temporary buffs
+    private int attackDamage, blockAmount;
 
     // cooldown -> time between attacks
     // For enemies, cooldown also determines
@@ -97,26 +98,20 @@ public abstract class Entity {
         this.attackDelay = attackDelay;
     }
 
-    public Weapon getWeapon() {
-        if (this.weapon == null) {
-            this.weapon = new Weapon("Sword", RarityType.Common, null, 5, 100);
-        }
-        return this.weapon;
+    // Weapon functions
+    public void setAttackDamage(int damage) {
+        this.attackDamage = damage;
+    }
+    public int getAttackDamage() {
+        return this.attackDamage;
     }
 
-    public void setWeapon(Weapon weapon) {
-        this.weapon = weapon;
+    // Armor functions
+    public void setBlockAmount(int blockAmount) {
+        this.blockAmount = blockAmount;
     }
-
-    public Armor getArmor() {
-        if (this.armor == null) {
-            this.setArmor(new Armor("Armor", RarityType.Common, null, 3));
-        }
-        return this.armor;
-    }
-
-    public void setArmor(Armor armor) {
-        this.armor = armor;
+    public int getBlockAmount() {
+        return this.blockAmount;
     }
 
     public int getMaxHealthPoints() {

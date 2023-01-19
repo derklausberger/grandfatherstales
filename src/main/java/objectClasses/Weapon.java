@@ -4,17 +4,24 @@ import objectClasses.Abstract.Item;
 import objectClasses.Enum.RarityType;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class Weapon extends Item {
-    private int attackAmount;
+    private int attackDamage;
     private int attackRange;
 
-    public int getAttackAmount() {
-        return attackAmount;
+    public Weapon(String name, RarityType rarity, BufferedImage image, int attackDamage, int attackRange) {
+        super(name, rarity, image);
+        this.attackDamage = attackDamage;
+        this.attackRange = attackRange;
     }
 
-    public void setAttackAmount(int attackAmount) {
-        this.attackAmount = attackAmount;
+    public int getAttackDamage() {
+        return attackDamage;
+    }
+
+    public void setAttackDamage(int attackDamage) {
+        this.attackDamage = attackDamage;
     }
 
     public int getAttackRange() {
@@ -25,9 +32,4 @@ public class Weapon extends Item {
         this.attackRange = attackRange;
     }
 
-    public Weapon(String name, RarityType rarity, Image image, int attackAmount, int attackRange) {
-        super(name, rarity, image);
-        this.attackAmount = attackAmount;
-        this.attackRange = attackRange;
-    }
 }

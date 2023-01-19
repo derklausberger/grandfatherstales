@@ -27,8 +27,9 @@ public class Enemy extends Entity {
     public Enemy(int positionX, int positionY, int movementSpeed, int healthPoints, EntityTypes entityTypes) {
         super(positionX, positionY, movementSpeed, healthPoints, entityTypes);
 
-        super.getArmor();
-        super.getWeapon();
+        // Enemies don't need an armor or weapon object, only values
+        super.setBlockAmount(5);
+        super.setAttackDamage(5);
         super.setAttackDelay(10);
 
         // Delay between frame updates in milliseconds
@@ -202,11 +203,11 @@ public class Enemy extends Entity {
                     arc2D.contains(game.getPlayer().getPositionX() + GamePanel.NEW_TILE_SIZE, game.getPlayer().getPositionY() + GamePanel.NEW_TILE_SIZE)) {
 
                 if (!game.getPlayer().isInvincible()) {
-                    if (game.getPlayer().getArmor().getBlockAmount() >= getWeapon().getAttackAmount()) {
+                    if (game.getPlayer().getBlockAmount() >= getAttackDamage()) {
 
                     } else {
                         AudioManager.play("S - d");
-                        game.getPlayer().setCurrentHealthPoints(game.getPlayer().getCurrentHealthPoints() + game.getPlayer().getArmor().getBlockAmount() - getWeapon().getAttackAmount());
+                        game.getPlayer().setCurrentHealthPoints(game.getPlayer().getCurrentHealthPoints() + game.getPlayer().getBlockAmount() - getAttackDamage());
                     }
 
                     if (game.getPlayer().getCurrentHealthPoints() <= 0) {
