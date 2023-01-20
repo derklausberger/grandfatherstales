@@ -59,7 +59,7 @@ public class InventoryPanel extends JPanel {
             inventoryItems.put(i, icons);
         }
 
-        Player player = GamePanel.playerArrayList.get(0);
+        Player player = GamePanel.player;
 
         // Loads the inventory background image and fonts for the stats container
         File statValueFontFile = new File("src/main/resources/fonts/DePixelBreit.ttf"),

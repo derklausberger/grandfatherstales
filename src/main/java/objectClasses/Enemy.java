@@ -210,7 +210,7 @@ public class Enemy extends Entity {
 
                     } else {
                         AudioManager.play("S - d");
-                        game.getPlayer().setCurrentHealthPoints(game.getPlayer().getCurrentHealthPoints() + game.getPlayer().getArmor().getBlockAmount() - getWeapon().getAttackAmount());
+                        game.getPlayer().setCurrentHealthPoints(game.getPlayer().getCurrentHealthPoints() + game.getPlayer().getBlockAmount() - getAttackDamage());
                     }
 
                     if (game.getPlayer().getCurrentHealthPoints() <= 0) {

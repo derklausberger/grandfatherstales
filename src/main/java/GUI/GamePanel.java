@@ -38,6 +38,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
     private final Game game;
     public static ArrayList<Enemy> enemyArrayList = new ArrayList<Enemy>();
     //public static ArrayList<Player> playerArrayList = new ArrayList<Player>();
+    public static Player player;
 
     // This variable will keep track of the current frame of the animation
     public static int currentFrame = 0;
@@ -47,6 +48,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
 
     public GamePanel() throws IOException, ParserConfigurationException, SAXException {
         game = new Game();//new Player((int) ((WINDOW_WIDTH) / 2), (int) ((WINDOW_HEIGHT) / 2), 3, 5, null, 3, 1));
+        player = game.getPlayer();
 
         this.setLayout(new BorderLayout());
         this.setPreferredSize(new Dimension(
