@@ -1,0 +1,26 @@
+{
+  "moveUp": {
+    "default": "W",
+    "current": "W"
+  },
+  "moveLeft": {
+    "default": "A",
+    "current": "A"
+  },
+  "moveDown": {
+    "default": "S",
+    "current": "S"
+  },
+  "moveRight": {
+    "default": "D",
+    "current": "D"
+  },
+  "attack": {
+    "default": "C",
+    "current": "C"
+  },
+  "inventory": {
+    "default": "E",
+    "current": "E"
+  }
+}

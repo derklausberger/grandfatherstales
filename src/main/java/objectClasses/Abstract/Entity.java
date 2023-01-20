@@ -102,6 +102,7 @@ public abstract class Entity {
     public void setAttackDamage(int damage) {
         this.attackDamage = damage;
     }
+
     public int getAttackDamage() {
         return this.attackDamage;
     }
@@ -110,6 +111,7 @@ public abstract class Entity {
     public void setBlockAmount(int blockAmount) {
         this.blockAmount = blockAmount;
     }
+
     public int getBlockAmount() {
         return this.blockAmount;
     }
@@ -181,7 +183,7 @@ public abstract class Entity {
         JsonObject root = null;
 
         try {
-            root = gson.fromJson(new FileReader("src/main/resources/animationFrames.json"), JsonObject.class);
+            root = gson.fromJson(new FileReader("src/main/resources/jsonFiles/animationFrames.json"), JsonObject.class);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -236,3 +238,35 @@ public abstract class Entity {
 
     public abstract void draw(Graphics2D graph2D, Game game, GamePanel gamePanel) throws IOException;
 }
+
+
+/*
+
+{
+  "moveUp": {
+    "default": "W",
+    "current": "W"
+  },
+  "moveLeft": {
+    "default": "A",
+    "current": "A"
+  },
+  "moveDown": {
+    "default": "S",
+    "current": "S"
+  },
+  "moveRight": {
+    "default": "D",
+    "current": "D"
+  },
+  "attack": {
+    "default": "C",
+    "current": "C"
+  },
+  "inventory": {
+    "default": "E",
+    "current": "E"
+  }
+}
+
+ */

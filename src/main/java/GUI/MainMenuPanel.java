@@ -59,6 +59,7 @@ public class MainMenuPanel extends JPanel {
             logo.setIcon(new ImageIcon(
                     Objects.requireNonNull(bufferedLogo)
                             .getScaledInstance(LOGO_WIDTH, LOGO_HEIGHT, Image.SCALE_SMOOTH)));
+            logo.setText("Test");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -254,6 +255,7 @@ public class MainMenuPanel extends JPanel {
                 JComponent comp = (JComponent) e.getSource();
                 Window window = SwingUtilities.getWindowAncestor(comp);
                 window.dispose();
+                System.exit(0);
             }
         });
         quitButton.addMouseListener(new MouseAdapter() {

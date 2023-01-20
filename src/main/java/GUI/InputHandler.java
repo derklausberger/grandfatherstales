@@ -20,22 +20,63 @@ public class InputHandler implements KeyListener {
 
     // In this method, a file containing the saved key
     // bindings would be loaded to update possible changes
-    private void loadKeyBindings() {
+    protected static void loadKeyBindings() {
 
-        // Arrow keys are "VK_UP" / "VK_DOWN"/..
-        upKey = KeyEvent.VK_W;
-        leftKey = KeyEvent.VK_A;
-        downKey = KeyEvent.VK_S;
-        rightKey = KeyEvent.VK_D;
-        attackKey = KeyEvent.VK_C;
-        inventoryKey = KeyEvent.VK_E;
+        // Gets the current key bindings from the options screen, instead of loading the file itself again
+        int keyCode;
+        for (String keyName : OptionsMenuPanel.keyBindings.keySet()) {
+
+            // Only interested in the current key bindings, not default
+            if (keyName.contains("Current")) {
+                String keyValue = OptionsMenuPanel.keyBindings.get(keyName);
+
+                // If the key value is one char long, it can be
+                // converted to its key code
+                if (keyValue.length() == 1) {
+                    keyCode = KeyEvent.getExtendedKeyCodeForChar(
+                            keyValue.toCharArray()[0]);
+                } else {
+
+                    // If the key value is longer than one char,
+                    // sets the key to the default value
+                    keyCode = KeyEvent.getExtendedKeyCodeForChar(
+                            OptionsMenuPanel.keyBindings
+                                    .get(keyName.replace("Current", "Default"))
+                                    .toCharArray()[0]);
+
+                    // Checks if the key value is one of the arrow keys
+                    keyCode = switch (keyValue) {
+                        case "Oben" -> KeyEvent.VK_UP;
+                        case "Links" -> KeyEvent.VK_LEFT;
+                        case "Unten" -> KeyEvent.VK_DOWN;
+                        case "Rechts" -> KeyEvent.VK_RIGHT;
+                        default -> keyCode;
+                    };
+
+                }
+
+                // Checks which key to bind it to
+                if (keyName.contains("Up")) {
+                    upKey = keyCode;
+                } else if (keyName.contains("Left")) {
+                    leftKey = keyCode;
+                } else if (keyName.contains("Down")) {
+                    downKey = keyCode;
+                } else if (keyName.contains("Right")) {
+                    rightKey = keyCode;
+                } else if (keyName.contains("attack")) {
+                    attackKey = keyCode;
+                } else {
+                    inventoryKey = keyCode;
+                }
+            }
+        }
     }
 
     private boolean isMovementKey(int key) {
 
         return key == upKey || key == leftKey || key == downKey || key == rightKey;
     }
-
 
     // all 3 are required by KeyListener,
     // however we don't use this specific one

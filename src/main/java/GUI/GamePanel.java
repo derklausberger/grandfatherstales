@@ -50,6 +50,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
         game = new Game();//new Player((int) ((WINDOW_WIDTH) / 2), (int) ((WINDOW_HEIGHT) / 2), 3, 5, null, 3, 1));
         player = game.getPlayer();
 
+
         this.setLayout(new BorderLayout());
         this.setPreferredSize(new Dimension(
                 (int) (Main.DEFAULT_WINDOW_WIDTH * Main.SCALING_FACTOR),
@@ -113,6 +114,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
     public void startPlayerThread() {
         playerThread = new Thread(this);
         playerThread.start();
+
     }
 
     private void loadAudio() {
@@ -209,7 +211,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
                 }
             } else {
                 AudioManager.stop("S - w");
-                int frame, lastDirection = game.getPlayer().getKeyHandler().lastDirection;
+                int frame = 10000, lastDirection = game.getPlayer().getKeyHandler().lastDirection;
 
                 if (lastDirection == InputHandler.leftKey) {
                     frame = 9;
@@ -217,15 +219,15 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
                     frame = 18;
                 } else if (lastDirection == InputHandler.upKey) {
                     frame = 27;
-                } else {
+                } else if (lastDirection == InputHandler.downKey) {
                     frame = 0;
                 }
-                game.getPlayer().setCurrentFrame(frame);
+                if (frame != 10000) game.getPlayer().setCurrentFrame(frame);
 
                 // Prevents the character to "slide" when moving, if a direction key
                 // is spammed really fast
-                if (game.getPlayer().getKeyHandler().lastDirection == InputHandler.upKey
-                        || game.getPlayer().getKeyHandler().lastDirection == InputHandler.downKey) {
+                if (lastDirection == InputHandler.upKey
+                        || lastDirection == InputHandler.downKey) {
                     currentFrame = 2;
                 } else currentFrame = 1;
             }
