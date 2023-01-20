@@ -8,6 +8,10 @@
     ],
     "file.lastUsedOpenFilter": "Alle Dateien (*)",
     "fileStates": {
+        "1.xml": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
         "C:/Users/kilia/Desktop/FH/2022W/Software_Engineering/Game/src/main/resources/map/level/1.xml": {
             "scale": 1,
             "selectedLayer": 0,
@@ -39,11 +43,11 @@
             }
         },
         "C:/Users/niklasklausberger/IdeaProjects/grandfatherstales/src/main/resources/map/level/map1.xml": {
-            "scale": 3,
-            "selectedLayer": 2,
+            "scale": 2,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 162.83333333333331,
-                "y": 153.66666666666666
+                "x": 256,
+                "y": 256
             }
         },
         "C:/Users/niklasklausberger/IdeaProjects/grandfatherstales/src/main/tiled/tileBiomCave.tsx": {
@@ -71,7 +75,7 @@
         }
     },
     "last.externalTilesetPath": "C:/Users/niklasklausberger/IdeaProjects/grandfatherstales/arbitraryResources/tiled",
-    "last.imagePath": "C:/Users/kilia/Desktop/FH/2022W/Software_Engineering/Game/src/main/resources/map/tile",
+    "last.imagePath": "C:/Users/niklasklausberger/Desktop/fackel/f",
     "map.height": 32,
     "map.lastUsedFormat": "tmx",
     "map.tileHeight": 16,
@@ -88,13 +92,14 @@
     ],
     "project": "map.tiled-project",
     "recentFiles": [
+        "1.xml",
+        "C:/Users/niklasklausberger/IdeaProjects/grandfatherstales/src/main/resources/map/level/map1.xml",
         "tileBiomCave.xml",
         "tileBiomPlains.xml",
         "tileBiomTaiga.xml",
         "tileAssetsWater.xml",
         "tileAssetsTrees.xml",
         "C:/Users/niklasklausberger/IdeaProjects/grandfatherstales/src/main/resources/map/level/3.xml",
-        "C:/Users/niklasklausberger/IdeaProjects/grandfatherstales/src/main/resources/map/level/map1.xml",
         "C:/Users/niklasklausberger/IdeaProjects/grandfatherstales/src/main/resources/map/1.xml",
         "C:/Users/kilia/Desktop/FH/2022W/Software_Engineering/Game/src/main/resources/map/level/1.xml"
     ],

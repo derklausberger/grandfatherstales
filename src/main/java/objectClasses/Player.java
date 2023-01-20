@@ -75,8 +75,8 @@ public class Player extends Entity {
     @Override
     public void draw(Graphics2D graph2D, Game game, GamePanel gamePanel) {
 
-        int x = (int) ((GamePanel.WINDOW_WIDTH - GamePanel.NEW_TILE_SIZE) / 2);
-        int y = (int) ((GamePanel.WINDOW_HEIGHT - GamePanel.NEW_TILE_SIZE) / 2);
+        int x = (int) ((GamePanel.WINDOW_WIDTH - 30) / 2);
+        int y = (int) ((GamePanel.WINDOW_HEIGHT - 50) / 2);
 
         if (this.getCurrentHealthPoints() < this.getMaxHealthPoints()) {
             Shape healthBarOutside = new Rectangle2D.Double(

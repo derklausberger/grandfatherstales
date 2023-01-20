@@ -6,6 +6,7 @@ import objectClasses.Enum.EntityTypes;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -16,7 +17,8 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.security.KeyPair;
+import java.util.*;
 import java.util.List;
 
 public class Game {
@@ -24,6 +26,13 @@ public class Game {
     private List<Level> levels;
     private int currentLevelNumber;
     private static List<TileSet> tileSets;
+
+    // 12 items, but 6 torch-images: 0+6 is one torch (0 is flame, 6 is
+    private BufferedImage[] torches;
+    private int torchFrame;
+
+    private BufferedImage[] chests;
+    private Map<Integer, Integer> chestsToOpen;
 
     public Game() throws IOException, ParserConfigurationException, SAXException {
         loadTileSetsFromFiles();
@@ -33,6 +42,44 @@ public class Game {
         int x = (int) ((getCurrentLevel().getEnterPos() % 32 + 0.5) * GamePanel.NEW_TILE_SIZE);
         int y = (getCurrentLevel().getEnterPos() / 32 + 1) * GamePanel.NEW_TILE_SIZE;
         this.player = new Player(x, y, 3, 100, 3, EntityTypes.character);
+
+        loadTorchImages();
+        loadChestImages();
+        chestsToOpen = new HashMap<>();
+    }
+
+    private void loadTorchImages() throws ParserConfigurationException, IOException {
+        torches = new BufferedImage[12];
+        String tileSetFolderPath = "src/main/resources/torch";
+        File dir = new File(tileSetFolderPath);
+
+        BufferedImage img;
+        int idx = 0;
+        for (File file : Arrays.stream(dir.listFiles()).sorted().toList()) {
+            if (!file.isDirectory() && file.getAbsolutePath().endsWith(".png")) {
+                img = ImageIO.read(file);
+                torches[idx] = img.getSubimage(0, 0, img.getWidth(), img.getHeight() / 2);
+                torches[idx + 6] = img.getSubimage(0, img.getHeight() / 2, img.getWidth(), img.getHeight() / 2);
+                idx ++;
+            }
+        }
+
+        torchFrame = 0;
+    }
+
+    private void loadChestImages() throws ParserConfigurationException, IOException {
+        chests = new BufferedImage[3];
+        String tileSetFolderPath = "src/main/resources/chests";
+        File dir = new File(tileSetFolderPath);
+
+        BufferedImage img;
+        int idx = 0;
+        for (File file : Arrays.stream(dir.listFiles()).sorted().toList()) {
+            if (!file.isDirectory() && file.getAbsolutePath().endsWith(".png")) {
+                chests[idx] = ImageIO.read(file);
+                idx ++;
+            }
+        }
     }
 
     public Player getPlayer() {
@@ -91,7 +138,7 @@ public class Game {
         Level level = getCurrentLevel();
         BufferedImage[][][] map = level.getMap();
         for (int i = 0; i < map.length; i++) {
-            if (i != level.getTrees()) {
+            if (i != level.getTrees() && i != level.getTorches() && i != level.getChests()) {
                 for (int j = 0; j < 32 * 32; j++) {
                     g.drawImage(map[i][j / 32][j % 32],
                             GamePanel.NEW_TILE_SIZE * (j % 32) - player.getPositionX() + (GamePanel.WINDOW_WIDTH / 2),
@@ -99,6 +146,37 @@ public class Game {
                             GamePanel.NEW_TILE_SIZE, GamePanel.NEW_TILE_SIZE,
                             null);
                 }
+            }
+        }
+    }
+
+    public void openChest(int x, int y) {
+        int chestX = x / GamePanel.NEW_TILE_SIZE;
+        int chestY = y / GamePanel.NEW_TILE_SIZE;
+        if (!chestsToOpen.containsKey(32 * chestY + chestX)) {
+            chestsToOpen.put(32 * chestY + chestX, 30);
+        }
+    }
+
+    public void renderChests(Graphics2D graph2D) {
+        Level level = getCurrentLevel();
+        BufferedImage[][][] map = level.getMap();
+        for (int j = 0; j < 32 * 32; j++) {
+            graph2D.drawImage(map[level.getChests()][j / 32][j % 32],
+                    (GamePanel.NEW_TILE_SIZE * (j % 32)) - player.getPositionX() + (GamePanel.WINDOW_WIDTH / 2),
+                    GamePanel.NEW_TILE_SIZE * (j / 32) - player.getPositionY() + (GamePanel.WINDOW_HEIGHT / 2),
+                    GamePanel.NEW_TILE_SIZE, GamePanel.NEW_TILE_SIZE,
+                    null);
+        }
+
+        for (Map.Entry<Integer, Integer> chest : chestsToOpen.entrySet()) {
+            if (chest.getValue() > 0) {
+                if (chest.getValue() == 10) {
+                    getCurrentLevel().setChest(chest.getKey() % 32 * GamePanel.NEW_TILE_SIZE, chest.getKey() / 32 * GamePanel.NEW_TILE_SIZE, chests[2]);
+                } else if (chest.getValue() == 20) {
+                    getCurrentLevel().setChest(chest.getKey() % 32 * GamePanel.NEW_TILE_SIZE, chest.getKey() / 32 * GamePanel.NEW_TILE_SIZE, chests[1]);
+                }
+                chest.setValue(chest.getValue() - 1);
             }
         }
     }
@@ -131,7 +209,41 @@ public class Game {
                     GamePanel.NEW_TILE_SIZE * (j / 32) - player.getPositionY() + (GamePanel.WINDOW_HEIGHT / 2),
                     GamePanel.NEW_TILE_SIZE, GamePanel.NEW_TILE_SIZE,
                     null);
-            //}
+        }
+    }
+
+    public void renderTorchFlames(Graphics2D graph2D) {
+        Level level = getCurrentLevel();
+        BufferedImage[][][] map = level.getMap();
+        for (int j = 0; j < 32 * 32; j++) {
+            if (map[level.getTorches()][j / 32][j % 32] != null) {
+                graph2D.drawImage(torches[torchFrame / 10],
+                        (int)(GamePanel.NEW_TILE_SIZE * ((j % 32) + 0.2)) - player.getPositionX() + (GamePanel.WINDOW_WIDTH / 2),
+                        (int) (GamePanel.NEW_TILE_SIZE * ((j / 32) - 0.75)) - player.getPositionY() + (GamePanel.WINDOW_HEIGHT / 2),
+                        (int) (GamePanel.NEW_TILE_SIZE * 0.6),
+                        (int) (GamePanel.NEW_TILE_SIZE * 0.75),
+                        null);
+            }
+        }
+        if (torchFrame < 58) {
+            torchFrame += 1;
+        } else {
+            torchFrame = 0;
+        }
+    }
+
+    public void renderTorchStems(Graphics2D graph2D) {
+        Level level = getCurrentLevel();
+        BufferedImage[][][] map = level.getMap();
+        for (int j = 0; j < 32 * 32; j++) {
+            if (map[level.getTorches()][j / 32][j % 32] != null) {
+                graph2D.drawImage(torches[torchFrame / 10 + 6],
+                        (int)(GamePanel.NEW_TILE_SIZE * ((j % 32) + 0.2)) - player.getPositionX() + (GamePanel.WINDOW_WIDTH / 2),
+                        GamePanel.NEW_TILE_SIZE * ((j / 32)) - player.getPositionY() + (GamePanel.WINDOW_HEIGHT / 2),
+                        (int) (GamePanel.NEW_TILE_SIZE * 0.6),
+                        (int) (GamePanel.NEW_TILE_SIZE * 0.75),
+                        null);
+            }
         }
     }
 

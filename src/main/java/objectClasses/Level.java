@@ -26,7 +26,7 @@ public class Level {
     private BufferedImage[][][] map;//layers height width
     private Hashtable<Integer, TileSet> tileSets;
     private ArrayList<Enemy> enemies = null;
-    private int obstacles = -1, chests = -1, solid = -1, trees = -1, enterPos = -1;
+    private int obstacles = -1, chests = -1, solid = -1, trees = -1, enterPos = -1, torches = -1;
 
     public Level(File mapXMLFile) throws ParserConfigurationException, IOException, SAXException {
         int map_width = 32;
@@ -61,6 +61,7 @@ public class Level {
                 case "obstacles" -> obstacles = i;
                 case "trees" -> trees = i;
                 case "solid" -> solid = i;
+                case "torches" -> torches = i;
             }
 
             int j = 0, field, tileSetKey, fieldX, fieldY;
@@ -117,6 +118,10 @@ public class Level {
         return trees;
     }
 
+    public int getTorches() {
+        return torches;
+    }
+
     // return true if player can move onto tile with the coordinates x and y
     public boolean isSolid(int x, int y) {
         int map_y = y / GamePanel.NEW_TILE_SIZE;
@@ -139,9 +144,21 @@ public class Level {
         return false;
     }
 
+    public boolean setChest(int x, int y, BufferedImage chest) {
+        if (isChest(x, y)) {
+            map[chests][y / GamePanel.NEW_TILE_SIZE][ x / GamePanel.NEW_TILE_SIZE] = chest;
+
+            return true;
+        }
+
+        return false;
+    }
+
     public boolean isChest(int x, int y) {
         int map_y = y / GamePanel.NEW_TILE_SIZE;
         int map_x = x / GamePanel.NEW_TILE_SIZE;
+
+        //System.out.println(x + ", " + y);
 
         if (y < 0 || x < 0 || map_y > 31 || map_x > 31) {
             return false;
@@ -152,6 +169,9 @@ public class Level {
         return false;
     }
 
+    public int getChests() {
+        return chests;
+    }
 
     public ArrayList<Enemy> getEnemies() {
         if (enemies != null) {
@@ -161,7 +181,7 @@ public class Level {
         enemies = new ArrayList<>();
         Random random = new Random();
         // Biome, Level, Number of enemies should be contained in the xml file
-        for (int i = 0; i < 0; i++) {
+        for (int i = 0; i < 1; i++) {
             int x, y;
             do {
                 x = random.nextInt(32) * GamePanel.NEW_TILE_SIZE;

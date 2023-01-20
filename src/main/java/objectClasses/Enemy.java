@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.*;
+import java.util.ArrayList;
 
 
 public class Enemy extends Entity {
@@ -23,6 +24,7 @@ public class Enemy extends Entity {
     // of the attack animation is reached and the hit box is drawn
     private boolean isAttacking, attackHitBoxDrawn;
     private int viewDirection;
+    private ArrayList<Projectile> projectiles;
 
     public Enemy(int positionX, int positionY, int movementSpeed, int healthPoints, EntityTypes entityTypes) {
         super(positionX, positionY, movementSpeed, healthPoints, entityTypes);
@@ -39,6 +41,7 @@ public class Enemy extends Entity {
         attackAnimationFrame = 0;
         viewDirection = 0;
         isAttacking = false;
+        projectiles = new ArrayList<>();
     }
 
     public void detectPlayer(Game game) {
@@ -117,7 +120,7 @@ public class Enemy extends Entity {
 
         if (distance <= 80) {
             isAttacking = true;
-            attackPlayer(game);
+            //attackPlayer(game);
         } else {
             if (up) {
                 if (game.getCurrentLevel().isSolid(getPositionX() + Math.floorDiv(GamePanel.NEW_TILE_SIZE * 3, 10), getPositionY() - getMovementSpeed()) &&
@@ -147,7 +150,7 @@ public class Enemy extends Entity {
 
         setCurrentAnimationType("attacking");
 
-        Point2D playerMiddle = new Point2D.Double(game.getPlayer().getPositionX() + Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2), game.getPlayer().getPositionY() + Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2));
+        // Point2D playerMiddle = new Point2D.Double(game.getPlayer().getPositionX() + Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2), game.getPlayer().getPositionY() + Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2));
         Point2D enemyMiddle = new Point2D.Double(getPositionX() + Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2), getPositionY() + Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2));
 
         int startAngle = 0;
@@ -206,7 +209,8 @@ public class Enemy extends Entity {
 
                     } else {
                         AudioManager.play("S - d");
-                        game.getPlayer().setCurrentHealthPoints(game.getPlayer().getCurrentHealthPoints() + game.getPlayer().getArmor().getBlockAmount() - getWeapon().getAttackAmount());
+                        projectiles.add(new Projectile(getPositionX(), getPositionY(), viewDirection));
+                        //game.getPlayer().setCurrentHealthPoints(game.getPlayer().getCurrentHealthPoints() + game.getPlayer().getArmor().getBlockAmount() - getWeapon().getAttackAmount());
                     }
 
                     if (game.getPlayer().getCurrentHealthPoints() <= 0) {
@@ -214,12 +218,31 @@ public class Enemy extends Entity {
                             game.getPlayer().setLife(game.getPlayer().getLife() - 1);
                             game.getPlayer().setCurrentHealthPoints(game.getPlayer().getMaxHealthPoints());
                         } else {
-                            GamePanel.playerArrayList.remove(game.getPlayer());
+                            //GamePanel.playerArrayList.remove(game.getPlayer());
                         }
                     }
                 } else {
                     System.out.println("WAS INVINCIBLE");
                     game.getPlayer().triggerInvincibility();
+                }
+            }
+        }
+    }
+
+
+    // das gehört angepasst, wenn pfeil bild rdy is (vllt auch noch aufteiln in 2 funktionen: moven und hitten??)
+    public void moveProjectiles(Game game) {
+        Projectile p;
+        for (int i = projectiles.size() - 1; i >= 0; i--) {
+            p = projectiles.get(i);
+            if (p.outOfScreen()) {
+                projectiles.remove(i);
+            } else {
+                p.move();
+                if (p.getX() < game.getPlayer().getPositionX() + 30 && p.getX() > game.getPlayer().getPositionX()
+                        && p.getY() < game.getPlayer().getPositionY() + 50 && p.getY() > game.getPlayer().getPositionY()) {
+                    //attackPlayer(game);
+                    projectiles.remove(i);
                 }
             }
         }
@@ -242,6 +265,10 @@ public class Enemy extends Entity {
                 y + frame.getYOffset() - game.getPlayer().getPositionY() + this.getPositionY(),
                 frame.getWidth(), frame.getHeight(), gamePanel
         );
+
+        for(Projectile p : projectiles) {
+            p.draw(graph2D, game, gamePanel);
+        }
 
         if (this.getCurrentHealthPoints() < this.getMaxHealthPoints()) {
             Shape healthBarOutside = new Rectangle2D.Double(

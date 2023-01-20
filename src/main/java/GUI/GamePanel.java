@@ -38,7 +38,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
 
     private final Game game;
     public static ArrayList<Enemy> enemyArrayList = new ArrayList<Enemy>();
-    public static ArrayList<Player> playerArrayList = new ArrayList<Player>();
+    //public static ArrayList<Player> playerArrayList = new ArrayList<Player>();
 
     // This variable will keep track of the current frame of the animation
     public static int currentFrame = 0;
@@ -61,7 +61,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
 
         loadAudio();
 
-        playerArrayList.add(game.getPlayer());
+        //playerArrayList.add(game.getPlayer());
         enemyArrayList.addAll(game.getCurrentLevel().getEnemies());
 
         startPlayerThread();
@@ -173,35 +173,37 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
 
             AudioManager.loop("S - w");
             game.getPlayer().setCurrentAnimationType("walking");
+            int player_height = 50;
+            int player_width = 30;
 
             if (game.getPlayer().getKeyHandler().walkingDirection == InputHandler.upKey) {
                 game.getPlayer().setCurrentFrame(currentFrame + 27);
 
-                if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed()) &&
-                        game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed() /*- Math.floorDiv(NEW_TILE_SIZE, 3)*/)) {
+                if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(player_width * 4, 10), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed() + Math.floorDiv(player_height * 2, 10)) &&
+                        game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(player_width * 4, 10), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed() + Math.floorDiv(player_height * 2, 10))) {
                     game.getPlayer().setPositionY(game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed());
-                } else if (game.getCurrentLevel().isChest(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() - Math.floorDiv(NEW_TILE_SIZE, 10))) {
-                    System.out.println("chest!");
+                } else if (game.getCurrentLevel().isChest(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() - Math.floorDiv(player_height, 10))) {
+                    game.openChest(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() - Math.floorDiv(player_height, 10));
                 }
             } else if (game.getPlayer().getKeyHandler().walkingDirection == InputHandler.downKey) {
                 game.getPlayer().setCurrentFrame(currentFrame);
 
-                if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE * 4, 10)) &&
-                        game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE * 4, 10))) {
+                if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(player_width * 4, 10), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed() + Math.floorDiv(player_height, 2)) &&
+                        game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(player_width * 4, 10), game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed() + Math.floorDiv(player_height, 2))) {
                     game.getPlayer().setPositionY(game.getPlayer().getPositionY() + game.getPlayer().getMovementSpeed());
                 }
             } else if (game.getPlayer().getKeyHandler().walkingDirection == InputHandler.leftKey) {
                 game.getPlayer().setCurrentFrame(currentFrame + 9);
 
-                if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() + Math.floorDiv(NEW_TILE_SIZE * 4, 10)) &&
-                        game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed() - Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY()/* - Math.floorDiv(NEW_TILE_SIZE, 3)*/)) {
+                if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed() - Math.floorDiv(player_width * 4, 10), game.getPlayer().getPositionY() + Math.floorDiv(player_height, 2)) &&
+                        game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed() - Math.floorDiv(player_width * 4, 10), game.getPlayer().getPositionY() + Math.floorDiv(player_height * 2, 10))) {
                     game.getPlayer().setPositionX(game.getPlayer().getPositionX() - game.getPlayer().getMovementSpeed());
                 }
             } else if (game.getPlayer().getKeyHandler().walkingDirection == InputHandler.rightKey) {
                 game.getPlayer().setCurrentFrame(currentFrame + 18);
 
-                if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY()) &&
-                        game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed() + Math.floorDiv(NEW_TILE_SIZE * 3, 10), game.getPlayer().getPositionY() + Math.floorDiv(NEW_TILE_SIZE * 4, 10))) {
+                if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed() + Math.floorDiv(player_width * 4, 10), game.getPlayer().getPositionY() + Math.floorDiv(player_height, 2)) &&
+                        game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed() + Math.floorDiv(player_width * 4, 10), game.getPlayer().getPositionY() + Math.floorDiv(player_height * 2, 10))) {
                     game.getPlayer().setPositionX(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed());
                 }
             } else {
@@ -252,6 +254,10 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
 
             } else game.getPlayer().setCurrentFrame(attackFrame);
         }
+
+        for (Enemy enemy: enemyArrayList) {
+            enemy.moveProjectiles(game);
+        }
     }
 
     @Override
@@ -269,8 +275,15 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
         }
 
         game.renderSolid(graph2D);
-        for (Player player : playerArrayList) { player.draw(graph2D, game, this);}
-        for (Enemy enemy : enemyArrayList) { enemy.draw(graph2D, game, this);}
+        game.renderChests(graph2D);
+        game.renderTorchStems(graph2D);
+        //for (Player player : playerArrayList) { player.draw(graph2D, game, this);}
+        game.getPlayer().draw(graph2D, game, this);
+        game.renderTorchFlames(graph2D);
+
+        for (Enemy enemy : enemyArrayList) {
+            enemy.draw(graph2D, game, this);
+        }
         game.renderTrees(graph2D);
         graph2D.dispose();
     }
