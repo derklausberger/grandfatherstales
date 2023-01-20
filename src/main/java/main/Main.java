@@ -1,13 +1,8 @@
 package main;
 
 import GUI.*;
-import objectClasses.Game;
-import org.xml.sax.SAXException;
-
 import javax.swing.*;
-import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
-import java.io.IOException;
 
 public class Main {
 
@@ -18,7 +13,7 @@ public class Main {
 
     // Only change the scaling factor for a smaller screen
     public static final float
-            SCALING_FACTOR = 1f;
+            SCALING_FACTOR = 1.2f;
 
     public static String currentScreen, previousScreen;
     private static JPanel rootPanel;
@@ -63,9 +58,9 @@ public class Main {
 
         // Still doesn't center the inventory perfectly vertically,
         // Therefore, moved 20px upwards
-        int x = (layeredPane.getWidth() - inventoryPanel.getWidth()) / 2;
+        //int x = (layeredPane.getWidth() - inventoryPanel.getWidth()) / 2;
         int y = (layeredPane.getHeight() - inventoryPanel.getHeight()) / 2;
-        inventoryPanel.setLocation(x, y - 20);
+        inventoryPanel.setLocation((int) ((layeredPane.getWidth() / 16) * SCALING_FACTOR), y - 20);
 
         layeredPane.add(gamePanel, JLayeredPane.DEFAULT_LAYER);
         layeredPane.add(inventoryPanel, JLayeredPane.PALETTE_LAYER);
@@ -117,15 +112,14 @@ public class Main {
         LoadingPanel loadingPanel = new LoadingPanel();
         rootPanel.add(loadingPanel, "Loading");
 
-        currentScreen = "Game";
-        GamePanel game = null;
+        //currentScreen = "Game";
+        //GamePanel game = null;
         try {
-            game = new GamePanel();
+            //game = new GamePanel();
         } catch (Exception e) {
             e.printStackTrace();
         }
         //showGameScreen(game);
-        //InventoryPanel panel = new InventoryPanel();
 
 
         showMainScreen();

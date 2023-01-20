@@ -29,8 +29,9 @@ public class Enemy extends Entity {
     public Enemy(int positionX, int positionY, int movementSpeed, int healthPoints, EntityTypes entityTypes) {
         super(positionX, positionY, movementSpeed, healthPoints, entityTypes);
 
-        super.getArmor();
-        super.getWeapon();
+        // Enemies don't need an armor or weapon object, only values
+        super.setBlockAmount(5);
+        super.setAttackDamage(5);
         super.setAttackDelay(10);
 
         // Delay between frame updates in milliseconds
@@ -150,7 +151,7 @@ public class Enemy extends Entity {
 
         setCurrentAnimationType("attacking");
 
-        // Point2D playerMiddle = new Point2D.Double(game.getPlayer().getPositionX() + Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2), game.getPlayer().getPositionY() + Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2));
+        Point2D playerMiddle = new Point2D.Double(game.getPlayer().getPositionX() + Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2), game.getPlayer().getPositionY() + Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2));
         Point2D enemyMiddle = new Point2D.Double(getPositionX() + Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2), getPositionY() + Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2));
 
         int startAngle = 0;
@@ -205,12 +206,11 @@ public class Enemy extends Entity {
                     arc2D.contains(game.getPlayer().getPositionX() + GamePanel.NEW_TILE_SIZE, game.getPlayer().getPositionY() + GamePanel.NEW_TILE_SIZE)) {
 
                 if (!game.getPlayer().isInvincible()) {
-                    if (game.getPlayer().getArmor().getBlockAmount() >= getWeapon().getAttackAmount()) {
+                    if (game.getPlayer().getBlockAmount() >= getAttackDamage()) {
 
                     } else {
                         AudioManager.play("S - d");
-                        projectiles.add(new Projectile(getPositionX(), getPositionY(), viewDirection));
-                        //game.getPlayer().setCurrentHealthPoints(game.getPlayer().getCurrentHealthPoints() + game.getPlayer().getArmor().getBlockAmount() - getWeapon().getAttackAmount());
+                        game.getPlayer().setCurrentHealthPoints(game.getPlayer().getCurrentHealthPoints() + game.getPlayer().getArmor().getBlockAmount() - getWeapon().getAttackAmount());
                     }
 
                     if (game.getPlayer().getCurrentHealthPoints() <= 0) {
