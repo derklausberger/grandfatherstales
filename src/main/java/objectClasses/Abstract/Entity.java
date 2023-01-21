@@ -16,20 +16,25 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import objectClasses.Enum.EntityType;
 import objectClasses.Game;
+import objectClasses.KnockBack;
 
 import javax.imageio.ImageIO;
 
-public abstract class Entity {
+public abstract class Entity implements KnockBack {
 
     private int positionX;
     private int positionY;
     private int movementSpeed;
 
     private EntityType entityType;
+    private boolean knockBack = false;
+    private int momentum;
+    private int knockBackDuration;
 
     // damage and amount store the combined value of all items
     // -> Easier to implement possible temporary buffs
-    private int attackDamage, blockAmount;
+    private int attackDamage;
+    private int blockAmount;
 
     // cooldown -> time between attacks
     // For enemies, cooldown also determines
@@ -68,6 +73,30 @@ public abstract class Entity {
         this.entityType = entityType;
 
         loadAnimationFrames(entityType.toString());
+    }
+
+    public boolean isKnockBack() {
+        return knockBack;
+    }
+
+    public void setKnockBack(boolean knockBack) {
+        this.knockBack = knockBack;
+    }
+
+    public int getMomentum() {
+        return momentum;
+    }
+
+    public void setMomentum(int momentum) {
+        this.momentum = momentum;
+    }
+
+    public int getKnockBackDuration() {
+        return knockBackDuration;
+    }
+
+    public void setKnockBackDuration(int knockBackDuration) {
+        this.knockBackDuration = knockBackDuration;
     }
 
     public void reduceCooldown() {
@@ -251,35 +280,3 @@ public abstract class Entity {
 
     public abstract void draw(Graphics2D graph2D, Game game, GamePanel gamePanel) throws IOException;
 }
-
-
-/*
-
-{
-  "moveUp": {
-    "default": "W",
-    "current": "W"
-  },
-  "moveLeft": {
-    "default": "A",
-    "current": "A"
-  },
-  "moveDown": {
-    "default": "S",
-    "current": "S"
-  },
-  "moveRight": {
-    "default": "D",
-    "current": "D"
-  },
-  "attack": {
-    "default": "C",
-    "current": "C"
-  },
-  "inventory": {
-    "default": "E",
-    "current": "E"
-  }
-}
-
- */

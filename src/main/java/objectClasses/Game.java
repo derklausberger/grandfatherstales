@@ -326,6 +326,11 @@ public class Game {
                         } else {
                             AudioManager.play("S - d");
                             enemy.setCurrentHealthPoints(enemy.getCurrentHealthPoints() + enemy.getBlockAmount() - player.getAttackDamage());
+
+                            if(!enemy.isKnockBack()) {
+                                enemy.hit();
+                            }
+
                         }
                         if (enemy.getCurrentHealthPoints() <= 0) {
                             GamePanel.enemyArrayList.remove(enemy);

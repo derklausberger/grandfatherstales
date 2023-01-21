@@ -285,6 +285,9 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
 
         for (Enemy enemy : enemyArrayList) {
             enemy.draw(graph2D, game, this);
+            if(enemy.isKnockBack()) {
+                enemy.update();
+            }
         }
         game.renderTrees(graph2D);
         graph2D.dispose();
