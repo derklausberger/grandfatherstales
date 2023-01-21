@@ -47,14 +47,6 @@ public class RewardPanel extends JPanel {
 
     private void init() {
 
-        rewardItems[0] = GamePanel.player.getWeapon();
-        try {
-            rewardItems[1] = GamePanel.player.getArmorPiece("chest");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         // Loads the reward background image and fonts for the stats
         File statFontFile = new File("src/main/resources/fonts/DePixelBreit.ttf");
         Font font = null;
@@ -69,6 +61,8 @@ public class RewardPanel extends JPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        rewardItems[0] = new Armor("helmet", RarityType.Common, helmet, 8);
+        rewardItems[1] = new Armor("helmet", RarityType.Common, helmet, 2);
         rewardItems[2] = new Armor("helmet", RarityType.Common, helmet, 4);
 
         // Creates the chest icon in the top center

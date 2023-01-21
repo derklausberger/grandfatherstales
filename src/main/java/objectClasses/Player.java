@@ -71,9 +71,9 @@ public class Player extends Entity {
         }
 
         setWeapon(new Weapon("sword", RarityType.Common, sword, 10, 100));
-        addArmorPiece(new Armor("chest", RarityType.Common, chestplate, 1));
-        addArmorPiece(new Armor("helmet", RarityType.Unique, helmet, 2));
-        addArmorPiece(new Armor("shield", RarityType.Rare, shield, 3));
+        //addArmorPiece(new Armor("chest", RarityType.Common, chestplate, 1));
+        //addArmorPiece(new Armor("helmet", RarityType.Unique, helmet, 2));
+        //addArmorPiece(new Armor("shield", RarityType.Rare, shield, 3));
     }
 
     public void addItem(Item item) {
@@ -130,6 +130,7 @@ public class Player extends Entity {
         this.weapon = weapon;
         super.setAttackDamage(weapon.getAttackDamage());
     }
+
     public Weapon getWeapon() {
         return this.weapon;
     }
@@ -139,6 +140,7 @@ public class Player extends Entity {
         this.armorItems.put(armor.getItemName(), armor);
         updateArmorAmount();
     }
+
     public Armor getArmorPiece(String piece) throws MissingItemException {
 
         if (armorItems.containsKey(piece)) {
@@ -146,6 +148,7 @@ public class Player extends Entity {
         }
         throw new MissingItemException(piece);
     }
+
     private void updateArmorAmount() {
         int blockAmount = 0;
         for (Armor piece : armorItems.values()) {
@@ -164,24 +167,27 @@ public class Player extends Entity {
         int x = (int) ((GamePanel.WINDOW_WIDTH - 30) / 2);
         int y = (int) ((GamePanel.WINDOW_HEIGHT - 50) / 2);
 
+        double healthBarWidth = (double) 262 / (double) this.getMaxHealthPoints() * (double) this.getCurrentHealthPoints();
+        Shape healthBar = new Rectangle2D.Double(
+                26,
+                66,
+                healthBarWidth,
+                14);
+
+        graph2D.setPaint(new Color(0x7d0027));
+        graph2D.fill(healthBar);
+
         if (this.getCurrentHealthPoints() < this.getMaxHealthPoints()) {
-            Shape healthBarOutside = new Rectangle2D.Double(
-                    (double) Math.floorDiv(GamePanel.WINDOW_WIDTH - GamePanel.NEW_TILE_SIZE, 2) - 1,
-                    (double) Math.floorDiv(GamePanel.WINDOW_HEIGHT - GamePanel.NEW_TILE_SIZE, 2) - 11,
-                    GamePanel.NEW_TILE_SIZE + 2,
-                    3);
+            Shape healthBarBackground = new Rectangle2D.Double(
+                    26 + healthBarWidth,
+                    66,
+                    262 - healthBarWidth,
+                    14);
 
-            Shape healthBarInside = new Rectangle2D.Double(
-                    (double) (GamePanel.WINDOW_WIDTH - GamePanel.NEW_TILE_SIZE) / 2,
-                    (double) (GamePanel.WINDOW_HEIGHT - GamePanel.NEW_TILE_SIZE) / 2 - 10,
-                    (double) GamePanel.NEW_TILE_SIZE / (double) this.getMaxHealthPoints() * (double) this.getCurrentHealthPoints(),
-                    3);
-
-            graph2D.setPaint(Color.black);
-            graph2D.draw(healthBarOutside);
-            graph2D.setPaint(Color.RED);
-            graph2D.fill(healthBarInside);
+            graph2D.setPaint(new Color(0xA6505050, true));
+            graph2D.fill(healthBarBackground);
         }
+
 
         // The current frame
         AnimationFrame frame = getEntityFrames(getCurrentAnimationType())[getCurrentFrame()];

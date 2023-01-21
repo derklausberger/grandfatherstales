@@ -63,7 +63,6 @@ public class Projectile {
 
     public void draw(Graphics2D graph2D, Game game, GamePanel gamePanel) {
 
-        System.out.println(x + ", " + y);
         graph2D.drawImage(game.getProjectileImage(direction), x  + (int) ((GamePanel.WINDOW_WIDTH) / 2) - game.getPlayer().getPositionX(),
                 y +  (int) ((GamePanel.WINDOW_HEIGHT) / 2) - game.getPlayer().getPositionY(), imageWidth, imageHeight, null);
     }

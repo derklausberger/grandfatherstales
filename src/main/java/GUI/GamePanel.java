@@ -6,11 +6,14 @@ import objectClasses.Game;
 import objectClasses.Player;
 import org.xml.sax.SAXException;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -280,7 +283,6 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
         game.renderChests(graph2D);
         game.renderTorchStems(graph2D);
         //for (Player player : playerArrayList) { player.draw(graph2D, game, this);}
-        game.getPlayer().draw(graph2D, game, this);
         game.renderTorchFlames(graph2D);
 
         for (Enemy enemy : enemyArrayList) {
@@ -290,6 +292,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
             }
         }
         game.renderTrees(graph2D);
+        game.getPlayer().draw(graph2D, game, this);
         graph2D.dispose();
     }
 

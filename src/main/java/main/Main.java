@@ -1,8 +1,12 @@
 package main;
 
 import GUI.*;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
 public class Main {
 
@@ -52,6 +56,18 @@ public class Main {
         RewardPanel rewardPanel = new RewardPanel();
         rewardPanel.setSize(rewardPanel.getPreferredSize());
 
+        BufferedImage bufferedBackground = null;
+
+        try {
+            bufferedBackground = ImageIO.read(new File("src/main/resources/screen/inventoryPanel/healthContainer.png"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        JLabel healthContainer = new JLabel("Health Container");
+        healthContainer.setSize(new Dimension(166 * 2, 37 * 2));
+        healthContainer.setIcon(new ImageIcon(bufferedBackground.getScaledInstance(166 * 2, 37 * 2, Image.SCALE_SMOOTH)));
+
         // Creates the layered pane to hold the game and inventory panels
         layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(
@@ -64,10 +80,13 @@ public class Main {
         int yCenter = (layeredPane.getHeight() - inventoryPanel.getHeight()) / 2;
         inventoryPanel.setLocation((int) ((layeredPane.getWidth() / 16) * SCALING_FACTOR), yCenter - 20);
 
+        healthContainer.setLocation(20, 20);
+
         rewardPanel.setLocation((layeredPane.getWidth() - rewardPanel.getWidth()) / 2, yCenter);
 
         layeredPane.add(gamePanel, JLayeredPane.DEFAULT_LAYER);
         layeredPane.add(inventoryPanel, JLayeredPane.PALETTE_LAYER);
+        layeredPane.add(healthContainer, JLayeredPane.PALETTE_LAYER);
         layeredPane.add(rewardPanel, JLayeredPane.MODAL_LAYER);
 
         rootPanel.add(layeredPane, "Game");
