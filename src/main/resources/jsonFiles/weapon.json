@@ -1,0 +1,408 @@
+{
+  "axe": [
+    {
+      "common": [
+        {
+          "itemStat": [
+            {
+              "attackDamage": 0,
+              "attackRange": 0
+            }
+          ],
+          "itemName": "",
+          "image": [
+            {
+              "image": "src/main/resources/item/weapon/axe/axeCommon.png",
+              "width": 16,
+              "height": 16
+            }
+          ]
+        }
+      ],
+      "rare": [
+        {
+          "itemStat": [
+            {
+              "attackDamage": 0,
+              "attackRange": 0
+            }
+          ],
+          "itemName": "",
+          "image": [
+            {
+              "image": "src/main/resources/item/weapon/axe/axeRare.png",
+              "width": 16,
+              "height": 16
+            }
+          ]
+        }
+      ],
+      "epic": [
+        {
+          "itemStat": [
+            {
+              "attackDamage": 0,
+              "attackRange": 0
+            }
+          ],
+          "itemName": "",
+          "image": [
+            {
+              "image": "src/main/resources/item/weapon/axe/axeEpic.png",
+              "width": 16,
+              "height": 16
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "crossbow": [
+    {
+      "common": [
+        {
+          "itemStat": [
+            {
+              "attackDamage": 0,
+              "attackRange": 0
+            }
+          ],
+          "itemName": "",
+          "image": [
+            {
+              "image": "src/main/resources/item/weapon/crossbow/crossbowCommon.png",
+              "width": 16,
+              "height": 16
+            }
+          ]
+        }
+      ],
+      "rare": [
+        {
+          "itemStat": [
+            {
+              "attackDamage": 0,
+              "attackRange": 0
+            }
+          ],
+          "itemName": "",
+          "image": [
+            {
+              "image": "src/main/resources/item/weapon/crossbow/crossbowRare.png",
+              "width": 16,
+              "height": 16
+            }
+          ]
+        }
+      ],
+      "epic": [
+        {
+          "itemStat": [
+            {
+              "attackDamage": 0,
+              "attackRange": 0
+            }
+          ],
+          "itemName": "",
+          "image": [
+            {
+              "image": "src/main/resources/item/weapon/crossbow/crossbowEpic.png",
+              "width": 16,
+              "height": 16
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dagger": [
+    {
+      "common": [
+        {
+          "itemStat": [
+            {
+              "attackDamage": 0,
+              "attackRange": 0
+            }
+          ],
+          "itemName": "",
+          "image": [
+            {
+              "image": "src/main/resources/item/weapon/dagger/daggerCommon.png",
+              "width": 16,
+              "height": 16
+            }
+          ]
+        }
+      ],
+      "rare": [
+        {
+          "itemStat": [
+            {
+              "attackDamage": 0,
+              "attackRange": 0
+            }
+          ],
+          "itemName": "",
+          "image": [
+            {
+              "image": "src/main/resources/item/weapon/dagger/daggerRare.png",
+              "width": 16,
+              "height": 16
+            }
+          ]
+        }
+      ],
+      "epic": [
+        {
+          "itemStat": [
+            {
+              "attackDamage": 0,
+              "attackRange": 0
+            }
+          ],
+          "itemName": "",
+          "image": [
+            {
+              "image": "src/main/resources/item/weapon/dagger/daggerEpic.png",
+              "width": 16,
+              "height": 16
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "sable": [
+    {
+      "common": [
+        {
+          "itemStat": [
+            {
+              "attackDamage": 0,
+              "attackRange": 0
+            }
+          ],
+          "itemName": "",
+          "image": [
+            {
+              "image": "src/main/resources/item/weapon/sable/sableCommon.png",
+              "width": 16,
+              "height": 16
+            }
+          ]
+        }
+      ],
+      "rare": [
+        {
+          "itemStat": [
+            {
+              "attackDamage": 0,
+              "attackRange": 0
+            }
+          ],
+          "itemName": "",
+          "image": [
+            {
+              "image": "src/main/resources/item/weapon/sable/sableRare.png",
+              "width": 16,
+              "height": 16
+            }
+          ]
+        }
+      ],
+      "epic": [
+        {
+          "itemStat": [
+            {
+              "attackDamage": 0,
+              "attackRange": 0
+            }
+          ],
+          "itemName": "",
+          "image": [
+            {
+              "image": "src/main/resources/item/weapon/sable/sableEpic.png",
+              "width": 16,
+              "height": 16
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "spear": [
+    {
+      "common": [
+        {
+          "itemStat": [
+            {
+              "attackDamage": 0,
+              "attackRange": 0
+            }
+          ],
+          "itemName": "",
+          "image": [
+            {
+              "image": "src/main/resources/item/weapon/spear/spearCommon.png",
+              "width": 16,
+              "height": 16
+            }
+          ]
+        }
+      ],
+      "rare": [
+        {
+          "itemStat": [
+            {
+              "attackDamage": 0,
+              "attackRange": 0
+            }
+          ],
+          "itemName": "",
+          "image": [
+            {
+              "image": "src/main/resources/item/weapon/spear/spearRare.png",
+              "width": 16,
+              "height": 16
+            }
+          ]
+        }
+      ],
+      "epic": [
+        {
+          "itemStat": [
+            {
+              "attackDamage": 0,
+              "attackRange": 0
+            }
+          ],
+          "itemName": "",
+          "image": [
+            {
+              "image": "src/main/resources/item/weapon/spear/spearEpic.png",
+              "width": 16,
+              "height": 16
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "sythce": [
+    {
+      "common": [
+        {
+          "itemStat": [
+            {
+              "attackDamage": 0,
+              "attackRange": 0
+            }
+          ],
+          "itemName": "",
+          "image": [
+            {
+              "image": "src/main/resources/item/weapon/sythce/sythceCommon.png",
+              "width": 16,
+              "height": 16
+            }
+          ]
+        }
+      ],
+      "rare": [
+        {
+          "itemStat": [
+            {
+              "attackDamage": 0,
+              "attackRange": 0
+            }
+          ],
+          "itemName": "",
+          "image": [
+            {
+              "image": "src/main/resources/item/weapon/sythce/sythceRare.png",
+              "width": 16,
+              "height": 16
+            }
+          ]
+        }
+      ],
+      "epic": [
+        {
+          "itemStat": [
+            {
+              "attackDamage": 0,
+              "attackRange": 0
+            }
+          ],
+          "itemName": "",
+          "image": [
+            {
+              "image": "src/main/resources/item/weapon/sythce/sythceEpic.png",
+              "width": 16,
+              "height": 16
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "wand": [
+    {
+      "common": [
+        {
+          "itemStat": [
+            {
+              "attackDamage": 0,
+              "attackRange": 0
+            }
+          ],
+          "itemName": "",
+          "image": [
+            {
+              "image": "src/main/resources/item/weapon/wand/wandCommon.png",
+              "width": 16,
+              "height": 16
+            }
+          ]
+        }
+      ],
+      "rare": [
+        {
+          "itemStat": [
+            {
+              "attackDamage": 0,
+              "attackRange": 0
+            }
+          ],
+          "itemName": "",
+          "image": [
+            {
+              "image": "src/main/resources/item/weapon/wand/wandRare.png",
+              "width": 16,
+              "height": 16
+            }
+          ]
+        }
+      ],
+      "epic": [
+        {
+          "itemStat": [
+            {
+              "attackDamage": 0,
+              "attackRange": 0
+            }
+          ],
+          "itemName": "",
+          "image": [
+            {
+              "image": "src/main/resources/item/weapon/wand/wandEpic.png",
+              "width": 16,
+              "height": 16
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
