@@ -139,6 +139,7 @@ public class Enemy extends Entity {
 
             if (getEntityType() == EntityType.skeletonArcher) animationTimer.setDelay(80);
 
+
         } else {
             if (angle >= 315 && angle < 359 || angle >= 0 && angle < 45) { // -> von 315 bis 45 -> Up
                 viewDirection = 27; setCurrentFrame(walkingAnimationFrame + viewDirection);
