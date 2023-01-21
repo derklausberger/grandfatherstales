@@ -20,12 +20,23 @@ import java.util.Map;
 
 public class Player extends Entity {
 
+    @Override
+    public void update() {
+
+    }
+
+    @Override
+    public void hit() {
+
+    }
+
+
     private InputHandler keyHandler;
 
     // armorItems stores all armor pieces (chest, helmet, boots, shield,..)
     private final Map<String, Armor> armorItems = new HashMap<>();
-
     private Weapon weapon;
+
 
     private int life;
     private boolean invincibility;
@@ -60,9 +71,9 @@ public class Player extends Entity {
         }
 
         setWeapon(new Weapon("sword", RarityType.Common, sword, 10, 100));
-        addArmorPiece(new Armor("chest", RarityType.Common, chestplate, 3));
-        addArmorPiece(new Armor("helmet", RarityType.Unique, helmet, 5));
-        addArmorPiece(new Armor("shield", RarityType.Rare, shield, 8));
+        addArmorPiece(new Armor("chest", RarityType.Common, chestplate, 1));
+        addArmorPiece(new Armor("helmet", RarityType.Unique, helmet, 2));
+        addArmorPiece(new Armor("shield", RarityType.Rare, shield, 3));
     }
 
     public void addItem(Item item) {
