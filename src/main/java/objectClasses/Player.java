@@ -5,11 +5,11 @@ import GUI.GamePanel;
 import GUI.InputHandler;
 import GUI.MissingItemException;
 import objectClasses.Abstract.Entity;
+import objectClasses.Abstract.Item;
 import objectClasses.Enum.EntityTypes;
 import objectClasses.Enum.RarityType;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.*;
 import java.awt.image.BufferedImage;
@@ -17,7 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class Player extends Entity {
 
@@ -66,6 +65,20 @@ public class Player extends Entity {
         addArmorPiece(new Armor("shield", RarityType.Rare, shield, 8));
     }
 
+    public void addItem(Item item) {
+
+        // If the item is a weapon
+        // Note: attackRange is currently always 100,
+        // it has to be changed for different weapons later on
+        if (item.getItemStatName().equals("Attack")) {
+            setWeapon(new Weapon(item.getItemName(), item.getRarity(), item.getImage(), item.getStatValue(), 100));
+
+            // If the item is an armor piece
+        } else if (item.getItemStatName().equals("Defense")) {
+            addArmorPiece(new Armor(item.getItemName(), item.getRarity(), item.getImage(), item.getStatValue()));
+        }
+    }
+
     public void triggerInvincibility() {
         this.invincibilityCooldown = 55;
         this.invincibilityDuration = 10; // -> safe for 20
@@ -112,7 +125,7 @@ public class Player extends Entity {
 
     // Armor functions
     public void addArmorPiece(Armor armor) {
-        this.armorItems.put(armor.getName(), armor);
+        this.armorItems.put(armor.getItemName(), armor);
         updateArmorAmount();
     }
     public Armor getArmorPiece(String piece) throws MissingItemException {

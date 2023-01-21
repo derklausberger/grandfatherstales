@@ -17,8 +17,13 @@ public class Armor extends Item {
         this.blockAmount = blockAmount;
     }
 
-    public Armor(String name, RarityType rarity, BufferedImage image, int blockAmount) {
-        super(name, rarity, image);
+    public Armor(String itemName, RarityType rarity, BufferedImage image, int blockAmount) {
+        super("Defense", itemName, rarity, image);
         this.blockAmount = blockAmount;
+    }
+
+    @Override
+    public int getStatValue() {
+        return blockAmount;
     }
 }

@@ -49,6 +49,9 @@ public class Main {
         InventoryPanel inventoryPanel = new InventoryPanel();
         inventoryPanel.setSize(inventoryPanel.getPreferredSize());
 
+        RewardPanel rewardPanel = new RewardPanel();
+        rewardPanel.setSize(rewardPanel.getPreferredSize());
+
         // Creates the layered pane to hold the game and inventory panels
         layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(
@@ -58,23 +61,35 @@ public class Main {
 
         // Still doesn't center the inventory perfectly vertically,
         // Therefore, moved 20px upwards
-        //int x = (layeredPane.getWidth() - inventoryPanel.getWidth()) / 2;
-        int y = (layeredPane.getHeight() - inventoryPanel.getHeight()) / 2;
-        inventoryPanel.setLocation((int) ((layeredPane.getWidth() / 16) * SCALING_FACTOR), y - 20);
+        int yCenter = (layeredPane.getHeight() - inventoryPanel.getHeight()) / 2;
+        inventoryPanel.setLocation((int) ((layeredPane.getWidth() / 16) * SCALING_FACTOR), yCenter - 20);
+
+        rewardPanel.setLocation((layeredPane.getWidth() - rewardPanel.getWidth()) / 2, yCenter);
 
         layeredPane.add(gamePanel, JLayeredPane.DEFAULT_LAYER);
         layeredPane.add(inventoryPanel, JLayeredPane.PALETTE_LAYER);
+        layeredPane.add(rewardPanel, JLayeredPane.MODAL_LAYER);
 
         rootPanel.add(layeredPane, "Game");
         cardLayout.show(rootPanel, "Game");
-        //previousScreen = currentScreen;
         currentScreen = "Game";
 
     }
 
     public static void toggleInventory() {
 
-        layeredPane.getComponent(0).setVisible(!layeredPane.getComponent(0).isVisible());
+        layeredPane.getComponentsInLayer(
+                JLayeredPane.PALETTE_LAYER)[0].setVisible(
+                        !layeredPane.getComponentsInLayer(
+                                JLayeredPane.PALETTE_LAYER)[0].isVisible());
+    }
+
+    public static void toggleRewardScreen() {
+
+        layeredPane.getComponentsInLayer(
+                JLayeredPane.MODAL_LAYER)[0].setVisible(
+                !layeredPane.getComponentsInLayer(
+                        JLayeredPane.MODAL_LAYER)[0].isVisible());
     }
 
     public static void showPreviousScreen() {

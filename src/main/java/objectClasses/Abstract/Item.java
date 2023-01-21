@@ -2,17 +2,19 @@ package objectClasses.Abstract;
 
 import objectClasses.Enum.RarityType;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 public abstract class Item {
-    private String name;
+    private String itemName;
+
+    private String itemStatName;
+
     private RarityType rarity;
     private BufferedImage image;
 
-    public Item(String name, RarityType rarity, BufferedImage image) {
-        this.name = name;
+    public Item(String itemStatName, String itemName, RarityType rarity, BufferedImage image) {
+        this.itemStatName = itemStatName;
+        this.itemName = itemName;
         this.rarity = rarity;
         this.image = image;
     }
@@ -21,7 +23,19 @@ public abstract class Item {
         return image;
     }
 
-    public String getName() {
-        return name;
+    public String getItemName() {
+        return itemName;
+    }
+
+    public String getItemStatName() {
+        return itemStatName;
+    }
+
+    public int getStatValue() {
+        return 0;
+    }
+
+    public RarityType getRarity() {
+        return rarity;
     }
 }

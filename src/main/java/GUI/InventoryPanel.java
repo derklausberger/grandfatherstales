@@ -1,6 +1,7 @@
 package GUI;
 
 import objectClasses.Player;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -11,8 +12,8 @@ import java.util.Map;
 
 public class InventoryPanel extends JPanel {
 
-    private final float SCALE_FACTOR = 2f;
-    private final int ICON_SIZE = (int) (25 * SCALE_FACTOR);
+    private static final float SCALE_FACTOR = 2f;
+    private static final int ICON_SIZE = (int) (25 * SCALE_FACTOR);
 
     private BufferedImage backgroundImage;
 
@@ -74,44 +75,30 @@ public class InventoryPanel extends JPanel {
             e.printStackTrace();
         }
 
-        // Creates the passive item container on the left (armour)
+        // Creates the passive item container on the left (armor)
         JPanel passiveItemContainer = new JPanel();
         passiveItemContainer.setPreferredSize(new Dimension((int) (27 * SCALE_FACTOR), (int) (120 * SCALE_FACTOR)));
         passiveItemContainer.setLayout(new BoxLayout(passiveItemContainer, BoxLayout.Y_AXIS));
         passiveItemContainer.setOpaque(false);
 
+        // Positions the four labels as placeholders without an icon
         for (int i = 0; i < 4; i++) {
-
-            // If the character does not have the specific item type,
-            // just sets the size of the label and skips setting an icon
             Map<String, JLabel> inventoryIcons = inventoryItems.get(i);
-            for (Map.Entry<String, JLabel> pair : inventoryIcons.entrySet()) {
 
-                try {
-                    inventoryIcons.get(pair.getKey()).setIcon(
-                            new ImageIcon(player.getArmorPiece(pair.getKey())
-                                    .getImage().getScaledInstance(
-                                            ICON_SIZE,
-                                            ICON_SIZE,
-                                            Image.SCALE_SMOOTH)));
-                } catch (MissingItemException e) {
-                    System.out.println(e);
-                    inventoryIcons.get(pair.getKey()).setPreferredSize(
-                            new Dimension(
-                                    ICON_SIZE,
-                                    ICON_SIZE));
-                    inventoryIcons.get(pair.getKey()).setMinimumSize(inventoryIcons.get(pair.getKey()).getPreferredSize());
-                    inventoryIcons.get(pair.getKey()).setMaximumSize(inventoryIcons.get(pair.getKey()).getPreferredSize());
-                }
-                inventoryIcons.get(pair.getKey()).setAlignmentX(JComponent.CENTER_ALIGNMENT);
+            for (JLabel label : inventoryIcons.values()) {
+
+                label.setPreferredSize(new Dimension(ICON_SIZE, ICON_SIZE));
+                label.setMinimumSize(new Dimension(ICON_SIZE, ICON_SIZE));
+                label.setMaximumSize(new Dimension(ICON_SIZE, ICON_SIZE));
+                label.setAlignmentX(JComponent.CENTER_ALIGNMENT);
 
                 passiveItemContainer.add(Box.createVerticalStrut((int) (1 * SCALE_FACTOR)));
-                passiveItemContainer.add(inventoryIcons.get(pair.getKey()));
-
-                if (i < 3) passiveItemContainer.add(Box.createVerticalStrut((int) (5 * SCALE_FACTOR)));
-                else passiveItemContainer.add(Box.createVerticalStrut((int) (1 * SCALE_FACTOR)));
+                passiveItemContainer.add(label);
             }
+            if (i < 3) passiveItemContainer.add(Box.createVerticalStrut((int) (5 * SCALE_FACTOR)));
+            else passiveItemContainer.add(Box.createVerticalStrut((int) (1 * SCALE_FACTOR)));
         }
+
         add(passiveItemContainer);
         passiveItemContainer.setBounds(
                 (int) (13 * SCALE_FACTOR),
@@ -126,41 +113,23 @@ public class InventoryPanel extends JPanel {
         activeItemContainer.setLayout(new BoxLayout(activeItemContainer, BoxLayout.Y_AXIS));
         activeItemContainer.setOpaque(false);
 
+        // Positions the two labels as placeholders without an icon
         for (int i = 4; i < 6; i++) {
-
-            BufferedImage image;
             Map<String, JLabel> inventoryIcons = inventoryItems.get(i);
-            for (Map.Entry<String, JLabel> pair : inventoryIcons.entrySet()) {
 
-                try {
-                    if (i == 4) image = player.getWeapon().getImage();
-                    else image = player.getArmorPiece(pair.getKey()).getImage();
+            for (JLabel label : inventoryIcons.values()) {
 
-                    inventoryIcons.get(pair.getKey()).setIcon(
-                            new ImageIcon(image
-                                    .getScaledInstance(
-                                            (int) (25 * SCALE_FACTOR),
-                                            (int) (25 * SCALE_FACTOR),
-                                            Image.SCALE_SMOOTH)));
-
-                } catch (MissingItemException e) {
-                    System.out.println(e);
-                    inventoryIcons.get(pair.getKey()).setPreferredSize(
-                            new Dimension(
-                                    ICON_SIZE,
-                                    ICON_SIZE));
-                    inventoryIcons.get(pair.getKey()).setMinimumSize(inventoryIcons.get(pair.getKey()).getPreferredSize());
-                    inventoryIcons.get(pair.getKey()).setMaximumSize(inventoryIcons.get(pair.getKey()).getPreferredSize());
-                }
-                inventoryIcons.get(pair.getKey()).setAlignmentX(JComponent.CENTER_ALIGNMENT);
+                label.setPreferredSize(new Dimension(ICON_SIZE, ICON_SIZE));
+                label.setMinimumSize(new Dimension(ICON_SIZE, ICON_SIZE));
+                label.setMaximumSize(new Dimension(ICON_SIZE, ICON_SIZE));
+                label.setAlignmentX(JComponent.CENTER_ALIGNMENT);
 
                 activeItemContainer.add(Box.createVerticalStrut((int) (1 * SCALE_FACTOR)));
-                activeItemContainer.add(inventoryIcons.get(pair.getKey()));
+                activeItemContainer.add(label);
                 activeItemContainer.add(Box.createVerticalStrut((int) (1 * SCALE_FACTOR)));
-
-                if (i == 4) {
-                    activeItemContainer.add(Box.createVerticalStrut((int) (66 * SCALE_FACTOR)));
-                }
+            }
+            if (i == 4) {
+                activeItemContainer.add(Box.createVerticalStrut((int) (66 * SCALE_FACTOR)));
             }
         }
         add(activeItemContainer);
@@ -177,6 +146,7 @@ public class InventoryPanel extends JPanel {
         statsContainer.setLayout(new BoxLayout(statsContainer, BoxLayout.Y_AXIS));
         statsContainer.setOpaque(false);
 
+        // Positions stat name and value labels as placeholders without a value
         for (int i = 6; i < inventoryItems.size(); i++) {
 
             JLabel statName = new JLabel();
@@ -188,27 +158,20 @@ public class InventoryPanel extends JPanel {
             statName.setFont(statNameFont.deriveFont(16f));
             statName.setForeground(new Color(0x5a3e28));
 
+            switch (i) {
+                case 6 -> statName.setText("Attack");
+                case 7 -> statName.setText("Defense");
+                default -> statName.setText("Health");
+            }
+
             Map<String, JLabel> inventoryIcons = inventoryItems.get(i);
-            for (Map.Entry<String, JLabel> pair : inventoryIcons.entrySet()) {
+            for (JLabel label : inventoryIcons.values()) {
 
-                inventoryIcons.get(pair.getKey()).setPreferredSize(new Dimension((int) (35 * SCALE_FACTOR), (int) (8 * SCALE_FACTOR)));
-
-                if (i == 6) {
-                    statName.setText("Attack");
-                    inventoryIcons.get(pair.getKey()).setText("" + player.getAttackDamage());
-                } else if (i == 7) {
-                    statName.setText("Defense");
-                    inventoryIcons.get(pair.getKey()).setText("" + player.getBlockAmount());
-                } else {
-                    statName.setText("Health");
-                    inventoryIcons.get(pair.getKey()).setText("" + player.getCurrentHealthPoints());
-                }
-
-                statsContainer.add(inventoryIcons.get(pair.getKey()));
+                label.setPreferredSize(new Dimension((int) (35 * SCALE_FACTOR), (int) (8 * SCALE_FACTOR)));
+                label.setFont(statValueFont.deriveFont(16f));
+                statsContainer.add(label);
 
                 if (i < 8) statsContainer.add(Box.createVerticalStrut((int) (11 * SCALE_FACTOR)));
-
-                inventoryIcons.get(pair.getKey()).setFont(statValueFont.deriveFont(16f));
             }
         }
 
@@ -219,6 +182,7 @@ public class InventoryPanel extends JPanel {
                 statsContainer.getPreferredSize().width,
                 statsContainer.getPreferredSize().height);
 
+        loadInventory();
 
         /** Currently not needed since no items
          can be held in the inventory */
@@ -264,6 +228,64 @@ public class InventoryPanel extends JPanel {
                 inventoryContainer.getPreferredSize().height);
 
          */
+    }
+
+    public static void loadInventory() {
+
+        // Loads the images of the armor pieces of the character
+        for (int i = 0; i < 4; i++) {
+            Map<String, JLabel> inventoryIcons = inventoryItems.get(i);
+            for (Map.Entry<String, JLabel> pair : inventoryIcons.entrySet()) {
+
+                try {
+                    inventoryIcons.get(pair.getKey()).setIcon(
+                            new ImageIcon(GamePanel.player.getArmorPiece(pair.getKey())
+                                    .getImage().getScaledInstance(
+                                            ICON_SIZE,
+                                            ICON_SIZE,
+                                            Image.SCALE_SMOOTH)));
+                } catch (MissingItemException e) {
+                    System.out.println(e);
+                }
+            }
+        }
+
+        // Loads the images of the weapon and shield of the character
+        for (int i = 4; i < 6; i++) {
+            BufferedImage image;
+            Map<String, JLabel> inventoryIcons = inventoryItems.get(i);
+            for (Map.Entry<String, JLabel> pair : inventoryIcons.entrySet()) {
+
+                try {
+                    if (i == 4) image = GamePanel.player.getWeapon().getImage();
+                    else image = GamePanel.player.getArmorPiece(pair.getKey()).getImage();
+
+                    inventoryIcons.get(pair.getKey()).setIcon(
+                            new ImageIcon(image
+                                    .getScaledInstance(
+                                            (int) (25 * SCALE_FACTOR),
+                                            (int) (25 * SCALE_FACTOR),
+                                            Image.SCALE_SMOOTH)));
+
+                } catch (MissingItemException e) {
+                    System.out.println(e);
+                }
+            }
+        }
+
+        // Loads the stat values
+        for (int i = 6; i < inventoryItems.size(); i++) {
+
+            Map<String, JLabel> inventoryIcons = inventoryItems.get(i);
+            for (Map.Entry<String, JLabel> pair : inventoryIcons.entrySet()) {
+
+                switch (i) {
+                    case 6 -> inventoryIcons.get(pair.getKey()).setText("" + GamePanel.player.getAttackDamage());
+                    case 7 -> inventoryIcons.get(pair.getKey()).setText("" + GamePanel.player.getBlockAmount());
+                    default -> inventoryIcons.get(pair.getKey()).setText("" + GamePanel.player.getCurrentHealthPoints());
+                }
+            }
+        }
     }
 
     public void paintComponent(Graphics g) {

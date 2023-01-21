@@ -2,6 +2,7 @@ package objectClasses;
 
 import GUI.AudioManager;
 import GUI.GamePanel;
+import main.Main;
 import objectClasses.Enum.EntityTypes;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -171,7 +172,9 @@ public class Game {
 
         for (Map.Entry<Integer, Integer> chest : chestsToOpen.entrySet()) {
             if (chest.getValue() > 0) {
-                if (chest.getValue() == 10) {
+                if (chest.getValue() == 1) {
+                    Main.toggleRewardScreen();
+                } else if (chest.getValue() == 10) {
                     getCurrentLevel().setChest(chest.getKey() % 32 * GamePanel.NEW_TILE_SIZE, chest.getKey() / 32 * GamePanel.NEW_TILE_SIZE, chests[2]);
                 } else if (chest.getValue() == 20) {
                     getCurrentLevel().setChest(chest.getKey() % 32 * GamePanel.NEW_TILE_SIZE, chest.getKey() / 32 * GamePanel.NEW_TILE_SIZE, chests[1]);

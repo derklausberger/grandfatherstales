@@ -10,8 +10,8 @@ public class Weapon extends Item {
     private int attackDamage;
     private int attackRange;
 
-    public Weapon(String name, RarityType rarity, BufferedImage image, int attackDamage, int attackRange) {
-        super(name, rarity, image);
+    public Weapon(String itemName, RarityType rarity, BufferedImage image, int attackDamage, int attackRange) {
+        super("Attack", itemName, rarity, image);
         this.attackDamage = attackDamage;
         this.attackRange = attackRange;
     }
@@ -32,4 +32,8 @@ public class Weapon extends Item {
         this.attackRange = attackRange;
     }
 
+    @Override
+    public int getStatValue() {
+        return attackDamage;
+    }
 }
