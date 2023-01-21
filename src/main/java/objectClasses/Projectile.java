@@ -8,22 +8,27 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class Projectile {
-    private BufferedImage img;
     private int direction;
     private int x;
     private int y;
+    private int imageWidth;
+    private int imageHeight;
 
     public Projectile(int x, int y, int direction) {
+
         this.x = x;
         this.y = y;
         this.direction = direction;
-        //if (direction == 0) {
-            try {
-                img = ImageIO.read(new File("src/main/resources/item/weapon/spear/spearCommon.png"));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        //}
+
+        if (direction == 0 || direction == 27) {
+            this.x += 10;
+            imageWidth = 5;
+            imageHeight = 31;
+        } else {
+            this.y += 20;
+            imageWidth = 31;
+            imageHeight = 5;
+        }
     }
 
     public int getX() {
@@ -35,7 +40,7 @@ public class Projectile {
     }
 
     public void move() {
-        int movementSpeed = 2;
+        int movementSpeed = 7;
         if (direction == 0) {
             y += movementSpeed;
         } else if (direction == 9) {
@@ -57,8 +62,9 @@ public class Projectile {
     }
 
     public void draw(Graphics2D graph2D, Game game, GamePanel gamePanel) {
+
         System.out.println(x + ", " + y);
-        graph2D.drawImage(img, x  + (int) ((GamePanel.WINDOW_WIDTH) / 2) - game.getPlayer().getPositionX(),
-                y +  (int) ((GamePanel.WINDOW_HEIGHT) / 2) - game.getPlayer().getPositionY(), 30, 30, null);
+        graph2D.drawImage(game.getProjectileImage(direction), x  + (int) ((GamePanel.WINDOW_WIDTH) / 2) - game.getPlayer().getPositionX(),
+                y +  (int) ((GamePanel.WINDOW_HEIGHT) / 2) - game.getPlayer().getPositionY(), imageWidth, imageHeight, null);
     }
 }

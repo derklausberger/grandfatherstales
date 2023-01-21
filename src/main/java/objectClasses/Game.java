@@ -3,11 +3,12 @@ package objectClasses;
 import GUI.AudioManager;
 import GUI.GamePanel;
 import main.Main;
-import objectClasses.Enum.EntityTypes;
+import objectClasses.Enum.EntityType;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -18,7 +19,6 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.security.KeyPair;
 import java.util.*;
 import java.util.List;
 
@@ -27,6 +27,10 @@ public class Game {
     private List<Level> levels;
     private int currentLevelNumber;
     private static List<TileSet> tileSets;
+
+    // Arrows for every direction, ordered alphabetically
+    // 0 is Down, 1 is Left, 2 is Right, 3 is Up
+    private BufferedImage[] arrows = new BufferedImage[4];
 
     // 12 items, but 6 torch-images: 0+6 is one torch (0 is flame, 6 is
     private BufferedImage[] torches;
@@ -42,16 +46,35 @@ public class Game {
 
         int x = (int) ((getCurrentLevel().getEnterPos() % 32 + 0.5) * GamePanel.NEW_TILE_SIZE);
         int y = (getCurrentLevel().getEnterPos() / 32 + 1) * GamePanel.NEW_TILE_SIZE;
-        this.player = new Player(x, y, 3, 100, 3, EntityTypes.character);
+        this.player = new Player(x, y, 3, 100, 3, EntityType.character);
 
         loadTorchImages();
         loadChestImages();
+        loadProjectileImages();
         chestsToOpen = new HashMap<>();
+    }
+
+    private void loadProjectileImages() {
+
+        try {
+            arrows[0] = ImageIO.read(new File("src/main/resources/entities/projectile/arrowDown.png"));
+            arrows[1] = ImageIO.read(new File("src/main/resources/entities/projectile/arrowLeft.png"));
+            arrows[2] = ImageIO.read(new File("src/main/resources/entities/projectile/arrowRight.png"));
+            arrows[3] = ImageIO.read(new File("src/main/resources/entities/projectile/arrowUp.png"));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public BufferedImage getProjectileImage(int direction) {
+
+        return arrows[direction / 9];
     }
 
     private void loadTorchImages() throws ParserConfigurationException, IOException {
         torches = new BufferedImage[12];
-        String tileSetFolderPath = "src/main/resources/torch";
+        String tileSetFolderPath = "src/main/resources/entities/torch";
         File dir = new File(tileSetFolderPath);
 
         BufferedImage img;
@@ -70,7 +93,7 @@ public class Game {
 
     private void loadChestImages() throws ParserConfigurationException, IOException {
         chests = new BufferedImage[3];
-        String tileSetFolderPath = "src/main/resources/chests";
+        String tileSetFolderPath = "src/main/resources/entities/chest";
         File dir = new File(tileSetFolderPath);
 
         BufferedImage img;

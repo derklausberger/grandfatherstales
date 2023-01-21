@@ -69,7 +69,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
         startPlayerThread();
 
         // Set up the timer to fire every 100 milliseconds (10 frames per second)
-        timer = new Timer(110, this);
+        timer = new Timer(100, this);
         timer.start();
     }
 
@@ -271,7 +271,6 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
         game.getPlayer().reduceInvincibilityCooldown();
         game.checkPlayerAttack(attackFrame);
 
-        //playerArrayList.get(0).reduceCooldown();
         for (Enemy enemy: enemyArrayList) {
             //enemy.reduceCooldown();
             enemy.detectPlayer(game);

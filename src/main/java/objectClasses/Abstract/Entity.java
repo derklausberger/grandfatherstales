@@ -10,15 +10,12 @@ import java.util.Map;
 
 import GUI.AnimationFrame;
 import GUI.GamePanel;
-import GUI.MissingItemException;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import objectClasses.Armor;
-import objectClasses.Enum.EntityTypes;
+import objectClasses.Enum.EntityType;
 import objectClasses.Game;
-import objectClasses.Weapon;
 
 import javax.imageio.ImageIO;
 
@@ -28,7 +25,7 @@ public abstract class Entity {
     private int positionY;
     private int movementSpeed;
 
-    private EntityTypes entityType;
+    private EntityType entityType;
 
     // damage and amount store the combined value of all items
     // -> Easier to implement possible temporary buffs
@@ -48,11 +45,19 @@ public abstract class Entity {
     private int maxHealthPoints;
     private int currentHealthPoints;
 
+    // entityFrames -> holds all frames of all animations
+    // currentAnimationType -> indicates the current type
+    // currentFrame -> indicates the current frame of the current animation
     private Map<String, AnimationFrame[]> entityFrames = new HashMap<>();
     private String currentAnimationType;
     private int currentFrame;
 
-    public Entity(int positionX, int positionY, int movementSpeed, int healthPoints, EntityTypes entityType) {
+    // Indicates the number of frames for one
+    // direction of the attack animation,
+    // because it differs between enemies
+    private int attackAnimationFrameLimit;
+
+    public Entity(int positionX, int positionY, int movementSpeed, int healthPoints, EntityType entityType) {
 
         this.positionX = positionX;
         this.positionY = positionY;
@@ -74,11 +79,11 @@ public abstract class Entity {
         }
     }
 
-    public EntityTypes getEntityType() {
+    public EntityType getEntityType() {
         return entityType;
     }
 
-    public void setEntityType(EntityTypes entityType) {
+    public void setEntityType(EntityType entityType) {
         this.entityType = entityType;
     }
 
@@ -176,6 +181,10 @@ public abstract class Entity {
         return entityFrames.get(animationName);
     }
 
+    public int getAttackAnimationFrameLimit() {
+        return attackAnimationFrameLimit;
+    }
+
     public void loadAnimationFrames(String entityType) {
 
         // Read the file into a JsonObject
@@ -188,7 +197,7 @@ public abstract class Entity {
             throw new RuntimeException(e);
         }
 
-        // Accesses the entity object (character/skeleton/orc/ ..)
+        // Accesses the entity object (character/skeleton/..)
         JsonObject entity = root.getAsJsonObject(entityType);
 
         // Loops through every entity's animation types
@@ -198,10 +207,10 @@ public abstract class Entity {
             JsonObject animationType = entity.getAsJsonObject(animationName);
 
             // An array to hold all frames of one animation type
-            // The size is the amount of animations of one direction * 4
-            // to store all four direction's frames
+            // The size is the amount of animations of one direction * number of directions
+            // to store all direction's frames
             AnimationFrame[] animationFrames =
-                    new AnimationFrame[animationType.getAsJsonArray("down").size() * 4];
+                    new AnimationFrame[animationType.getAsJsonArray("down").size() * animationType.keySet().size()];
 
             int width, height, xOffset, yOffset, index = 0;
 
@@ -210,6 +219,10 @@ public abstract class Entity {
 
                 // Holds all frames from a direction
                 JsonArray frames = animationType.getAsJsonArray(direction);
+
+                if (animationName.equals("attacking")) {
+                    attackAnimationFrameLimit = frames.size();
+                }
 
                 // Loops through every frame of the direction, creates an AnimationFrame
                 // with the values and saves it to the according frame array

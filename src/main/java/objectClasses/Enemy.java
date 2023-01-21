@@ -4,7 +4,7 @@ import GUI.AnimationFrame;
 import GUI.AudioManager;
 import GUI.GamePanel;
 import objectClasses.Abstract.Entity;
-import objectClasses.Enum.EntityTypes;
+import objectClasses.Enum.EntityType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,27 +22,39 @@ public class Enemy extends Entity {
     // isAttacking -> indicates if the attack animation is executed
     // attackHitBoxDrawn -> is set to true as soon as the third frame
     // of the attack animation is reached and the hit box is drawn
+    // attackCollisionFrame -> indicates, when exactly (frame)
+    // the hitbox for an attack should be drawn
     private boolean isAttacking, attackHitBoxDrawn;
-    private int viewDirection;
+    private int viewDirection, sightRadius, attackDistance;
+    private int attackCollisionFrame = 4;
+
     private ArrayList<Projectile> projectiles;
 
-    public Enemy(int positionX, int positionY, int movementSpeed, int healthPoints, EntityTypes entityTypes) {
-        super(positionX, positionY, movementSpeed, healthPoints, entityTypes);
+    public Enemy(int positionX, int positionY, int movementSpeed, int healthPoints, int sightRadius, int attackDistance, EntityType entityType) {
+        super(positionX, positionY, movementSpeed, healthPoints, entityType);
 
         // Enemies don't need an armor or weapon object, only values
         super.setBlockAmount(5);
         super.setAttackDamage(5);
         super.setAttackDelay(10);
+        this.sightRadius = sightRadius;
+        this.attackDistance = attackDistance;
 
         // Delay between frame updates in milliseconds
-        final int ANIMATION_DELAY = 110;
+        int animationDelay = 100;
 
-        animationTimer = new Timer(ANIMATION_DELAY, new AnimationHandler());
+        animationTimer = new Timer(animationDelay, new AnimationHandler());
         walkingAnimationFrame = 0;
         attackAnimationFrame = 0;
         viewDirection = 0;
         isAttacking = false;
         projectiles = new ArrayList<>();
+
+        if (entityType == EntityType.skeletonWarrior) {
+            attackCollisionFrame = 4;
+        } else if (entityType == EntityType.skeletonArcher) {
+            attackCollisionFrame = 10;
+        }
     }
 
     public void detectPlayer(Game game) {
@@ -50,7 +62,7 @@ public class Enemy extends Entity {
         Ellipse2D sightCircle = getCircleByCenter(new Point2D.Double(
                         getPositionX() + Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2),
                         getPositionY() + Math.floorDiv(GamePanel.NEW_TILE_SIZE, 2)),
-                200);
+                sightRadius);
 
         if (!isAttacking) {
             setCurrentAnimationType("walking");
@@ -119,8 +131,10 @@ public class Enemy extends Entity {
             setCurrentFrame(walkingAnimationFrame + viewDirection);
         }
 
-        if (distance <= 80) {
+        if (distance <= attackDistance) {
             isAttacking = true;
+
+            if (getEntityType() == EntityType.skeletonArcher) animationTimer.setDelay(80);
             //attackPlayer(game);
         } else {
             if (up) {
@@ -162,19 +176,19 @@ public class Enemy extends Entity {
                 startAngle = 45;
                 arcAngle = 90;
                 //System.out.println("enemy up attack");
-                setCurrentFrame(attackAnimationFrame + 18);
+                setCurrentFrame(attackAnimationFrame + getAttackAnimationFrameLimit() * 3);
             }
             case 9 -> {
                 startAngle = 135;
                 arcAngle = 90;
                 //System.out.println("enemy left attack");
-                setCurrentFrame(attackAnimationFrame + 6);
+                setCurrentFrame(attackAnimationFrame + getAttackAnimationFrameLimit());
             }
             case 18 -> {
                 startAngle = 315;
                 arcAngle = 90;
                 //System.out.println("enemy right attack");
-                setCurrentFrame(attackAnimationFrame + 12);
+                setCurrentFrame(attackAnimationFrame + getAttackAnimationFrameLimit() * 2);
             }
             case 0 -> {
                 startAngle = 225;
@@ -187,44 +201,49 @@ public class Enemy extends Entity {
         // Draws the hit box when the sword was swung (fourth image seems fine)
         // Therefore, the character has the possibility to walk out of an attack
         // and dodge it before he was actually (visually) hit
-        if (attackAnimationFrame == 4 && !attackHitBoxDrawn) {
+        if (attackAnimationFrame == attackCollisionFrame && !attackHitBoxDrawn) {
 
             attackHitBoxDrawn = true;
             walkingAnimationFrame = 0;
 
-            Arc2D arc2D = new Arc2D.Double();
-            arc2D.setArcByCenter(
-                    enemyMiddle.getX(),
-                    enemyMiddle.getY(),
-                    100,
-                    startAngle, arcAngle,
-                    Arc2D.PIE);
+            if (getEntityType() == EntityType.skeletonWarrior) {
+                Arc2D arc2D = new Arc2D.Double();
+                arc2D.setArcByCenter(
+                        enemyMiddle.getX(),
+                        enemyMiddle.getY(),
+                        100,
+                        startAngle, arcAngle,
+                        Arc2D.PIE);
 
-            if (arc2D.contains(game.getPlayer().getPositionX(), game.getPlayer().getPositionY()) ||
-                    arc2D.contains(game.getPlayer().getPositionX() + GamePanel.NEW_TILE_SIZE, game.getPlayer().getPositionY()) ||
-                    arc2D.contains(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() + GamePanel.NEW_TILE_SIZE) ||
-                    arc2D.contains(game.getPlayer().getPositionX() + GamePanel.NEW_TILE_SIZE, game.getPlayer().getPositionY() + GamePanel.NEW_TILE_SIZE)) {
+                if (arc2D.contains(game.getPlayer().getPositionX(), game.getPlayer().getPositionY()) ||
+                        arc2D.contains(game.getPlayer().getPositionX() + GamePanel.NEW_TILE_SIZE, game.getPlayer().getPositionY()) ||
+                        arc2D.contains(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() + GamePanel.NEW_TILE_SIZE) ||
+                        arc2D.contains(game.getPlayer().getPositionX() + GamePanel.NEW_TILE_SIZE, game.getPlayer().getPositionY() + GamePanel.NEW_TILE_SIZE)) {
 
-                if (!game.getPlayer().isInvincible()) {
-                    if (game.getPlayer().getBlockAmount() >= getAttackDamage()) {
+                    if (!game.getPlayer().isInvincible()) {
+                        if (game.getPlayer().getBlockAmount() >= getAttackDamage()) {
 
-                    } else {
-                        AudioManager.play("S - d");
-                        game.getPlayer().setCurrentHealthPoints(game.getPlayer().getCurrentHealthPoints() + game.getPlayer().getBlockAmount() - getAttackDamage());
-                    }
-
-                    if (game.getPlayer().getCurrentHealthPoints() <= 0) {
-                        if (game.getPlayer().getLife() >= 1) {
-                            game.getPlayer().setLife(game.getPlayer().getLife() - 1);
-                            game.getPlayer().setCurrentHealthPoints(game.getPlayer().getMaxHealthPoints());
                         } else {
-                            //GamePanel.playerArrayList.remove(game.getPlayer());
+                            AudioManager.play("S - d");
+                            game.getPlayer().setCurrentHealthPoints(game.getPlayer().getCurrentHealthPoints() + game.getPlayer().getBlockAmount() - getAttackDamage());
                         }
+
+                        if (game.getPlayer().getCurrentHealthPoints() <= 0) {
+                            if (game.getPlayer().getLife() >= 1) {
+                                game.getPlayer().setLife(game.getPlayer().getLife() - 1);
+                                game.getPlayer().setCurrentHealthPoints(game.getPlayer().getMaxHealthPoints());
+                            } else {
+                                //GamePanel.playerArrayList.remove(game.getPlayer());
+                            }
+                        }
+                    } else {
+                        System.out.println("WAS INVINCIBLE");
+                        game.getPlayer().triggerInvincibility();
                     }
-                } else {
-                    System.out.println("WAS INVINCIBLE");
-                    game.getPlayer().triggerInvincibility();
                 }
+            } else if (getEntityType() == EntityType.skeletonArcher) {
+
+                projectiles.add(new Projectile(getPositionX(), getPositionY(), viewDirection));
             }
         }
     }
@@ -241,6 +260,7 @@ public class Enemy extends Entity {
                 p.move();
                 if (p.getX() < game.getPlayer().getPositionX() + 30 && p.getX() > game.getPlayer().getPositionX()
                         && p.getY() < game.getPlayer().getPositionY() + 50 && p.getY() > game.getPlayer().getPositionY()) {
+                    System.out.println("Player was hit by projectile");
                     //attackPlayer(game);
                     projectiles.remove(i);
                 }
@@ -266,7 +286,7 @@ public class Enemy extends Entity {
                 frame.getWidth(), frame.getHeight(), gamePanel
         );
 
-        for(Projectile p : projectiles) {
+        for (Projectile p : projectiles) {
             p.draw(graph2D, game, gamePanel);
         }
 
@@ -311,10 +331,11 @@ public class Enemy extends Entity {
                 }
             } else {
                 attackAnimationFrame++;
-                if (attackAnimationFrame >= 6) {
+                if (attackAnimationFrame >= getAttackAnimationFrameLimit()) {
                     attackAnimationFrame = 0;
                     isAttacking = false;
                     attackHitBoxDrawn = false;
+                    animationTimer.setDelay(100);
                     setCooldown(getAttackDelay());
                 }
             }

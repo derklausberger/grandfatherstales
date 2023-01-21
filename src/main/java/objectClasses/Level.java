@@ -1,8 +1,7 @@
 package objectClasses;
 
 import GUI.GamePanel;
-import objectClasses.Abstract.Entity;
-import objectClasses.Enum.EntityTypes;
+import objectClasses.Enum.EntityType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -181,15 +180,21 @@ public class Level {
         enemies = new ArrayList<>();
         Random random = new Random();
         // Biome, Level, Number of enemies should be contained in the xml file
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 6; i++) {
             int x, y;
             do {
                 x = random.nextInt(32) * GamePanel.NEW_TILE_SIZE;
                 y = random.nextInt(32) * GamePanel.NEW_TILE_SIZE;
 
             } while (!isSolid(x,y));
-            Enemy e = new Enemy(x, y,1,52, EntityTypes.skeletonWarrior);
-            enemies.add(e);
+
+            Enemy enemy;
+            if (i % 2 == 0) {
+                enemy = new Enemy(x, y,1,52, 200, 80, EntityType.skeletonWarrior);
+            } else {
+                enemy = new Enemy(x, y,1,52, 300, 250, EntityType.skeletonArcher);
+            }
+            enemies.add(enemy);
         }
         return enemies;
     }

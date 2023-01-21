@@ -6,7 +6,7 @@ import GUI.InputHandler;
 import GUI.MissingItemException;
 import objectClasses.Abstract.Entity;
 import objectClasses.Abstract.Item;
-import objectClasses.Enum.EntityTypes;
+import objectClasses.Enum.EntityType;
 import objectClasses.Enum.RarityType;
 
 import javax.imageio.ImageIO;
@@ -32,9 +32,9 @@ public class Player extends Entity {
     private int invincibilityCooldown;
     private int invincibilityDuration;
 
-    public Player(int positionX, int positionY, int movementSpeed, int healthPoints, int life, EntityTypes entityTypes) {
+    public Player(int positionX, int positionY, int movementSpeed, int healthPoints, int life, EntityType entityType) {
 
-        super(positionX, positionY, movementSpeed, healthPoints, entityTypes);
+        super(positionX, positionY, movementSpeed, healthPoints, entityType);
         this.life = life;
         this.invincibility = true;
         this.invincibilityCooldown = 0;

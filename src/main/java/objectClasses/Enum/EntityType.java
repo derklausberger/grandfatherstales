@@ -1,8 +1,9 @@
 package objectClasses.Enum;
 
-public enum EntityTypes {
+public enum EntityType {
     character,
-    skeletonWarrior;
+    skeletonWarrior,
+    skeletonArcher;
 
     @Override
     public String toString() {
