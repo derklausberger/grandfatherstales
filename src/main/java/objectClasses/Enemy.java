@@ -1,9 +1,7 @@
 package objectClasses;
 
-import GUI.AnimationFrame;
-import GUI.AudioManager;
-import GUI.GamePanel;
-import GUI.InputHandler;
+import GUI.*;
+import main.Main;
 import objectClasses.Abstract.Entity;
 import objectClasses.Enum.EntityType;
 
@@ -209,7 +207,7 @@ public class Enemy extends Entity {
                         arc2D.contains(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() + GamePanel.NEW_TILE_SIZE) ||
                         arc2D.contains(game.getPlayer().getPositionX() + GamePanel.NEW_TILE_SIZE, game.getPlayer().getPositionY() + GamePanel.NEW_TILE_SIZE)) {
 
-                    dealDamage(game.getPlayer());
+                    dealDamage(game);
 
                 }
             } else if (getEntityType() == EntityType.skeletonArcher) {
@@ -264,7 +262,7 @@ public class Enemy extends Entity {
                 if (p.getX() < playerXRight && p.getX() + arrowOffset > playerXLeft
                         && p.getY() < playerYDown && p.getY() + arrowOffset > playerYUp) {
 
-                    dealDamage(game.getPlayer());
+                    dealDamage(game);
                     System.out.println("Player was hit by projectile");
 
                     projectiles.remove(i);
@@ -283,28 +281,25 @@ public class Enemy extends Entity {
         }
     }
 
-    private void dealDamage(Player player) {
+    private void dealDamage(Game game) {
 
-        if (!player.isInvincible()) {
-            if (player.getBlockAmount() >= getAttackDamage()) {
+        if (!game.getPlayer().isInvincible()) {
+            if (game.getPlayer().getBlockAmount() >= getAttackDamage()) {
 
                 // Block sound
             } else {
                 AudioManager.play("S - characterHit");
-                player.setCurrentHealthPoints(player.getCurrentHealthPoints() + player.getBlockAmount() - getAttackDamage());
+                game.getPlayer().setCurrentHealthPoints(game.getPlayer().getCurrentHealthPoints() + game.getPlayer().getBlockAmount() - getAttackDamage());
+                InventoryPanel.loadInventory();
             }
 
-            if (player.getCurrentHealthPoints() <= 0) {
-                if (player.getLife() >= 1) {
-                    player.setLife(player.getLife() - 1);
-                    player.setCurrentHealthPoints(player.getMaxHealthPoints());
-                } else {
-                    // End the game
-                }
+            if (game.getPlayer().getCurrentHealthPoints() <= 0) {
+
+                GamePanel.isDead = true;
             }
         } else {
             System.out.println("WAS INVINCIBLE");
-            player.triggerInvincibility();
+            game.getPlayer().triggerInvincibility();
         }
     }
 
@@ -382,23 +377,47 @@ public class Enemy extends Entity {
     }
 
     @Override
-    public void update() {
-        if (getKnockBackDuration() <= 1) {
-            setKnockBackDuration(0);
-            setKnockBack(false);
+    public void update(Game game) {
+        if (this.getKnockBackDuration() <= 1) {
+            this.setKnockBackDuration(0);
+            this.setKnockBack(false);
 
-            setMomentum(0);
-        } else if (isKnockBack()) {
+            this.setMomentum(0);
+        } else if (this.isKnockBack()) {
             if (GamePanel.player.getCurrentFrame() >= 19 && GamePanel.player.getCurrentFrame() < 25+1) { // up
-                setPositionY(this.getPositionY() - (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
+                if(game.getCurrentLevel().isSolid(this.getPositionX(),this.getPositionY() - (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()])) &&
+                        game.getCurrentLevel().isSolid(this.getPositionX() + GamePanel.NEW_TILE_SIZE,this.getPositionY() - (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]))
+                ) {
+                    this.setPositionY(this.getPositionY() - (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
+                } else {
+                    this.setKnockBackDuration(0);
+                }
             } else if (GamePanel.player.getCurrentFrame() >= 13 && GamePanel.player.getCurrentFrame() < 18+1) { // right
-                setPositionX(this.getPositionX() + (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
+                if(game.getCurrentLevel().isSolid(this.getPositionX() + (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]) + GamePanel.NEW_TILE_SIZE,this.getPositionY()) &&
+                        game.getCurrentLevel().isSolid(this.getPositionX() + (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]) + GamePanel.NEW_TILE_SIZE,this.getPositionY() + GamePanel.NEW_TILE_SIZE)
+                ) {
+                    this.setPositionX(this.getPositionX() + (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
+                } else {
+                    this.setKnockBackDuration(0);
+                }
             } else if (GamePanel.player.getCurrentFrame() >= 1 && GamePanel.player.getCurrentFrame() < 6+1) { // down
-                setPositionY(this.getPositionY() + (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
+                if(game.getCurrentLevel().isSolid(this.getPositionX(), this.getPositionY() + (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]) + GamePanel.NEW_TILE_SIZE) &&
+                        game.getCurrentLevel().isSolid(this.getPositionX() + GamePanel.NEW_TILE_SIZE, this.getPositionY() + (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]) + GamePanel.NEW_TILE_SIZE)
+                ) {
+                    this.setPositionY(this.getPositionY() + (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
+                } else {
+                    this.setKnockBackDuration(0);
+                }
             } else if (GamePanel.player.getCurrentFrame() >= 7 && GamePanel.player.getCurrentFrame() < 12+1) { // left
-                setPositionX(this.getPositionX() - (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
+                if(game.getCurrentLevel().isSolid(this.getPositionX() - (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]), this.getPositionY()) &&
+                        game.getCurrentLevel().isSolid(this.getPositionX() - (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]), this.getPositionY() + GamePanel.NEW_TILE_SIZE)
+                ) {
+                    this.setPositionX(this.getPositionX() - (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
+                } else {
+                    this.setKnockBackDuration(0);
+                }
             }
-            setKnockBackDuration(getKnockBackDuration() - 1);
+            this.setKnockBackDuration(this.getKnockBackDuration() - 1);
         }
     }
 

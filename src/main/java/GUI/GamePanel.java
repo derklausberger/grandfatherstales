@@ -15,7 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class GamePanel extends JPanel implements Runnable, ActionListener {
@@ -24,8 +24,8 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
     static final int ORIGINAL_TILE_SIZE = 16; // 16 x 16 pixel
     public static final int NEW_TILE_SIZE = ORIGINAL_TILE_SIZE * SCALE_FACTOR;
 
-    public static final int WINDOW_WIDTH = (int)(Main.DEFAULT_WINDOW_WIDTH * Main.SCALING_FACTOR);      //NEW_TILE_SIZE * MAX_SCREEN_COL; // 768 pixel
-    public static final int WINDOW_HEIGHT = (int)(Main.DEFAULT_WINDOW_HEIGHT * Main.SCALING_FACTOR);    //NEW_TILE_SIZE * MAX_SCREEN_ROW; // 576 pixel
+    public static final int WINDOW_WIDTH = (int) (Main.DEFAULT_WINDOW_WIDTH * Main.SCALING_FACTOR);      //NEW_TILE_SIZE * MAX_SCREEN_COL; // 768 pixel
+    public static final int WINDOW_HEIGHT = (int) (Main.DEFAULT_WINDOW_HEIGHT * Main.SCALING_FACTOR);    //NEW_TILE_SIZE * MAX_SCREEN_ROW; // 576 pixel
 
     private Thread playerThread = null;
 
@@ -34,14 +34,16 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
     // on the frames per second -> thus we need to
     // regulate it
 
+    private BufferedImage[] lifeImages = new BufferedImage[3];
 
     private final Game game;
     //public static ArrayList<Enemy> enemyArrayList = new ArrayList<Enemy>();
     //public static ArrayList<Player> playerArrayList = new ArrayList<Player>();
     public static Player player;
+    public static boolean isDead;
 
     // This variable will keep track of the current frame of the animation
-    public static int currentFrame = 0;
+    public static int currentFrame;
 
     // This timer will be used to control the frame rate of the animation
     private Timer timer;
@@ -50,7 +52,10 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
         game = new Game();//new Player((int) ((WINDOW_WIDTH) / 2), (int) ((WINDOW_HEIGHT) / 2), 3, 5, null, 3, 1));
         player = game.getPlayer();
 
-
+        attackFrame = 1;
+        deathFrame = 1;
+        currentFrame = 0;
+        isDead = false;
         this.setLayout(new BorderLayout());
         this.setPreferredSize(new Dimension(
                 (int) (Main.DEFAULT_WINDOW_WIDTH * Main.SCALING_FACTOR),
@@ -63,8 +68,13 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
 
         loadAudio();
 
-        //playerArrayList.add(game.getPlayer());
-        //enemyArrayList.addAll(game.getCurrentLevel().getEnemies());
+        try {
+            lifeImages[0] = ImageIO.read(new File("src/main/resources/screen/inventoryPanel/oneLife.png"));
+            lifeImages[1] = ImageIO.read(new File("src/main/resources/screen/inventoryPanel/twoLives.png"));
+            lifeImages[2] = ImageIO.read(new File("src/main/resources/screen/inventoryPanel/threeLives.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         startPlayerThread();
 
@@ -79,10 +89,37 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
     // Fix: attack animation needs an independent timer that increases
     // the current attack frame only after attack actually has been pressed
     // (not implemented yet)
-    int attackFrame = 1;
+    int attackFrame, deathFrame;
+
+    boolean allowThreadRemoval, loading;
 
     public void actionPerformed(ActionEvent e) {
 
+        if (isDead && deathFrame <= 4) {
+            deathFrame++;
+
+            if (deathFrame >= 5) {
+
+                new Timer(2000, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+
+                        ((Timer) e.getSource()).stop();
+                        if (game.getPlayer().getLife() == 0) {
+                            allowThreadRemoval = true;
+                            loading = true;
+                            Main.showBlackScreen("Game Over");
+                        } else {
+                            loading = true;
+                            Main.showBlackScreen("Reloading Level");
+                            game.reloadLevel();
+                            loading = false;
+                        }
+                        deathFrame = 0;
+                    }
+                }).start();
+            }
+        }
         if (!game.getPlayer().getKeyHandler().attackPressed) {
             currentFrame++;
 
@@ -111,10 +148,18 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
         }
     }
 
+    private void clearMemory() {
+
+        AudioManager.stopAll();
+        timer.stop();
+        timer = null;
+        this.removeKeyListener(game.getPlayer().getKeyHandler());
+        game.getPlayer().removeKeyHandler();
+    }
+
     public void startPlayerThread() {
         playerThread = new Thread(this);
         playerThread.start();
-
     }
 
     private void loadAudio() {
@@ -136,6 +181,14 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
         long nextDrawTime = System.nanoTime() + drawInterval;
 
         while (playerThread != null) {
+
+            if (allowThreadRemoval) {
+                System.out.println("stopping thread");
+                playerThread.interrupt();
+                playerThread = null;
+                clearMemory();
+                return;
+            }
 
             try {
                 update(); // updates: character positions, etc...
@@ -166,6 +219,17 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
 
     public void update() throws IOException {
 
+        for (Enemy enemy : game.getCurrentLevel().getEnemies()) {
+            enemy.moveProjectiles(game);
+        }
+
+        if (isDead) {
+            game.getPlayer().setInvincibility(true);
+            game.getPlayer().setCurrentAnimationType("dying");
+            game.getPlayer().setCurrentFrame(deathFrame);
+            return;
+        }
+
         if (game.getPlayer().getKeyHandler().menuPressed) {
             game.getPlayer().getKeyHandler().menuPressed = false;
             Main.showOptionsScreen();
@@ -192,8 +256,23 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
                     AudioManager.play("S - openingChest");
                     game.openChest(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() - Math.floorDiv(player_height, 10));
                 } else if (game.getCurrentLevel().isExit(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() - Math.floorDiv(player_height, 10))) {
+                    loading = true;
                     if (!game.loadNextLevel()) {
-                        System.out.println("this is last level");
+                        allowThreadRemoval = true;
+                        Main.showBlackScreen("Congrats!");
+
+                    } else {
+                        Main.showBlackScreen("Loading Next Level");
+                        new Timer(2000, new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+
+                                ((Timer) e.getSource()).stop();
+
+                                game.displayLevel();
+                                loading = false;
+                            }
+                        }).start();
                     }
                 }
             } else if (game.getPlayer().getKeyHandler().walkingDirection == InputHandler.downKey) {
@@ -266,10 +345,10 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
             } else game.getPlayer().setCurrentFrame(attackFrame);
         }
 
-        for (Enemy enemy: game.getCurrentLevel().getEnemies()) {
-            enemy.moveProjectiles(game);
-        }
+
     }
+
+
 
     @Override
     public void paint(Graphics graph) {
@@ -279,26 +358,41 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
         game.getPlayer().reduceInvincibilityCooldown();
         game.checkPlayerAttack(attackFrame);
 
-        for (Enemy enemy: game.getCurrentLevel().getEnemies()) {
-            //enemy.reduceCooldown();
-            enemy.detectPlayer(game);
+        if (!loading) {
+            for (Enemy enemy : game.getCurrentLevel().getEnemies()) {
+                //enemy.reduceCooldown();
+                enemy.detectPlayer(game);
+            }
         }
 
         game.renderSolid(graph2D);
         game.renderChests(graph2D);
         game.renderTorchStems(graph2D);
         game.getPlayer().draw(graph2D, game, this);
-        //for (Player player : playerArrayList) { player.draw(graph2D, game, this);}
         game.renderTorchFlames(graph2D);
 
         for (Enemy enemy : game.getCurrentLevel().getEnemies()) {
             enemy.draw(graph2D, game, this);
-            /*if(enemy.isKnockBack()) {
-                enemy.update();
-            }*/
+            if (enemy.isKnockBack()) {
+                enemy.update(game);
+            }
         }
         game.renderTrees(graph2D);
         game.getPlayer().draw(graph2D, game, this);
+
+        int imageIndex = switch (game.getPlayer().getLife()) {
+            case 3 -> 2;
+            case 2-> 1;
+            default -> 0;
+        };
+        // Draw current Lives
+        graph2D.drawImage(lifeImages[imageIndex],
+                46,
+                34,
+                100,
+                18,
+                null);
+
         graph2D.dispose();
     }
 

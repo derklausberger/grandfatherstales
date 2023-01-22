@@ -2,6 +2,7 @@ package objectClasses;
 
 import GUI.AudioManager;
 import GUI.GamePanel;
+import GUI.InventoryPanel;
 import main.Main;
 import objectClasses.Enum.EntityType;
 import org.w3c.dom.Document;
@@ -54,10 +55,19 @@ public class Game {
         chestsToOpen = new HashMap<>();
     }
 
-    public void reloadLevel() throws ParserConfigurationException, IOException, SAXException {
-        levels.set(currentLevelNumber, new Level(getCurrentLevel().getMapXMLFile()));
+    public void reloadLevel() {
+        try {
+            levels.set(currentLevelNumber, new Level(getCurrentLevel().getMapXMLFile()));
+        } catch (Exception e) {
+            System.out.println(e);
+        }
 
         displayLevel();
+        player.setCurrentHealthPoints(player.getMaxHealthPoints());
+        player.setLife(player.getLife() - 1);
+        player.getKeyHandler().clearVariables();
+        InventoryPanel.loadInventory();
+        GamePanel.isDead = false;
     }
 
     public void displayLevel() {
@@ -67,6 +77,7 @@ public class Game {
         this.player.setPositionY(y);
 
         chestsToOpen = new HashMap<>();
+
     }
 
     public boolean loadNextLevel() {
@@ -75,7 +86,6 @@ public class Game {
         }
 
         currentLevelNumber++;
-        displayLevel();
         return true;
     }
 

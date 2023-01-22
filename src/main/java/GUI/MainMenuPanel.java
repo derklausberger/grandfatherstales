@@ -59,7 +59,6 @@ public class MainMenuPanel extends JPanel {
             logo.setIcon(new ImageIcon(
                     Objects.requireNonNull(bufferedLogo)
                             .getScaledInstance(LOGO_WIDTH, LOGO_HEIGHT, Image.SCALE_SMOOTH)));
-            logo.setText("Test");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -148,6 +147,8 @@ public class MainMenuPanel extends JPanel {
         createListeners();
     }
 
+    GamePanel gamePanel;
+
     private void loadAudio() {
 
         // Initializes the SoundManager
@@ -160,9 +161,6 @@ public class MainMenuPanel extends JPanel {
 
         AudioManager.setMusicVolume(1.0f);
         AudioManager.setSoundVolume(1.0f);
-
-        // Attempt to create a smoother transition when looping
-        //AudioManager.loop("M - mainTheme", 0, 175, AudioManager.getFrames("M - mainTheme") - 1);
     }
 
     private void createListeners() {
@@ -192,7 +190,8 @@ public class MainMenuPanel extends JPanel {
 
                         // Create the game panel and add it to the main panel
                         try {
-                            GamePanel gamePanel = new GamePanel();
+                            if (gamePanel != null) gamePanel = null;
+                            gamePanel = new GamePanel();
                             Main.showGameScreen(gamePanel);
                         } catch (Exception e) {
                             e.printStackTrace();

@@ -187,7 +187,8 @@ public abstract class Entity implements KnockBack {
     }
 
     public void setCurrentHealthPoints(int healthPoints) {
-        this.currentHealthPoints = healthPoints;
+        if (healthPoints <= 0) currentHealthPoints = 0;
+        else currentHealthPoints = healthPoints;
     }
 
     public void setCurrentAnimationType(String currentAnimationType) {

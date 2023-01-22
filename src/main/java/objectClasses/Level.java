@@ -24,7 +24,7 @@ public class Level {
     private int id;
     private BufferedImage[][][] map;//layers height width
     private Hashtable<Integer, TileSet> tileSets;
-    private ArrayList<Enemy> enemies = null;
+    private ArrayList<Enemy> enemies;
     private File mapXMLFile;
     private int obstacles = -1, chests = -1, solid = -1, trees = -1, enterPos = -1, torches = -1, exit = -1;
 
@@ -32,6 +32,7 @@ public class Level {
         this.mapXMLFile = mapXMLFile;
         int map_width = 32;
         int map_height = 32;
+        enemies = null;
 
         tileSets = new Hashtable<>();
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
