@@ -54,7 +54,13 @@ public class Game {
         chestsToOpen = new HashMap<>();
     }
 
-    public void reloadLevel() {
+    public void reloadLevel() throws ParserConfigurationException, IOException, SAXException {
+        levels.set(currentLevelNumber, new Level(getCurrentLevel().getMapXMLFile()));
+
+        displayLevel();
+    }
+
+    public void displayLevel() {
         int x = (int) ((getCurrentLevel().getEnterPos() % 32 + 0.5) * GamePanel.NEW_TILE_SIZE);
         int y = (getCurrentLevel().getEnterPos() / 32 + 1) * GamePanel.NEW_TILE_SIZE;
         this.player.setPositionX(x);
@@ -69,7 +75,7 @@ public class Game {
         }
 
         currentLevelNumber++;
-        reloadLevel();
+        displayLevel();
         return true;
     }
 
@@ -261,7 +267,7 @@ public class Game {
         Level level = getCurrentLevel();
         BufferedImage[][][] map = level.getMap();
         for (int j = 0; j < 32 * 32; j++) {
-            if (map[level.getTorches()][j / 32][j % 32] != null) {
+            if (map[level.getTorches()][j / 32][j % 32] != null && map[level.getTorches()][(j / 32) + 1][j % 32] != null) {
 
                 graph2D.drawImage(torches[torchFrame / 10],
                         (int)(GamePanel.NEW_TILE_SIZE * ((j % 32) + 0.2)) - player.getPositionX() + (GamePanel.WINDOW_WIDTH / 2),
@@ -282,7 +288,7 @@ public class Game {
         Level level = getCurrentLevel();
         BufferedImage[][][] map = level.getMap();
         for (int j = 0; j < 32 * 32; j++) {
-            if (map[level.getTorches()][j / 32][j % 32] != null) {
+            if (map[level.getTorches()][j / 32][j % 32] != null  && map[level.getTorches()][(j / 32) + 1][j % 32] != null) {
                 graph2D.drawImage(torches[6],
                         (int)(GamePanel.NEW_TILE_SIZE * ((j % 32) + 0.2)) - player.getPositionX() + (GamePanel.WINDOW_WIDTH / 2),
                         GamePanel.NEW_TILE_SIZE * ((j / 32)) - player.getPositionY() + (GamePanel.WINDOW_HEIGHT / 2),

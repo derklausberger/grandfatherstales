@@ -24,13 +24,10 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
     static final int ORIGINAL_TILE_SIZE = 16; // 16 x 16 pixel
     public static final int NEW_TILE_SIZE = ORIGINAL_TILE_SIZE * SCALE_FACTOR;
 
-    static final int MAX_SCREEN_COL = 16; // max. 16 tiles in x
-    static final int MAX_SCREEN_ROW = 12; // max. 12 tiles in y
-
     public static final int WINDOW_WIDTH = (int)(Main.DEFAULT_WINDOW_WIDTH * Main.SCALING_FACTOR);      //NEW_TILE_SIZE * MAX_SCREEN_COL; // 768 pixel
     public static final int WINDOW_HEIGHT = (int)(Main.DEFAULT_WINDOW_HEIGHT * Main.SCALING_FACTOR);    //NEW_TILE_SIZE * MAX_SCREEN_ROW; // 576 pixel
 
-    Thread playerThread = null;
+    private Thread playerThread = null;
 
     int FPS = 60;
     // needed because repaint() is called depending

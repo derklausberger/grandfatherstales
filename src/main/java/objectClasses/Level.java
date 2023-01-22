@@ -25,9 +25,11 @@ public class Level {
     private BufferedImage[][][] map;//layers height width
     private Hashtable<Integer, TileSet> tileSets;
     private ArrayList<Enemy> enemies = null;
+    private File mapXMLFile;
     private int obstacles = -1, chests = -1, solid = -1, trees = -1, enterPos = -1, torches = -1, exit = -1;
 
     public Level(File mapXMLFile) throws ParserConfigurationException, IOException, SAXException {
+        this.mapXMLFile = mapXMLFile;
         int map_width = 32;
         int map_height = 32;
 
@@ -92,6 +94,10 @@ public class Level {
                 j++;
             }
         }
+    }
+
+    public File getMapXMLFile() {
+        return mapXMLFile;
     }
 
     public int getId() {
