@@ -5,8 +5,8 @@
         {
           "itemStat": [
             {
-              "attackDamage": 0,
-              "attackRange": 0
+              "attackDamage": 1,
+              "attackRange": 1
             }
           ],
           "itemName": "",
@@ -23,8 +23,8 @@
         {
           "itemStat": [
             {
-              "attackDamage": 0,
-              "attackRange": 0
+              "attackDamage": 2,
+              "attackRange": 1
             }
           ],
           "itemName": "",
@@ -41,8 +41,8 @@
         {
           "itemStat": [
             {
-              "attackDamage": 0,
-              "attackRange": 0
+              "attackDamage": 3,
+              "attackRange": 1
             }
           ],
           "itemName": "",
@@ -63,8 +63,8 @@
         {
           "itemStat": [
             {
-              "attackDamage": 0,
-              "attackRange": 0
+              "attackDamage": 4,
+              "attackRange": 5
             }
           ],
           "itemName": "",
@@ -81,8 +81,8 @@
         {
           "itemStat": [
             {
-              "attackDamage": 0,
-              "attackRange": 0
+              "attackDamage": 4,
+              "attackRange":5
             }
           ],
           "itemName": "",
@@ -99,8 +99,8 @@
         {
           "itemStat": [
             {
-              "attackDamage": 0,
-              "attackRange": 0
+              "attackDamage": 4,
+              "attackRange": 5
             }
           ],
           "itemName": "",
@@ -121,8 +121,8 @@
         {
           "itemStat": [
             {
-              "attackDamage": 0,
-              "attackRange": 0
+              "attackDamage": 3,
+              "attackRange": 3
             }
           ],
           "itemName": "",
@@ -139,8 +139,8 @@
         {
           "itemStat": [
             {
-              "attackDamage": 0,
-              "attackRange": 0
+              "attackDamage": 4,
+              "attackRange": 3
             }
           ],
           "itemName": "",
@@ -157,8 +157,8 @@
         {
           "itemStat": [
             {
-              "attackDamage": 0,
-              "attackRange": 0
+              "attackDamage": 5,
+              "attackRange": 3
             }
           ],
           "itemName": "",
@@ -179,8 +179,8 @@
         {
           "itemStat": [
             {
-              "attackDamage": 0,
-              "attackRange": 0
+              "attackDamage": 4,
+              "attackRange": 2
             }
           ],
           "itemName": "",
@@ -197,8 +197,8 @@
         {
           "itemStat": [
             {
-              "attackDamage": 0,
-              "attackRange": 0
+              "attackDamage": 5,
+              "attackRange": 2
             }
           ],
           "itemName": "",
@@ -215,8 +215,8 @@
         {
           "itemStat": [
             {
-              "attackDamage": 0,
-              "attackRange": 0
+              "attackDamage": 6,
+              "attackRange": 2
             }
           ],
           "itemName": "",
@@ -237,8 +237,8 @@
         {
           "itemStat": [
             {
-              "attackDamage": 0,
-              "attackRange": 0
+              "attackDamage": 4,
+              "attackRange": 5
             }
           ],
           "itemName": "",
@@ -255,8 +255,8 @@
         {
           "itemStat": [
             {
-              "attackDamage": 0,
-              "attackRange": 0
+              "attackDamage": 5,
+              "attackRange": 5
             }
           ],
           "itemName": "",
@@ -273,8 +273,8 @@
         {
           "itemStat": [
             {
-              "attackDamage": 0,
-              "attackRange": 0
+              "attackDamage": 6,
+              "attackRange": 5
             }
           ],
           "itemName": "",
@@ -302,7 +302,7 @@
           "itemName": "",
           "image": [
             {
-              "image": "src/main/resources/item/weapon/scythe/scytheCommon.png",
+              "image": "src/main/resources/item/weapon/sythce/sythceCommon.png",
               "width": 16,
               "height": 16
             }

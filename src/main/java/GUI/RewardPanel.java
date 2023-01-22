@@ -1,9 +1,14 @@
 package GUI;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import main.Main;
 import objectClasses.Abstract.Item;
 import objectClasses.Armor;
 import objectClasses.Enum.RarityType;
+import objectClasses.Weapon;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -12,6 +17,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.Buffer;
+import java.util.ArrayList;
+import java.util.Map;
 
 public class RewardPanel extends JPanel {
 
@@ -35,6 +46,7 @@ public class RewardPanel extends JPanel {
     private final Item[] rewardItems = new Item[3];
     private boolean itemIsSelected = false;
     private int selectedItem = -1;
+    private int i;
 
     public RewardPanel() {
 
@@ -45,7 +57,103 @@ public class RewardPanel extends JPanel {
         init();
     }
 
+    private ArrayList<Item> loadWeaponsFromFile() throws IOException {
+        Gson gson = new Gson();
+        JsonObject json = gson.fromJson(new FileReader("src/main/resources/jsonFiles/weapon.json"), JsonObject.class);
+        ArrayList<Item> items = new ArrayList<>();
+
+        for (String itemName : json.keySet()) {
+            JsonObject weaponClass = json.get(itemName).getAsJsonArray().get(0).getAsJsonObject();
+            for (String rarity : weaponClass.keySet()) {
+                String fileName = weaponClass.get(rarity).getAsJsonArray().get(0).getAsJsonObject().get("image")
+                        .getAsJsonArray().get(0).getAsJsonObject().get("image").toString().replace("\"", "");
+                RarityType rarityType;
+                switch (rarity) {
+                    case("common")->rarityType = RarityType.Common;
+                    case("rare")->rarityType = RarityType.Rare;
+                    case("epic")->rarityType = RarityType.Epic;
+                    case("legendary")->rarityType = RarityType.Legendary;
+                    case("unique")->rarityType = RarityType.Unique;
+                    default -> rarityType = null;
+                }
+                BufferedImage img = ImageIO.read(new File(fileName));
+
+                int attackDamage = Integer.valueOf(weaponClass.get(rarity).getAsJsonArray().get(0).getAsJsonObject().get("itemStat").getAsJsonArray().get(0).getAsJsonObject().get("attackDamage").toString());
+                int attackRange = Integer.valueOf(weaponClass.get(rarity).getAsJsonArray().get(0).getAsJsonObject().get("itemStat").getAsJsonArray().get(0).getAsJsonObject().get("attackRange").toString());
+                Weapon weapon = new Weapon(itemName, rarityType, img, attackDamage, attackRange);
+
+                items.add(weapon);
+            }
+        }
+        return items;
+    }
+
+    private ArrayList<Item> loadArmorFromFile() throws IOException {
+        Gson gson = new Gson();
+        JsonObject json = gson.fromJson(new FileReader("src/main/resources/jsonFiles/armor.json"), JsonObject.class);
+        ArrayList<Item> items = new ArrayList<>();
+
+        for (String itemName : json.keySet()) {
+            JsonObject weaponClass = json.get(itemName).getAsJsonArray().get(0).getAsJsonObject();
+            for (String rarity : weaponClass.keySet()) {
+                String fileName = weaponClass.get(rarity).getAsJsonArray().get(0).getAsJsonObject().get("image")
+                        .getAsJsonArray().get(0).getAsJsonObject().get("image").toString().replace("\"", "");
+                RarityType rarityType;
+                switch (rarity) {
+                    case("common")->rarityType = RarityType.Common;
+                    case("rare")->rarityType = RarityType.Rare;
+                    case("epic")->rarityType = RarityType.Epic;
+                    case("legendary")->rarityType = RarityType.Legendary;
+                    case("unique")->rarityType = RarityType.Unique;
+                    default -> rarityType = null;
+                }
+                BufferedImage img = ImageIO.read(new File(fileName));
+
+                int blockAmount = Integer.valueOf(weaponClass.get(rarity).getAsJsonArray().get(0).getAsJsonObject().get("itemStat").getAsJsonArray().get(0).getAsJsonObject().get("blockAmount").toString());
+                Armor armor = new Armor(itemName, rarityType, img, blockAmount);
+
+                items.add(armor);
+            }
+        }
+        return items;
+    }
+    private ArrayList<Item> items = new ArrayList<>();
+
+    private void loadItems() {
+        try {
+            if (items.size() > 0) {
+                items = new ArrayList<>();
+            }
+            for (Item i : loadWeaponsFromFile()) {
+                items.add(i);
+            }
+
+            for (Item i : loadArmorFromFile()) {
+                items.add(i);
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setRandomRewards() {
+        for (int i = 0; i < 3; i++)
+            rewardItems[i] = items.get((int) (Math.random() * items.size()));
+
+        leftItem.setIcon(new ImageIcon(rewardItems[0].getImage().getScaledInstance(ICON_SIZE, ICON_SIZE, Image.SCALE_SMOOTH)));
+        leftItem.setBackground(new Color(0x67422E1C, true));
+        middleItem.setIcon(new ImageIcon(rewardItems[1].getImage().getScaledInstance(ICON_SIZE, ICON_SIZE, Image.SCALE_SMOOTH)));
+        middleItem.setBackground(new Color(0x67422E1C, true));
+        rightItem.setIcon(new ImageIcon(rewardItems[2].getImage().getScaledInstance(ICON_SIZE, ICON_SIZE, Image.SCALE_SMOOTH)));
+        rightItem.setBackground(new Color(0x67422E1C, true));
+    }
+
     private void init() {
+
+        loadItems();
+        setRandomRewards();
 
         // Loads the reward background image and fonts for the stats
         File statFontFile = new File("src/main/resources/fonts/DePixelBreit.ttf");
@@ -61,9 +169,6 @@ public class RewardPanel extends JPanel {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        rewardItems[0] = new Armor("helmet", RarityType.Common, helmet, 8);
-        rewardItems[1] = new Armor("helmet", RarityType.Common, helmet, 2);
-        rewardItems[2] = new Armor("helmet", RarityType.Common, helmet, 4);
 
         // Creates the chest icon in the top center
         JLabel chestIcon = new JLabel();
@@ -84,12 +189,12 @@ public class RewardPanel extends JPanel {
         rewardItemContainer.setLayout(new BoxLayout(rewardItemContainer, BoxLayout.X_AXIS));
         rewardItemContainer.setOpaque(false);
 
-        leftItem.setIcon(new ImageIcon(rewardItems[0].getImage().getScaledInstance(ICON_SIZE, ICON_SIZE, Image.SCALE_SMOOTH)));
+        /*leftItem.setIcon(new ImageIcon(rewardItems[0].getImage().getScaledInstance(ICON_SIZE, ICON_SIZE, Image.SCALE_SMOOTH)));
         leftItem.setBackground(new Color(0x67422E1C, true));
         middleItem.setIcon(new ImageIcon(rewardItems[1].getImage().getScaledInstance(ICON_SIZE, ICON_SIZE, Image.SCALE_SMOOTH)));
         middleItem.setBackground(new Color(0x67422E1C, true));
         rightItem.setIcon(new ImageIcon(rewardItems[2].getImage().getScaledInstance(ICON_SIZE, ICON_SIZE, Image.SCALE_SMOOTH)));
-        rightItem.setBackground(new Color(0x67422E1C, true));
+        rightItem.setBackground(new Color(0x67422E1C, true));*/
 
         rewardItemContainer.add(Box.createHorizontalStrut((int) (1 * SCALE_FACTOR)));
         rewardItemContainer.add(leftItem);

@@ -104,11 +104,11 @@ public class Main {
     }
 
     public static void toggleRewardScreen() {
-
-        layeredPane.getComponentsInLayer(
-                JLayeredPane.MODAL_LAYER)[0].setVisible(
-                !layeredPane.getComponentsInLayer(
-                        JLayeredPane.MODAL_LAYER)[0].isVisible());
+        ((RewardPanel)(layeredPane.getComponentsInLayer(JLayeredPane.MODAL_LAYER)[0])).setRandomRewards();
+        layeredPane.getComponentsInLayer(JLayeredPane.MODAL_LAYER)[0]
+                .setVisible(
+                !layeredPane.getComponentsInLayer(JLayeredPane.MODAL_LAYER)[0]
+                        .isVisible());
     }
 
     public static void showPreviousScreen() {
