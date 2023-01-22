@@ -295,7 +295,7 @@
         {
           "itemStat": [
             {
-              "attackDamage": 5,
+              "attackDamage": 40,
               "attackRange": 150
             }
           ],
@@ -313,7 +313,7 @@
         {
           "itemStat": [
             {
-              "attackDamage": 5,
+              "attackDamage": 45,
               "attackRange": 150
             }
           ],
@@ -331,7 +331,7 @@
         {
           "itemStat": [
             {
-              "attackDamage": 6,
+              "attackDamage": 50,
               "attackRange": 150
             }
           ],
