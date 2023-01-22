@@ -6,11 +6,11 @@ import java.util.ArrayList;
 
 public class InputHandler implements KeyListener {
 
-    protected static int upKey, leftKey, downKey, rightKey, attackKey, inventoryKey;
+    public static int upKey, leftKey, downKey, rightKey, attackKey, inventoryKey;
     public boolean attackPressed;
     protected boolean menuPressed, inventoryPressed;
     public int lastDirection;
-    protected int attackDirection = 10000, walkingDirection;
+    public int attackDirection = 10000, walkingDirection;
     public ArrayList<Integer> movementKeys = new ArrayList<>();
 
     public InputHandler() {

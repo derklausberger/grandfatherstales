@@ -3,6 +3,7 @@ package objectClasses;
 import GUI.AnimationFrame;
 import GUI.AudioManager;
 import GUI.GamePanel;
+import GUI.InputHandler;
 import objectClasses.Abstract.Entity;
 import objectClasses.Enum.EntityType;
 
@@ -18,37 +19,10 @@ public class Enemy extends Entity {
 
     Double[] factor = {1.0, 0.98, 0.95, 0.88, 0.70, 0.56, 0.47, 0.40, 0.35, 0.30, 0.27, 0.25, 0.21, 0.20, 0.19};
 
-    @Override
-    public void update() {
-        if (this.getKnockBackDuration() <= 1) {
-            this.setKnockBackDuration(0);
-            this.setKnockBack(false);
-
-            this.setMomentum(0);
-        } else if (this.isKnockBack()) {
-            if (GamePanel.player.getCurrentFrame() >= 19 && GamePanel.player.getCurrentFrame() < 25+1) { // up
-                this.setPositionY(this.getPositionY() - (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
-            } else if (GamePanel.player.getCurrentFrame() >= 13 && GamePanel.player.getCurrentFrame() < 18+1) { // right
-                this.setPositionX(this.getPositionX() + (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
-            } else if (GamePanel.player.getCurrentFrame() >= 1 && GamePanel.player.getCurrentFrame() < 6+1) { // down
-                this.setPositionY(this.getPositionY() + (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
-            } else if (GamePanel.player.getCurrentFrame() >= 7 && GamePanel.player.getCurrentFrame() < 12+1) { // left
-                this.setPositionX(this.getPositionX() - (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
-            }
-            this.setKnockBackDuration(this.getKnockBackDuration() - 1);
-        }
-    }
-
-    @Override
-    public void hit() {
-        this.setKnockBackDuration(15);
-        this.setMomentum(this.getKnockBackDuration() * this.getMovementSpeed());
-        this.setKnockBack(true);
-    }
-
-
     private int walkingAnimationFrame, attackAnimationFrame;
     private final Timer animationTimer;
+
+    private boolean playingWalkingSound;
 
     // isAttacking -> indicates if the attack animation is executed
     // attackHitBoxDrawn -> is set to true as soon as the third frame
@@ -105,14 +79,28 @@ public class Enemy extends Entity {
                                 sightCircle.contains(game.getPlayer().getPositionX() + GamePanel.NEW_TILE_SIZE, game.getPlayer().getPositionY() + GamePanel.NEW_TILE_SIZE)) {
 
                     followPlayer(game);
+
                 } else {
                     if (animationTimer.isRunning()) {
                         animationTimer.stop();
                     }
                     walkingAnimationFrame = 0;
                     setCurrentFrame(viewDirection);
+
+                    if (playingWalkingSound) {
+                        System.out.println("stopping 1");
+                        AudioManager.stop("S - skeletonWalking");
+                        playingWalkingSound = false;
+                        AudioManager.playingSkeletonWalking = false;
+                    }
                 }
             } else {
+                if (playingWalkingSound) {
+                    System.out.println("stopping 2");
+                    AudioManager.stop("S - skeletonWalking");
+                    playingWalkingSound = false;
+                    AudioManager.playingSkeletonWalking = false;
+                }
                 walkingAnimationFrame = 0;
                 setCurrentFrame(viewDirection);
             }
@@ -120,6 +108,8 @@ public class Enemy extends Entity {
             attackPlayer(game);
         }
     }
+
+
 
     public void followPlayer(Game game) {
         animationTimer.start();
@@ -137,10 +127,25 @@ public class Enemy extends Entity {
         if (enemyMiddle.distance(playerMiddle) <= attackDistance) {
             isAttacking = true;
 
+            if (playingWalkingSound) {
+                System.out.println("stopping 3");
+                AudioManager.stop("S - skeletonWalking");
+                playingWalkingSound = false;
+                AudioManager.playingSkeletonWalking = false;
+            }
+
             if (getEntityType() == EntityType.skeletonArcher) animationTimer.setDelay(80);
 
 
         } else {
+            if (!playingWalkingSound) {
+                if (!AudioManager.playingSkeletonWalking) {
+                    System.out.println("starting");
+                    AudioManager.loop("S - skeletonWalking");
+                    AudioManager.playingSkeletonWalking = true;
+                    playingWalkingSound = true;
+                }
+            }
             if (angle >= 315 && angle < 359 || angle >= 0 && angle < 45) { // -> von 315 bis 45 -> Up
                 viewDirection = 27; setCurrentFrame(walkingAnimationFrame + viewDirection);
                 if (game.getCurrentLevel().isSolid(getPositionX() + Math.floorDiv(GamePanel.NEW_TILE_SIZE * 3, 10), getPositionY() - getMovementSpeed()) &&
@@ -204,26 +209,8 @@ public class Enemy extends Entity {
                         arc2D.contains(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() + GamePanel.NEW_TILE_SIZE) ||
                         arc2D.contains(game.getPlayer().getPositionX() + GamePanel.NEW_TILE_SIZE, game.getPlayer().getPositionY() + GamePanel.NEW_TILE_SIZE)) {
 
-                    if (!game.getPlayer().isInvincible()) {
-                        if (game.getPlayer().getBlockAmount() >= getAttackDamage()) {
+                    dealDamage(game.getPlayer());
 
-                        } else {
-                            AudioManager.play("S - d");
-                            game.getPlayer().setCurrentHealthPoints(game.getPlayer().getCurrentHealthPoints() + game.getPlayer().getBlockAmount() - getAttackDamage());
-                        }
-
-                        if (game.getPlayer().getCurrentHealthPoints() <= 0) {
-                            if (game.getPlayer().getLife() >= 1) {
-                                game.getPlayer().setLife(game.getPlayer().getLife() - 1);
-                                game.getPlayer().setCurrentHealthPoints(game.getPlayer().getMaxHealthPoints());
-                            } else {
-                                //GamePanel.playerArrayList.remove(game.getPlayer());
-                            }
-                        }
-                    } else {
-                        System.out.println("WAS INVINCIBLE");
-                        game.getPlayer().triggerInvincibility();
-                    }
                 }
             } else if (getEntityType() == EntityType.skeletonArcher) {
 
@@ -242,16 +229,84 @@ public class Enemy extends Entity {
                 projectiles.remove(i);
             } else {
                 p.move();
+
+                int arrowOffset = 5;
+                int playerXLeft = game.getPlayer().getPositionX(), playerXRight = game.getPlayer().getPositionX() + 30;
+                int playerYUp = game.getPlayer().getPositionY(), playerYDown = game.getPlayer().getPositionY() + 50;
+                switch (p.getDirection()) {
+                    case 9, 18 -> {
+                        if (game.getPlayer().getKeyHandler().walkingDirection == InputHandler.upKey
+                                || game.getPlayer().getKeyHandler().walkingDirection == InputHandler.downKey) {
+                            playerXLeft -= 25;
+                            playerXRight -= 22;
+
+                        } else {
+                            playerXLeft -= 35;
+                            playerXRight -= 22;
+                        }
+                        playerYUp -= 25;
+                        playerYDown -= 25;
+                    }
+                    case 0, 27 -> {
+                        if (game.getPlayer().getKeyHandler().walkingDirection == InputHandler.upKey
+                                || game.getPlayer().getKeyHandler().walkingDirection == InputHandler.downKey) {
+                            playerXLeft -= 15;
+                            playerXRight -= 12;
+                        } else {
+                            playerXLeft -= 15;
+                            playerXRight -= 18;
+                        }
+                        playerYUp -= 40;
+                        playerYDown -= 25;
+                    }
+                }
+
+                if (p.getX() < playerXRight && p.getX() + arrowOffset > playerXLeft
+                        && p.getY() < playerYDown && p.getY() + arrowOffset > playerYUp) {
+
+                    dealDamage(game.getPlayer());
+                    System.out.println("Player was hit by projectile");
+
+                    projectiles.remove(i);
+                }
+                /*
                 if (p.getX() < game.getPlayer().getPositionX() + 30 && p.getX() > game.getPlayer().getPositionX()
                         && p.getY() < game.getPlayer().getPositionY() + 50 && p.getY() > game.getPlayer().getPositionY()) {
-                    System.out.println("Player was hit by projectile");
+                    System.out.println("Player: " + game.getPlayer().getPositionX() + " " + game.getPlayer().getPositionY());
+                    System.out.println("Projectile: " + p.getX() + " " + p.getY());
+                    //System.out.println("Player was hit by projectile");
                     //attackPlayer(game);
                     projectiles.remove(i);
                 }
+                 */
             }
         }
     }
 
+    private void dealDamage(Player player) {
+
+        if (!player.isInvincible()) {
+            if (player.getBlockAmount() >= getAttackDamage()) {
+
+                // Block sound
+            } else {
+                AudioManager.play("S - characterHit");
+                player.setCurrentHealthPoints(player.getCurrentHealthPoints() + player.getBlockAmount() - getAttackDamage());
+            }
+
+            if (player.getCurrentHealthPoints() <= 0) {
+                if (player.getLife() >= 1) {
+                    player.setLife(player.getLife() - 1);
+                    player.setCurrentHealthPoints(player.getMaxHealthPoints());
+                } else {
+                    // End the game
+                }
+            }
+        } else {
+            System.out.println("WAS INVINCIBLE");
+            player.triggerInvincibility();
+        }
+    }
 
     @Override
     public void draw(Graphics2D graph2D, Game game, GamePanel gamePanel) {
@@ -324,6 +379,34 @@ public class Enemy extends Entity {
                 }
             }
         }
+    }
+
+    @Override
+    public void update() {
+        if (this.getKnockBackDuration() <= 1) {
+            this.setKnockBackDuration(0);
+            this.setKnockBack(false);
+
+            this.setMomentum(0);
+        } else if (this.isKnockBack()) {
+            if (GamePanel.player.getCurrentFrame() >= 19 && GamePanel.player.getCurrentFrame() < 25+1) { // up
+                this.setPositionY(this.getPositionY() - (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
+            } else if (GamePanel.player.getCurrentFrame() >= 13 && GamePanel.player.getCurrentFrame() < 18+1) { // right
+                this.setPositionX(this.getPositionX() + (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
+            } else if (GamePanel.player.getCurrentFrame() >= 1 && GamePanel.player.getCurrentFrame() < 6+1) { // down
+                this.setPositionY(this.getPositionY() + (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
+            } else if (GamePanel.player.getCurrentFrame() >= 7 && GamePanel.player.getCurrentFrame() < 12+1) { // left
+                this.setPositionX(this.getPositionX() - (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
+            }
+            this.setKnockBackDuration(this.getKnockBackDuration() - 1);
+        }
+    }
+
+    @Override
+    public void hit() {
+        this.setKnockBackDuration(15);
+        this.setMomentum(this.getKnockBackDuration() * this.getMovementSpeed());
+        this.setKnockBack(true);
     }
 }
 

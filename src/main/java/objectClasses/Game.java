@@ -73,7 +73,7 @@ public class Game {
     }
 
     private void loadTorchImages() throws ParserConfigurationException, IOException {
-        torches = new BufferedImage[12];
+        torches = new BufferedImage[7];
         String tileSetFolderPath = "src/main/resources/entities/torch";
         File dir = new File(tileSetFolderPath);
 
@@ -83,7 +83,8 @@ public class Game {
             if (!file.isDirectory() && file.getAbsolutePath().endsWith(".png")) {
                 img = ImageIO.read(file);
                 torches[idx] = img.getSubimage(0, 0, img.getWidth(), img.getHeight() / 2);
-                torches[idx + 6] = img.getSubimage(0, img.getHeight() / 2, img.getWidth(), img.getHeight() / 2);
+                //torches[idx + 6] = img.getSubimage(0, img.getHeight() / 2, img.getWidth(), img.getHeight() / 2);
+                torches[6] = img.getSubimage(0, img.getHeight() / 2, img.getWidth(), img.getHeight() / 2);
                 idx ++;
             }
         }
@@ -242,6 +243,7 @@ public class Game {
         BufferedImage[][][] map = level.getMap();
         for (int j = 0; j < 32 * 32; j++) {
             if (map[level.getTorches()][j / 32][j % 32] != null) {
+
                 graph2D.drawImage(torches[torchFrame / 10],
                         (int)(GamePanel.NEW_TILE_SIZE * ((j % 32) + 0.2)) - player.getPositionX() + (GamePanel.WINDOW_WIDTH / 2),
                         (int) (GamePanel.NEW_TILE_SIZE * ((j / 32) - 0.75)) - player.getPositionY() + (GamePanel.WINDOW_HEIGHT / 2),
@@ -262,7 +264,7 @@ public class Game {
         BufferedImage[][][] map = level.getMap();
         for (int j = 0; j < 32 * 32; j++) {
             if (map[level.getTorches()][j / 32][j % 32] != null) {
-                graph2D.drawImage(torches[torchFrame / 10 + 6],
+                graph2D.drawImage(torches[6],
                         (int)(GamePanel.NEW_TILE_SIZE * ((j % 32) + 0.2)) - player.getPositionX() + (GamePanel.WINDOW_WIDTH / 2),
                         GamePanel.NEW_TILE_SIZE * ((j / 32)) - player.getPositionY() + (GamePanel.WINDOW_HEIGHT / 2),
                         (int) (GamePanel.NEW_TILE_SIZE * 0.6),
@@ -323,7 +325,7 @@ public class Game {
 
                             // Implement block sound effect
                         } else {
-                            AudioManager.play("S - d");
+                            AudioManager.play("S - skeletonHit");
                             enemy.setCurrentHealthPoints(enemy.getCurrentHealthPoints() + enemy.getBlockAmount() - player.getAttackDamage());
 
                             if(!enemy.isKnockBack()) {

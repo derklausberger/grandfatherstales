@@ -39,6 +39,10 @@ public class Projectile {
         return y;
     }
 
+    public int getDirection() {
+        return direction;
+    }
+
     public void move() {
         int movementSpeed = 7;
         if (direction == 0) {

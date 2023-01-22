@@ -33,6 +33,10 @@ public class Player extends Entity {
 
     private InputHandler keyHandler;
 
+    // Differentiate between drawing player or health bar
+    // (because of layers when drawing)
+    boolean drawPlayer = true;
+
     // armorItems stores all armor pieces (chest, helmet, boots, shield,..)
     private final Map<String, Armor> armorItems = new HashMap<>();
     private Weapon weapon;
@@ -167,38 +171,41 @@ public class Player extends Entity {
         int x = (int) ((GamePanel.WINDOW_WIDTH - 30) / 2);
         int y = (int) ((GamePanel.WINDOW_HEIGHT - 50) / 2);
 
-        double healthBarWidth = (double) 262 / (double) this.getMaxHealthPoints() * (double) this.getCurrentHealthPoints();
-        Shape healthBar = new Rectangle2D.Double(
-                26,
-                66,
-                healthBarWidth,
-                14);
+        if (drawPlayer) {
+            // The current frame
+            AnimationFrame frame = getEntityFrames(getCurrentAnimationType())[getCurrentFrame()];
 
-        graph2D.setPaint(new Color(0x7d0027));
-        graph2D.fill(healthBar);
-
-        if (this.getCurrentHealthPoints() < this.getMaxHealthPoints()) {
-            Shape healthBarBackground = new Rectangle2D.Double(
-                    26 + healthBarWidth,
+            // Draws the character
+            graph2D.drawImage(frame.getImage(),
+                    x + frame.getXOffset(),
+                    y + frame.getYOffset(),
+                    frame.getWidth(),
+                    frame.getHeight(),
+                    gamePanel
+            );
+        } else {
+            double healthBarWidth = (double) 262 / (double) this.getMaxHealthPoints() * (double) this.getCurrentHealthPoints();
+            Shape healthBar = new Rectangle2D.Double(
+                    26,
                     66,
-                    262 - healthBarWidth,
+                    healthBarWidth,
                     14);
 
-            graph2D.setPaint(new Color(0xA6505050, true));
-            graph2D.fill(healthBarBackground);
+            graph2D.setPaint(new Color(0x7d0027));
+            graph2D.fill(healthBar);
+
+            if (this.getCurrentHealthPoints() < this.getMaxHealthPoints()) {
+                Shape healthBarBackground = new Rectangle2D.Double(
+                        26 + healthBarWidth,
+                        66,
+                        262 - healthBarWidth,
+                        14);
+
+                graph2D.setPaint(new Color(0xA6505050, true));
+                graph2D.fill(healthBarBackground);
+            }
         }
+        drawPlayer = !drawPlayer;
 
-
-        // The current frame
-        AnimationFrame frame = getEntityFrames(getCurrentAnimationType())[getCurrentFrame()];
-
-        // Draws the character
-        graph2D.drawImage(frame.getImage(),
-                x + frame.getXOffset(),
-                y + frame.getYOffset(),
-                frame.getWidth(),
-                frame.getHeight(),
-                gamePanel
-        );
     }
 }

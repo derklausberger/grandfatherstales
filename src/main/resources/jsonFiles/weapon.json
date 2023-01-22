@@ -289,7 +289,7 @@
       ]
     }
   ],
-  "sythce": [
+  "scythe": [
     {
       "common": [
         {
@@ -302,7 +302,7 @@
           "itemName": "",
           "image": [
             {
-              "image": "src/main/resources/item/weapon/sythce/sythceCommon.png",
+              "image": "src/main/resources/item/weapon/scythe/scytheCommon.png",
               "width": 16,
               "height": 16
             }

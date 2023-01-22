@@ -122,11 +122,14 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
 
     private void loadAudio() {
 
-        AudioManager.load("src/main/resources/audio/sounds/attack/Sword Swipe 1.wav", "S - ssw1");
-        AudioManager.load("src/main/resources/audio/sounds/attack/Sword Swipe 2.wav", "S - ssw2");
-        AudioManager.load("src/main/resources/audio/sounds/attack/Sword Swipe 3.wav", "S - ssw3");
-        AudioManager.load("src/main/resources/audio/sounds/attack/Damage.wav", "S - d");
-        AudioManager.load("src/main/resources/audio/sounds/Walking Hard Ground.wav", "S - w");
+        AudioManager.load("src/main/resources/audio/sounds/attack/Sword Swipe 1.wav", "S - swordSwipe1");
+        AudioManager.load("src/main/resources/audio/sounds/attack/Sword Swipe 2.wav", "S - swordSwipe2");
+        AudioManager.load("src/main/resources/audio/sounds/attack/Sword Swipe 3.wav", "S - swordSwipe3");
+        AudioManager.load("src/main/resources/audio/sounds/attack/characterHit.wav", "S - characterHit");
+        AudioManager.load("src/main/resources/audio/sounds/Walking Hard Ground.wav", "S - characterWalking");
+        AudioManager.load("src/main/resources/audio/sounds/skeletonHit.wav", "S - skeletonHit");
+        AudioManager.load("src/main/resources/audio/sounds/skeletonWalk.wav", "S - skeletonWalking");
+        AudioManager.load("src/main/resources/audio/sounds/openingChest.wav", "S - openingChest");
     }
 
     @Override
@@ -177,7 +180,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
 
         if (!game.getPlayer().getKeyHandler().attackPressed) {
 
-            AudioManager.loop("S - w");
+            AudioManager.loop("S - characterWalking");
             game.getPlayer().setCurrentAnimationType("walking");
             int player_height = 50;
             int player_width = 30;
@@ -189,6 +192,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
                         game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(player_width * 4, 10), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed() + Math.floorDiv(player_height * 2, 10))) {
                     game.getPlayer().setPositionY(game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed());
                 } else if (game.getCurrentLevel().isChest(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() - Math.floorDiv(player_height, 10))) {
+                    AudioManager.play("S - openingChest");
                     game.openChest(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() - Math.floorDiv(player_height, 10));
                 }
             } else if (game.getPlayer().getKeyHandler().walkingDirection == InputHandler.downKey) {
@@ -213,7 +217,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
                     game.getPlayer().setPositionX(game.getPlayer().getPositionX() + game.getPlayer().getMovementSpeed());
                 }
             } else {
-                AudioManager.stop("S - w");
+                AudioManager.stop("S - characterWalking");
                 int frame = 10000, lastDirection = game.getPlayer().getKeyHandler().lastDirection;
 
                 if (lastDirection == InputHandler.leftKey) {
@@ -239,11 +243,11 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
         if (game.getPlayer().getKeyHandler().attackPressed) {
             if (game.getPlayer().getCurrentAnimationType().equals("walking")) {
                 // Creates an array of the sound names
-                String[] sounds = {"S - ssw1", "S - ssw2", "S - ssw3"};
+                String[] sounds = {"S - swordSwipe1", "S - swordSwipe2", "S - swordSwipe3"};
                 // Generates a random index
                 int index = (int) (Math.random() * sounds.length);
                 AudioManager.play(sounds[index]);
-                AudioManager.stop("S - w");
+                AudioManager.stop("S - characterWalking");
             }
             game.getPlayer().setCurrentAnimationType("attacking");
 
@@ -282,6 +286,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
         game.renderSolid(graph2D);
         game.renderChests(graph2D);
         game.renderTorchStems(graph2D);
+        game.getPlayer().draw(graph2D, game, this);
         //for (Player player : playerArrayList) { player.draw(graph2D, game, this);}
         game.renderTorchFlames(graph2D);
 

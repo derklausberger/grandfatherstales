@@ -1,5 +1,7 @@
 package GUI;
 
+import objectClasses.Enemy;
+
 import javax.sound.sampled.*;
 import java.io.File;
 import java.util.HashMap;
@@ -17,6 +19,9 @@ public class AudioManager {
     private static float soundVolume;
     // A flag to indicate whether the sound is muted or not
     private static boolean mute = false;
+
+
+    public static boolean playingSkeletonWalking;
 
     // Initializes the HashMap
     public static void init() {
@@ -117,6 +122,7 @@ public class AudioManager {
     public static void stop(String name) {
         // If the sound does not exist, does nothing
         if (clips.get(name) == null) return;
+
         // If the sound is already stopped, does nothing
         if (clips.get(name).isRunning()) clips.get(name).stop();
     }
