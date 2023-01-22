@@ -127,6 +127,14 @@ public class AudioManager {
         if (clips.get(name).isRunning()) clips.get(name).stop();
     }
 
+    // Stops all sounds
+    public static void stopAll() {
+
+        for (Clip c : clips.values()) {
+            if (c.isRunning()) c.stop();
+        }
+    }
+
     // Resumes a sound from where it was paused
     public static void resume(String name) {
         // If the sound is muted, does nothing

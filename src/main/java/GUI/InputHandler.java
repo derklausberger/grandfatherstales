@@ -10,12 +10,18 @@ public class InputHandler implements KeyListener {
     public boolean attackPressed;
     protected boolean menuPressed, inventoryPressed;
     public int lastDirection;
-    public int attackDirection = 10000, walkingDirection;
+    public int attackDirection, walkingDirection;
     public ArrayList<Integer> movementKeys = new ArrayList<>();
 
     public InputHandler() {
 
+        attackDirection = 10000;
         loadKeyBindings();
+    }
+
+    public void clearVariables() {
+
+        lastDirection = 10000;
     }
 
     // In this method, a file containing the saved key
@@ -86,6 +92,11 @@ public class InputHandler implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
 
+        if (GamePanel.isDead) {
+            e.consume();
+            return;
+        }
+
         if (key == KeyEvent.VK_ESCAPE) {
             menuPressed = true;
         } else if (key == attackKey) {
@@ -122,6 +133,11 @@ public class InputHandler implements KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
+
+        if (GamePanel.isDead) {
+            e.consume();
+            return;
+        }
 
         // Removes the movement key from the list
         if (movementKeys.contains(key)) {

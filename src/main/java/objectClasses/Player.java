@@ -21,7 +21,7 @@ import java.util.Map;
 public class Player extends Entity {
 
     @Override
-    public void update() {
+    public void update(Game game) {
 
     }
 
@@ -100,6 +100,7 @@ public class Player extends Entity {
     }
 
     public void reduceInvincibilityCooldown() {
+        if (GamePanel.isDead) return;
         if (this.invincibilityDuration > 0) {
             this.invincibilityDuration--;
         } else {
@@ -115,6 +116,11 @@ public class Player extends Entity {
 
     public boolean isInvincible() {
         return invincibility;
+    }
+
+    public void setInvincibility(boolean invincibility) {
+
+        this.invincibility = invincibility;
     }
 
     public int getInvincibilityCooldown() {
@@ -165,6 +171,11 @@ public class Player extends Entity {
         return this.keyHandler;
     }
 
+    public void removeKeyHandler() {
+
+        this.keyHandler = null;
+    }
+
     @Override
     public void draw(Graphics2D graph2D, Game game, GamePanel gamePanel) {
 
@@ -184,10 +195,11 @@ public class Player extends Entity {
                     gamePanel
             );
         } else {
+
             double healthBarWidth = (double) 262 / (double) this.getMaxHealthPoints() * (double) this.getCurrentHealthPoints();
             Shape healthBar = new Rectangle2D.Double(
-                    26,
-                    66,
+                    24,
+                    64,
                     healthBarWidth,
                     14);
 
@@ -196,13 +208,15 @@ public class Player extends Entity {
 
             if (this.getCurrentHealthPoints() < this.getMaxHealthPoints()) {
                 Shape healthBarBackground = new Rectangle2D.Double(
-                        26 + healthBarWidth,
-                        66,
+                        24 + healthBarWidth,
+                        64,
                         262 - healthBarWidth,
                         14);
 
                 graph2D.setPaint(new Color(0xA6505050, true));
                 graph2D.fill(healthBarBackground);
+
+
             }
         }
         drawPlayer = !drawPlayer;

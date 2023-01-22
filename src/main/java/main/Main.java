@@ -5,6 +5,8 @@ import GUI.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -20,7 +22,7 @@ public class Main {
             SCALING_FACTOR = 1.2f;
 
     public static String currentScreen, previousScreen;
-    private static JPanel rootPanel;
+    private static JPanel rootPanel, blackScreen;
     private static JLayeredPane layeredPane;
 
     // CardLayout to switch between screens
@@ -31,6 +33,10 @@ public class Main {
         cardLayout.show(rootPanel, "Main Menu");
         previousScreen = currentScreen;
         currentScreen = "Main Menu";
+
+        AudioManager.stopAll();
+        // Attempt to create a smoother transition when looping
+        //AudioManager.loop("M - mainTheme", 0, 175, AudioManager.getFrames("M - mainTheme") - 1);
     }
 
     public static void showOptionsScreen() {
@@ -47,8 +53,8 @@ public class Main {
     public static void showGameScreen(JPanel gamePanel) {
 
         gamePanel.setBounds(0, 0,
-                (int)(DEFAULT_WINDOW_WIDTH * SCALING_FACTOR),
-                (int)(DEFAULT_WINDOW_HEIGHT * SCALING_FACTOR));
+                (int) (DEFAULT_WINDOW_WIDTH * SCALING_FACTOR),
+                (int) (DEFAULT_WINDOW_HEIGHT * SCALING_FACTOR));
 
         InventoryPanel inventoryPanel = new InventoryPanel();
         inventoryPanel.setSize(inventoryPanel.getPreferredSize());
@@ -84,23 +90,88 @@ public class Main {
 
         rewardPanel.setLocation((layeredPane.getWidth() - rewardPanel.getWidth()) / 2, yCenter);
 
+        blackScreen = new JPanel();
+        blackScreen.setLayout(new BorderLayout());
+        blackScreen.setPreferredSize(new Dimension(
+                (int) (DEFAULT_WINDOW_WIDTH * SCALING_FACTOR),
+                (int) (DEFAULT_WINDOW_HEIGHT * SCALING_FACTOR)));
+        blackScreen.setSize(blackScreen.getPreferredSize());
+        blackScreen.setVisible(false);
+
+        layeredPane.add(blackScreen, JLayeredPane.POPUP_LAYER);
         layeredPane.add(gamePanel, JLayeredPane.DEFAULT_LAYER);
         layeredPane.add(inventoryPanel, JLayeredPane.PALETTE_LAYER);
         layeredPane.add(healthContainer, JLayeredPane.PALETTE_LAYER);
         layeredPane.add(rewardPanel, JLayeredPane.MODAL_LAYER);
 
+
         rootPanel.add(layeredPane, "Game");
         cardLayout.show(rootPanel, "Game");
         currentScreen = "Game";
-
     }
+
+    public static void showBlackScreen(String msg) {
+
+        blackScreen.removeAll();
+
+        File fontFile = new File("src/main/resources/fonts/DePixelBreit.ttf");
+        Font font = null;
+        try {
+            font = Font.createFont(Font.TRUETYPE_FONT, fontFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        JLabel message = new JLabel(msg);
+        message.setFont(font.deriveFont(46f));
+        message.setForeground(new Color(0x7d0027));
+        message.setVisible(false);
+        message.setHorizontalAlignment(JLabel.CENTER);
+
+        blackScreen.add(message, BorderLayout.CENTER);
+
+        // Creates a Timer to schedule the fading of the screen
+        Timer fadeTimer = new Timer(35, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Fade the game screen to black by decreasing the alpha value
+
+                if (!blackScreen.isVisible()) {
+                    blackScreen.setVisible(true);
+                    blackScreen.setBackground(new Color(0, 0, 0, 0));
+                }
+                blackScreen.setBackground(new Color(0, 0, 0, blackScreen.getBackground().getAlpha() + 1));
+
+                if (blackScreen.getBackground().getAlpha() >= 50) {
+                    ((Timer) e.getSource()).stop();
+                    // Display the "Game Over" text
+                    message.setVisible(true);
+                    // Schedule a delay of 3 seconds before showing the main menu
+                    new Timer(3000, new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            // Make the main menu visible
+                            ((Timer) e.getSource()).stop();
+
+                            if (msg.equals("Game Over") || msg.contains("Congrats!")) showMainScreen();
+                            else blackScreen.setVisible(false);
+                        }
+                    }).start();
+                }
+            }
+        });
+
+// Start the fading of the screen
+        fadeTimer.start();
+    }
+
 
     public static void toggleInventory() {
 
         layeredPane.getComponentsInLayer(
                 JLayeredPane.PALETTE_LAYER)[0].setVisible(
-                        !layeredPane.getComponentsInLayer(
-                                JLayeredPane.PALETTE_LAYER)[0].isVisible());
+                !layeredPane.getComponentsInLayer(
+                        JLayeredPane.PALETTE_LAYER)[0].isVisible());
     }
 
     public static void toggleRewardScreen() {
