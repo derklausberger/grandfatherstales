@@ -54,6 +54,25 @@ public class Game {
         chestsToOpen = new HashMap<>();
     }
 
+    public void reloadLevel() {
+        int x = (int) ((getCurrentLevel().getEnterPos() % 32 + 0.5) * GamePanel.NEW_TILE_SIZE);
+        int y = (getCurrentLevel().getEnterPos() / 32 + 1) * GamePanel.NEW_TILE_SIZE;
+        this.player.setPositionX(x);
+        this.player.setPositionY(y);
+
+        chestsToOpen = new HashMap<>();
+    }
+
+    public boolean loadNextLevel() {
+        if (currentLevelNumber >= levels.size()) {
+            return false;
+        }
+
+        currentLevelNumber++;
+        reloadLevel();
+        return true;
+    }
+
     private void loadProjectileImages() {
 
         try {
@@ -312,7 +331,7 @@ public class Game {
                     Arc2D.PIE);
 
             ArrayList<Enemy> alreadyHit = new ArrayList<>();
-            for (Enemy enemy : GamePanel.enemyArrayList) {
+            for (Enemy enemy : getCurrentLevel().getEnemies()) {
                 if (arc2D.contains(enemy.getPositionX(), enemy.getPositionY()) ||
                         arc2D.contains(enemy.getPositionX() + GamePanel.NEW_TILE_SIZE, enemy.getPositionY()) ||
                         arc2D.contains(enemy.getPositionX(), enemy.getPositionY() + GamePanel.NEW_TILE_SIZE) ||
@@ -334,7 +353,7 @@ public class Game {
 
                         }
                         if (enemy.getCurrentHealthPoints() <= 0) {
-                            GamePanel.enemyArrayList.remove(enemy);
+                            getCurrentLevel().getEnemies().remove(enemy);
                             break;
                         }
                     }

@@ -383,22 +383,22 @@ public class Enemy extends Entity {
 
     @Override
     public void update() {
-        if (this.getKnockBackDuration() <= 1) {
-            this.setKnockBackDuration(0);
-            this.setKnockBack(false);
+        if (getKnockBackDuration() <= 1) {
+            setKnockBackDuration(0);
+            setKnockBack(false);
 
-            this.setMomentum(0);
-        } else if (this.isKnockBack()) {
+            setMomentum(0);
+        } else if (isKnockBack()) {
             if (GamePanel.player.getCurrentFrame() >= 19 && GamePanel.player.getCurrentFrame() < 25+1) { // up
-                this.setPositionY(this.getPositionY() - (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
+                setPositionY(this.getPositionY() - (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
             } else if (GamePanel.player.getCurrentFrame() >= 13 && GamePanel.player.getCurrentFrame() < 18+1) { // right
-                this.setPositionX(this.getPositionX() + (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
+                setPositionX(this.getPositionX() + (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
             } else if (GamePanel.player.getCurrentFrame() >= 1 && GamePanel.player.getCurrentFrame() < 6+1) { // down
-                this.setPositionY(this.getPositionY() + (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
+                setPositionY(this.getPositionY() + (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
             } else if (GamePanel.player.getCurrentFrame() >= 7 && GamePanel.player.getCurrentFrame() < 12+1) { // left
-                this.setPositionX(this.getPositionX() - (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
+                setPositionX(this.getPositionX() - (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
             }
-            this.setKnockBackDuration(this.getKnockBackDuration() - 1);
+            setKnockBackDuration(getKnockBackDuration() - 1);
         }
     }
 

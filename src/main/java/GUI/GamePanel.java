@@ -39,7 +39,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
 
 
     private final Game game;
-    public static ArrayList<Enemy> enemyArrayList = new ArrayList<Enemy>();
+    //public static ArrayList<Enemy> enemyArrayList = new ArrayList<Enemy>();
     //public static ArrayList<Player> playerArrayList = new ArrayList<Player>();
     public static Player player;
 
@@ -67,7 +67,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
         loadAudio();
 
         //playerArrayList.add(game.getPlayer());
-        enemyArrayList.addAll(game.getCurrentLevel().getEnemies());
+        //enemyArrayList.addAll(game.getCurrentLevel().getEnemies());
 
         startPlayerThread();
 
@@ -194,6 +194,10 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
                 } else if (game.getCurrentLevel().isChest(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() - Math.floorDiv(player_height, 10))) {
                     AudioManager.play("S - openingChest");
                     game.openChest(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() - Math.floorDiv(player_height, 10));
+                } else if (game.getCurrentLevel().isExit(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() - Math.floorDiv(player_height, 10))) {
+                    if (!game.loadNextLevel()) {
+                        System.out.println("this is last level");
+                    }
                 }
             } else if (game.getPlayer().getKeyHandler().walkingDirection == InputHandler.downKey) {
                 game.getPlayer().setCurrentFrame(currentFrame);
@@ -265,7 +269,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
             } else game.getPlayer().setCurrentFrame(attackFrame);
         }
 
-        for (Enemy enemy: enemyArrayList) {
+        for (Enemy enemy: game.getCurrentLevel().getEnemies()) {
             enemy.moveProjectiles(game);
         }
     }
@@ -278,7 +282,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
         game.getPlayer().reduceInvincibilityCooldown();
         game.checkPlayerAttack(attackFrame);
 
-        for (Enemy enemy: enemyArrayList) {
+        for (Enemy enemy: game.getCurrentLevel().getEnemies()) {
             //enemy.reduceCooldown();
             enemy.detectPlayer(game);
         }
@@ -290,11 +294,11 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
         //for (Player player : playerArrayList) { player.draw(graph2D, game, this);}
         game.renderTorchFlames(graph2D);
 
-        for (Enemy enemy : enemyArrayList) {
+        for (Enemy enemy : game.getCurrentLevel().getEnemies()) {
             enemy.draw(graph2D, game, this);
-            if(enemy.isKnockBack()) {
+            /*if(enemy.isKnockBack()) {
                 enemy.update();
-            }
+            }*/
         }
         game.renderTrees(graph2D);
         game.getPlayer().draw(graph2D, game, this);

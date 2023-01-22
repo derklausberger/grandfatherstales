@@ -25,7 +25,7 @@ public class Level {
     private BufferedImage[][][] map;//layers height width
     private Hashtable<Integer, TileSet> tileSets;
     private ArrayList<Enemy> enemies = null;
-    private int obstacles = -1, chests = -1, solid = -1, trees = -1, enterPos = -1, torches = -1;
+    private int obstacles = -1, chests = -1, solid = -1, trees = -1, enterPos = -1, torches = -1, exit = -1;
 
     public Level(File mapXMLFile) throws ParserConfigurationException, IOException, SAXException {
         int map_width = 32;
@@ -61,6 +61,7 @@ public class Level {
                 case "trees" -> trees = i;
                 case "solid" -> solid = i;
                 case "torches" -> torches = i;
+                case "exit" -> exit = i;
             }
 
             int j = 0, field, tileSetKey, fieldX, fieldY;
@@ -163,6 +164,18 @@ public class Level {
             return false;
             //variables für solid/chest/deko/eingang im konstruktor setzen
         } else if (map[chests][map_y][map_x] != null) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isExit(int x, int y) {
+        int map_y = y / GamePanel.NEW_TILE_SIZE;
+        int map_x = x / GamePanel.NEW_TILE_SIZE;
+
+        if (y < 0 || x < 0 || map_y > 31 || map_x > 31) {
+            return false;
+        } else if (map[exit][map_y][map_x] != null) {
             return true;
         }
         return false;
