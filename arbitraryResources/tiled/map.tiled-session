@@ -50,6 +50,14 @@
                 "y": 256
             }
         },
+        "C:/Users/niklasklausberger/IdeaProjects/grandfatherstales/src/main/resources/map/level/map2.xml": {
+            "scale": 2,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 303.5,
+                "y": 188
+            }
+        },
         "C:/Users/niklasklausberger/IdeaProjects/grandfatherstales/src/main/tiled/tileBiomCave.tsx": {
             "scaleInDock": 1
         },
