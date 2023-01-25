@@ -328,6 +328,8 @@ public class OptionsMenuPanel extends JPanel implements KeyListener {
             public void stateChanged(ChangeEvent e) {
 
                 AudioManager.setMusicVolume((float) musicVolumeSlider.getValue() / 100);
+                optionsContainer.setVisible(false);
+                optionsContainer.setVisible(true);
                 AudioManager.play("S - c2");
             }
         });
@@ -337,6 +339,8 @@ public class OptionsMenuPanel extends JPanel implements KeyListener {
             public void stateChanged(ChangeEvent e) {
 
                 AudioManager.setSoundVolume((float) soundVolumeSlider.getValue() / 100);
+                optionsContainer.setVisible(false);
+                optionsContainer.setVisible(true);
                 AudioManager.play("S - c2");
             }
         });
@@ -346,6 +350,8 @@ public class OptionsMenuPanel extends JPanel implements KeyListener {
             public void actionPerformed(ActionEvent e) {
 
                 AudioManager.setMute(muteBox.isSelected());
+                optionsContainer.setVisible(false);
+                optionsContainer.setVisible(true);
                 AudioManager.play("S - c1");
             }
         });
@@ -368,8 +374,6 @@ public class OptionsMenuPanel extends JPanel implements KeyListener {
                 super.mouseEntered(e);
 
                 backLabel.setForeground(new Color(0x262F3F));
-                setVisible(false);
-                setVisible(true);
                 AudioManager.play("S - h1");
             }
         });

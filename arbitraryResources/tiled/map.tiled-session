@@ -44,10 +44,10 @@
         },
         "C:/Users/niklasklausberger/IdeaProjects/grandfatherstales/src/main/resources/map/level/map1.xml": {
             "scale": 2,
-            "selectedLayer": 3,
+            "selectedLayer": 5,
             "viewCenter": {
                 "x": 256,
-                "y": 256
+                "y": 124
             }
         },
         "C:/Users/niklasklausberger/IdeaProjects/grandfatherstales/src/main/resources/map/level/map2.xml": {

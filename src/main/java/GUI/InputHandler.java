@@ -92,7 +92,7 @@ public class InputHandler implements KeyListener {
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
 
-        if (GamePanel.isDead) {
+        if (GamePanel.isDead || GamePanel.loading) {
             e.consume();
             return;
         }

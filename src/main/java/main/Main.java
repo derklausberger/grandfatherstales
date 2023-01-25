@@ -137,8 +137,8 @@ public class Main {
                 // Fade the game screen to black by decreasing the alpha value
 
                 if (!blackScreen.isVisible()) {
-                    blackScreen.setVisible(true);
                     blackScreen.setBackground(new Color(0, 0, 0, 0));
+                    blackScreen.setVisible(true);
                 }
                 blackScreen.setBackground(new Color(0, 0, 0, blackScreen.getBackground().getAlpha() + 1));
 

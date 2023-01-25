@@ -56,6 +56,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
         deathFrame = 1;
         currentFrame = 0;
         isDead = false;
+        loading = false;
         this.setLayout(new BorderLayout());
         this.setPreferredSize(new Dimension(
                 (int) (Main.DEFAULT_WINDOW_WIDTH * Main.SCALING_FACTOR),
@@ -91,7 +92,9 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
     // (not implemented yet)
     int attackFrame, deathFrame;
 
-    boolean allowThreadRemoval, loading;
+    boolean allowThreadRemoval;
+
+    public static boolean loading;
 
     public void actionPerformed(ActionEvent e) {
 
@@ -230,6 +233,10 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
             return;
         }
 
+        if (loading) {
+            return;
+        }
+
         if (game.getPlayer().getKeyHandler().menuPressed) {
             game.getPlayer().getKeyHandler().menuPressed = false;
             Main.showOptionsScreen();
@@ -254,6 +261,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
                     game.getPlayer().setPositionY(game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed());
                 } else if (game.getCurrentLevel().isChest(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() - Math.floorDiv(player_height, 10))) {
                     AudioManager.play("S - openingChest");
+                    //loading = true;
                     game.openChest(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() - Math.floorDiv(player_height, 10));
                 } else if (game.getCurrentLevel().isExit(game.getPlayer().getPositionX(), game.getPlayer().getPositionY() - Math.floorDiv(player_height, 10))) {
                     loading = true;
@@ -349,51 +357,57 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
     }
 
 
-
     @Override
     public void paint(Graphics graph) {
         super.paintComponent(graph);
         Graphics2D graph2D = (Graphics2D) graph;
 
-        game.getPlayer().reduceInvincibilityCooldown();
-        game.checkPlayerAttack(attackFrame);
 
         if (!loading) {
-            for (Enemy enemy : game.getCurrentLevel().getEnemies()) {
-                //enemy.reduceCooldown();
-                enemy.detectPlayer(game);
+            game.getPlayer().reduceInvincibilityCooldown();
+            game.checkPlayerAttack(attackFrame);
+
+            if (!loading) {
+                for (Enemy enemy : game.getCurrentLevel().getEnemies()) {
+                    //enemy.reduceCooldown();
+                    enemy.detectPlayer(game);
+                    if (enemy.isKnockBack()) {
+                        enemy.update(game);
+                    }
+                }
             }
-        }
 
-        game.renderSolid(graph2D);
-        game.renderChests(graph2D);
-        game.renderTorchStems(graph2D);
-        game.getPlayer().draw(graph2D, game, this);
-        game.renderTorchFlames(graph2D);
+            game.renderSolid(graph2D);
+            game.renderChests(graph2D);
+            game.renderTorchStems(graph2D);
+            game.getPlayer().draw(graph2D, game, this);
+            game.renderTorchFlames(graph2D);
 
-        for (Enemy enemy : game.getCurrentLevel().getEnemies()) {
-            enemy.draw(graph2D, game, this);
-            if (enemy.isKnockBack()) {
-                enemy.update(game);
+
+            if (!loading) {
+                for (Enemy enemy : game.getCurrentLevel().getEnemies()) {
+                    enemy.draw(graph2D, game, this);
+                }
             }
+
+            game.renderTrees(graph2D);
+            game.getPlayer().draw(graph2D, game, this);
+
+            int imageIndex = switch (game.getPlayer().getLife()) {
+                case 3 -> 2;
+                case 2 -> 1;
+                default -> 0;
+            };
+            // Draw current Lives
+            graph2D.drawImage(lifeImages[imageIndex],
+                    46,
+                    34,
+                    100,
+                    18,
+                    null);
+
+            graph2D.dispose();
         }
-        game.renderTrees(graph2D);
-        game.getPlayer().draw(graph2D, game, this);
-
-        int imageIndex = switch (game.getPlayer().getLife()) {
-            case 3 -> 2;
-            case 2-> 1;
-            default -> 0;
-        };
-        // Draw current Lives
-        graph2D.drawImage(lifeImages[imageIndex],
-                46,
-                34,
-                100,
-                18,
-                null);
-
-        graph2D.dispose();
     }
 
 }

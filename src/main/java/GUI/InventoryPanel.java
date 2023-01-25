@@ -19,7 +19,7 @@ public class InventoryPanel extends JPanel {
 
     private final static Map<Integer, Map> inventoryItems = new HashMap<>();
     private final static JLabel
-            helmet = new JLabel(),
+            head = new JLabel(),
             chest = new JLabel(),
             legs = new JLabel(),
             boots = new JLabel(),
@@ -47,7 +47,7 @@ public class InventoryPanel extends JPanel {
         for (int i = 0; i < 9; i++) {
             Map<String, JLabel> icons = new HashMap<>(1);
             switch (i) {
-                case 0 -> icons.put("helmet", helmet);
+                case 0 -> icons.put("head", head);
                 case 1 -> icons.put("chest", chest);
                 case 2 -> icons.put("legs", legs);
                 case 3 -> icons.put("boots", boots);
@@ -68,6 +68,8 @@ public class InventoryPanel extends JPanel {
         Font statValueFont = null, statNameFont = null;
         try {
             backgroundImage = ImageIO.read(new File("src/main/resources/screen/inventoryPanel/inventory.png"));
+
+            // classloader
 
             statValueFont = Font.createFont(Font.TRUETYPE_FONT, statValueFontFile);
             statNameFont = Font.createFont(Font.TRUETYPE_FONT, statNameFontFile);

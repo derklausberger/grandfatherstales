@@ -57,7 +57,9 @@ public class Game {
 
     public void reloadLevel() {
         try {
-            levels.set(currentLevelNumber, new Level(getCurrentLevel().getMapXMLFile()));
+            Level level = new Level(getCurrentLevel().getMapXMLFile());
+            level.setId(currentLevelNumber);
+            levels.set(currentLevelNumber - 1, level);
         } catch (Exception e) {
             System.out.println(e);
         }
@@ -81,6 +83,9 @@ public class Game {
     }
 
     public boolean loadNextLevel() {
+        player.getKeyHandler().clearVariables();
+        System.out.println(currentLevelNumber);
+        System.out.println(levels.size() + "size");
         if (currentLevelNumber >= levels.size()) {
             return false;
         }
@@ -277,7 +282,7 @@ public class Game {
         Level level = getCurrentLevel();
         BufferedImage[][][] map = level.getMap();
         for (int j = 0; j < 32 * 32; j++) {
-            if (map[level.getTorches()][j / 32][j % 32] != null && map[level.getTorches()][(j / 32) + 1][j % 32] != null) {
+            if (map[level.getTorches()][j / 32][j % 32] != null) {
 
                 graph2D.drawImage(torches[torchFrame / 10],
                         (int)(GamePanel.NEW_TILE_SIZE * ((j % 32) + 0.2)) - player.getPositionX() + (GamePanel.WINDOW_WIDTH / 2),
@@ -298,7 +303,7 @@ public class Game {
         Level level = getCurrentLevel();
         BufferedImage[][][] map = level.getMap();
         for (int j = 0; j < 32 * 32; j++) {
-            if (map[level.getTorches()][j / 32][j % 32] != null  && map[level.getTorches()][(j / 32) + 1][j % 32] != null) {
+            if (map[level.getTorches()][j / 32][j % 32] != null) {
                 graph2D.drawImage(torches[6],
                         (int)(GamePanel.NEW_TILE_SIZE * ((j % 32) + 0.2)) - player.getPositionX() + (GamePanel.WINDOW_WIDTH / 2),
                         GamePanel.NEW_TILE_SIZE * ((j / 32)) - player.getPositionY() + (GamePanel.WINDOW_HEIGHT / 2),

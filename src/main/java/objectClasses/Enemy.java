@@ -38,7 +38,7 @@ public class Enemy extends Entity {
 
         // Enemies don't need an armor or weapon object, only values
         super.setBlockAmount(5);
-        super.setAttackDamage(5);
+        super.setAttackDamage(10);
         super.setAttackDelay(10);
         this.sightRadius = sightRadius;
         this.attackDistance = attackDistance;

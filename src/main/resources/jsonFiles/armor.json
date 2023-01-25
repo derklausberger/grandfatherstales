@@ -1,311 +1,320 @@
 {
-  "chestplate": [
-    {
-      "common": [
-        {
-          "itemStat": [
-            {
-              "blockAmount": 0
-            }
-          ],
-          "itemName": "",
-          "image": [
-            {
-              "image": "src/main/resources/item/armor/chestplate/chestChainCommon.png",
-              "width": 16,
-              "height": 16
-            }
-          ]
-        }
-      ],
-      "rare": [
-        {
-          "itemStat": [
-            {
-              "blockAmount": 0
-            }
-          ],
-          "itemName": "",
-          "image": [
-            {
-              "image": "src/main/resources/item/armor/chestplate/chestChainRare.png",
-              "width": 16,
-              "height": 16
-            }
-          ]
-        }
-      ],
-      "epic": [
-        {
-          "itemStat": [
-            {
-              "blockAmount": 0
-            }
-          ],
-          "itemName": "",
-          "image": [
-            {
-              "image": "src/main/resources/item/armor/chestplate/chestChainEpic.png",
-              "width": 16,
-              "height": 16
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "hat": [
-    {
-      "common": [
-        {
-          "itemStat": [
-            {
-              "blockAmount": 0
-            }
-          ],
-          "itemName": "",
-          "image": [
-            {
-              "image": "src/main/resources/item/armor/hat/headClothCommon.png",
-              "width": 16,
-              "height": 16
-            }
-          ]
-        }
-      ],
-      "rare": [
-        {
-          "itemStat": [
-            {
-              "blockAmount": 0
-            }
-          ],
-          "itemName": "",
-          "image": [
-            {
-              "image": "src/main/resources/item/armor/hat/headClothRare.png",
-              "width": 16,
-              "height": 16
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "helmet": [
-    {
-      "common": [
-        {
-          "itemStat": [
-            {
-              "blockAmount": 0
-            }
-          ],
-          "itemName": "",
-          "image": [
-            {
-              "image": "src/main/resources/item/armor/helmet/headIronCommon.png",
-              "width": 16,
-              "height": 16
-            }
-          ]
-        }
-      ],
-      "rare": [
-        {
-          "itemStat": [
-            {
-              "blockAmount": 0
-            }
-          ],
-          "itemName": "",
-          "image": [
-            {
-              "image": "src/main/resources/item/armor/helmet/headIronRare.png",
-              "width": 16,
-              "height": 16
-            }
-          ]
-        }
-      ],
-      "epic": [
-        {
-          "itemStat": [
-            {
-              "blockAmount": 0
-            }
-          ],
-          "itemName": "",
-          "image": [
-            {
-              "image": "src/main/resources/item/armor/helmet/headIronEpic.png",
-              "width": 16,
-              "height": 16
-            }
-          ]
-        }
-      ],
-      "legendary": [
-        {
-          "itemStat": [
-            {
-              "blockAmount": 0
-            }
-          ],
-          "itemName": "",
-          "image": [
-            {
-              "image": "src/main/resources/item/armor/helmet/headIronLegendary.png",
-              "width": 16,
-              "height": 16
-            }
-          ]
-        }
-      ],
-      "unique": [
-        {
-          "itemStat": [
-            {
-              "blockAmount": 0
-            }
-          ],
-          "itemName": "",
-          "image": [
-            {
-              "image": "src/main/resources/item/armor/helmet/headIronUnique.png",
-              "width": 16,
-              "height": 16
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "robe": [
-    {
-      "common": [
-        {
-          "itemStat": [
-            {
-              "blockAmount": 0
-            }
-          ],
-          "itemName": "",
-          "image": [
-            {
-              "image": "src/main/resources/item/armor/robe/bodyClothCommon.png",
-              "width": 16,
-              "height": 16
-            }
-          ]
-        }
-      ],
-      "rare": [
-        {
-          "itemStat": [
-            {
-              "blockAmount": 0
-            }
-          ],
-          "itemName": "",
-          "image": [
-            {
-              "image": "src/main/resources/item/armor/robe/bodyClothRare.png",
-              "width": 16,
-              "height": 16
-            }
-          ]
-        }
-      ],
-      "epic": [
-        {
-          "itemStat": [
-            {
-              "blockAmount": 0
-            }
-          ],
-          "itemName": "",
-          "image": [
-            {
-              "image": "src/main/resources/item/armor/robe/bodyClothEpic.png",
-              "width": 16,
-              "height": 16
-            }
-          ]
-        }
-      ],
-      "legendary": [
-        {
-          "itemStat": [
-            {
-              "blockAmount": 0
-            }
-          ],
-          "itemName": "",
-          "image": [
-            {
-              "image": "src/main/resources/item/armor/robe/bodyClothLegendary.png",
-              "width": 16,
-              "height": 16
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "shield": [
-    {
-      "common": [
-        {
-          "itemStat": [
-            {
-              "blockAmount": 0
-            }
-          ],
-          "itemName": "",
-          "image": [
-            {
-              "image": "src/main/resources/item/armor/shield/armIronCommon.png",
-              "width": 16,
-              "height": 16
-            }
-          ]
-        }
-      ],
-      "rare": [
-        {
-          "itemStat": [
-            {
-              "blockAmount": 0
-            }
-          ],
-          "itemName": "",
-          "image": [
-            {
-              "image": "src/main/resources/item/armor/shield/armIronRare.png",
-              "width": 16,
-              "height": 16
-            }
-          ]
-        }
-      ],
-      "epic": [
-        {
-          "itemStat": [
-            {
-              "blockAmount": 0
-            }
-          ],
-          "itemName": "",
-          "image": [
-            {
-              "image": "src/main/resources/item/armor/shield/armIronEpic.png",
-              "width": 16,
-              "height": 16
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  "chest": {
+
+    "chestplate": [
+      {
+        "common": [
+          {
+            "itemStat": [
+              {
+                "blockAmount": 3
+              }
+            ],
+            "itemName": "",
+            "image": [
+              {
+                "image": "src/main/resources/item/armor/chestplate/chestChainCommon.png",
+                "width": 16,
+                "height": 16
+              }
+            ]
+          }
+        ],
+        "rare": [
+          {
+            "itemStat": [
+              {
+                "blockAmount": 4
+              }
+            ],
+            "itemName": "",
+            "image": [
+              {
+                "image": "src/main/resources/item/armor/chestplate/chestChainRare.png",
+                "width": 16,
+                "height": 16
+              }
+            ]
+          }
+        ],
+        "epic": [
+          {
+            "itemStat": [
+              {
+                "blockAmount": 5
+              }
+            ],
+            "itemName": "",
+            "image": [
+              {
+                "image": "src/main/resources/item/armor/chestplate/chestChainEpic.png",
+                "width": 16,
+                "height": 16
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "robe": [
+      {
+        "common": [
+          {
+            "itemStat": [
+              {
+                "blockAmount": 2
+              }
+            ],
+            "itemName": "",
+            "image": [
+              {
+                "image": "src/main/resources/item/armor/robe/bodyClothCommon.png",
+                "width": 16,
+                "height": 16
+              }
+            ]
+          }
+        ],
+        "rare": [
+          {
+            "itemStat": [
+              {
+                "blockAmount": 3
+              }
+            ],
+            "itemName": "",
+            "image": [
+              {
+                "image": "src/main/resources/item/armor/robe/bodyClothRare.png",
+                "width": 16,
+                "height": 16
+              }
+            ]
+          }
+        ],
+        "epic": [
+          {
+            "itemStat": [
+              {
+                "blockAmount": 4
+              }
+            ],
+            "itemName": "",
+            "image": [
+              {
+                "image": "src/main/resources/item/armor/robe/bodyClothEpic.png",
+                "width": 16,
+                "height": 16
+              }
+            ]
+          }
+        ],
+        "legendary": [
+          {
+            "itemStat": [
+              {
+                "blockAmount": 5
+              }
+            ],
+            "itemName": "",
+            "image": [
+              {
+                "image": "src/main/resources/item/armor/robe/bodyClothLegendary.png",
+                "width": 16,
+                "height": 16
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "head": {
+
+    "hat": [
+      {
+        "common": [
+          {
+            "itemStat": [
+              {
+                "blockAmount": 1
+              }
+            ],
+            "itemName": "",
+            "image": [
+              {
+                "image": "src/main/resources/item/armor/hat/headClothCommon.png",
+                "width": 16,
+                "height": 16
+              }
+            ]
+          }
+        ],
+        "rare": [
+          {
+            "itemStat": [
+              {
+                "blockAmount": 2
+              }
+            ],
+            "itemName": "",
+            "image": [
+              {
+                "image": "src/main/resources/item/armor/hat/headClothRare.png",
+                "width": 16,
+                "height": 16
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "helmet": [
+      {
+        "common": [
+          {
+            "itemStat": [
+              {
+                "blockAmount": 2
+              }
+            ],
+            "itemName": "",
+            "image": [
+              {
+                "image": "src/main/resources/item/armor/helmet/headIronCommon.png",
+                "width": 16,
+                "height": 16
+              }
+            ]
+          }
+        ],
+        "rare": [
+          {
+            "itemStat": [
+              {
+                "blockAmount": 3
+              }
+            ],
+            "itemName": "",
+            "image": [
+              {
+                "image": "src/main/resources/item/armor/helmet/headIronRare.png",
+                "width": 16,
+                "height": 16
+              }
+            ]
+          }
+        ],
+        "epic": [
+          {
+            "itemStat": [
+              {
+                "blockAmount": 4
+              }
+            ],
+            "itemName": "",
+            "image": [
+              {
+                "image": "src/main/resources/item/armor/helmet/headIronEpic.png",
+                "width": 16,
+                "height": 16
+              }
+            ]
+          }
+        ],
+        "legendary": [
+          {
+            "itemStat": [
+              {
+                "blockAmount": 5
+              }
+            ],
+            "itemName": "",
+            "image": [
+              {
+                "image": "src/main/resources/item/armor/helmet/headIronLegendary.png",
+                "width": 16,
+                "height": 16
+              }
+            ]
+          }
+        ],
+        "unique": [
+          {
+            "itemStat": [
+              {
+                "blockAmount": 6
+              }
+            ],
+            "itemName": "",
+            "image": [
+              {
+                "image": "src/main/resources/item/armor/helmet/headIronUnique.png",
+                "width": 16,
+                "height": 16
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "shield": {
+
+    "shield": [
+      {
+        "common": [
+          {
+            "itemStat": [
+              {
+                "blockAmount": 3
+              }
+            ],
+            "itemName": "",
+            "image": [
+              {
+                "image": "src/main/resources/item/armor/shield/armIronCommon.png",
+                "width": 16,
+                "height": 16
+              }
+            ]
+          }
+        ],
+        "rare": [
+          {
+            "itemStat": [
+              {
+                "blockAmount": 4
+              }
+            ],
+            "itemName": "",
+            "image": [
+              {
+                "image": "src/main/resources/item/armor/shield/armIronRare.png",
+                "width": 16,
+                "height": 16
+              }
+            ]
+          }
+        ],
+        "epic": [
+          {
+            "itemStat": [
+              {
+                "blockAmount": 5
+              }
+            ],
+            "itemName": "",
+            "image": [
+              {
+                "image": "src/main/resources/item/armor/shield/armIronEpic.png",
+                "width": 16,
+                "height": 16
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
 }

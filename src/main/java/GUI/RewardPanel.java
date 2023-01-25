@@ -93,26 +93,33 @@ public class RewardPanel extends JPanel {
         JsonObject json = gson.fromJson(new FileReader("src/main/resources/jsonFiles/armor.json"), JsonObject.class);
         ArrayList<Item> items = new ArrayList<>();
 
-        for (String itemName : json.keySet()) {
-            JsonObject weaponClass = json.get(itemName).getAsJsonArray().get(0).getAsJsonObject();
-            for (String rarity : weaponClass.keySet()) {
-                String fileName = weaponClass.get(rarity).getAsJsonArray().get(0).getAsJsonObject().get("image")
-                        .getAsJsonArray().get(0).getAsJsonObject().get("image").toString().replace("\"", "");
-                RarityType rarityType;
-                switch (rarity) {
-                    case("common")->rarityType = RarityType.Common;
-                    case("rare")->rarityType = RarityType.Rare;
-                    case("epic")->rarityType = RarityType.Epic;
-                    case("legendary")->rarityType = RarityType.Legendary;
-                    case("unique")->rarityType = RarityType.Unique;
-                    default -> rarityType = null;
+        // Loops through every type (chest, head,..)
+        for (String armorTypeName : json.keySet()) {
+            JsonObject armorType = json.get(armorTypeName).getAsJsonObject();
+
+            // Loops through all items of the type
+            for (String itemName : armorType.keySet()) {
+                JsonObject armorPiece = armorType.get(itemName).getAsJsonArray().get(0).getAsJsonObject();
+
+                for (String rarity : armorPiece.keySet()) {
+                    String fileName = armorPiece.get(rarity).getAsJsonArray().get(0).getAsJsonObject().get("image")
+                            .getAsJsonArray().get(0).getAsJsonObject().get("image").toString().replace("\"", "");
+                    RarityType rarityType;
+                    switch (rarity) {
+                        case ("common") -> rarityType = RarityType.Common;
+                        case ("rare") -> rarityType = RarityType.Rare;
+                        case ("epic") -> rarityType = RarityType.Epic;
+                        case ("legendary") -> rarityType = RarityType.Legendary;
+                        case ("unique") -> rarityType = RarityType.Unique;
+                        default -> rarityType = null;
+                    }
+                    BufferedImage img = ImageIO.read(new File(fileName));
+
+                    int blockAmount = Integer.valueOf(armorPiece.get(rarity).getAsJsonArray().get(0).getAsJsonObject().get("itemStat").getAsJsonArray().get(0).getAsJsonObject().get("blockAmount").toString());
+                    Armor armor = new Armor(armorTypeName, rarityType, img, blockAmount);
+
+                    items.add(armor);
                 }
-                BufferedImage img = ImageIO.read(new File(fileName));
-
-                int blockAmount = Integer.valueOf(weaponClass.get(rarity).getAsJsonArray().get(0).getAsJsonObject().get("itemStat").getAsJsonArray().get(0).getAsJsonObject().get("blockAmount").toString());
-                Armor armor = new Armor(itemName, rarityType, img, blockAmount);
-
-                items.add(armor);
             }
         }
         return items;
@@ -336,6 +343,7 @@ public class RewardPanel extends JPanel {
         itemIsSelected = false;
         toggleVisibility(selectedItem, false, 1);
         selectedItem = -1;
+        GamePanel.loading = false;
         return true;
     }
 
