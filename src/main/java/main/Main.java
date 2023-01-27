@@ -1,6 +1,8 @@
 package main;
 
 import GUI.*;
+import utilityClasses.AudioManager;
+import utilityClasses.ResourceLoader;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -62,13 +64,9 @@ public class Main {
         RewardPanel rewardPanel = new RewardPanel();
         rewardPanel.setSize(rewardPanel.getPreferredSize());
 
-        BufferedImage bufferedBackground = null;
+        ResourceLoader rl = ResourceLoader.getResourceLoader();
+        BufferedImage bufferedBackground = rl.getBufferedImage("/screen/inventoryPanel/healthContainer.png");
 
-        try {
-            bufferedBackground = ImageIO.read(new File("src/main/resources/screen/inventoryPanel/healthContainer.png"));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         JLabel healthContainer = new JLabel("Health Container");
         healthContainer.setSize(new Dimension(166 * 2, 37 * 2));
@@ -114,13 +112,8 @@ public class Main {
 
         blackScreen.removeAll();
 
-        File fontFile = new File("src/main/resources/fonts/DePixelBreit.ttf");
-        Font font = null;
-        try {
-            font = Font.createFont(Font.TRUETYPE_FONT, fontFile);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ResourceLoader rl = ResourceLoader.getResourceLoader();
+        Font font = rl.getFontByFilePath("DePixelBreit.ttf");
 
         JLabel message = new JLabel(msg);
         message.setFont(font.deriveFont(46f));
@@ -232,12 +225,13 @@ public class Main {
         window.add(rootPanel);
 
         // window image at the top left (very small and unreadable at the moment)
-        window.setIconImage(new ImageIcon("src/main/resources/screen/mainMenuPanel/logo.png").getImage());
+        
+        ResourceLoader rl = ResourceLoader.getResourceLoader();
+        window.setIconImage(new ImageIcon(rl.getBufferedImage("/screen/mainMenuPanel/logo.png")).getImage());
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
         window.pack();
         window.setLocationRelativeTo(null);
         window.setVisible(true);
-
     }
 }

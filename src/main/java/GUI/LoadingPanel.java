@@ -2,6 +2,7 @@ package GUI;
 
 
 import main.Main;
+import utilityClasses.ResourceLoader;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -18,7 +19,7 @@ public class LoadingPanel extends JPanel implements ActionListener {
     private JPanel container;
     private Timer timer;
     private int currentFrame = 0;
-    private Image[] images;
+    private BufferedImage[] images;
 
     private JLabel character;
 
@@ -44,28 +45,22 @@ public class LoadingPanel extends JPanel implements ActionListener {
 
     private void loadImages() {
 
-        // Set the directory path
-        String dirPath = "src/main/resources/character/walking";
+        ResourceLoader rl = ResourceLoader.getResourceLoader();
 
         // Create a File object for the directory
-        File dir = new File(dirPath);
-
-        // Get a list of the PNG files in the directory
-        File[] files = dir.listFiles();
+        File dir = rl.getFile("/character/walking");
 
         // Create an array to hold the images
-        images = new Image[9];
+        images = new BufferedImage[9];
 
-        // Load the images from the files
         int index = 0;
-        for (int i = 0; i < files.length; i++) {
-            try {
-                if (i >= 18 && i <= 26) {
-                    images[index] = ImageIO.read(files[i]);
-                    index++;
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+        for (int i = 0; i < dir.listFiles().length; i++) {
+
+            if (i >= 18 && i <= 26) {
+
+                images[index] = rl.getBufferedImage("/character/walking/" + dir.list()[i]);
+                index++;
+
             }
         }
 
@@ -80,7 +75,6 @@ public class LoadingPanel extends JPanel implements ActionListener {
         content2.setOpaque(false);
 
         JLabel logo = new JLabel();
-        //logo.setIcon(new ImageIcon(Objects.requireNonNull(MainMenuPanel.bufferedLogo).getScaledInstance(600, 330, Image.SCALE_SMOOTH)));
         logo.setOpaque(false);
 
         character = new JLabel();

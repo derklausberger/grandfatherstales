@@ -1,21 +1,23 @@
 package GUI;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonReader;
 import main.Main;
+import utilityClasses.AudioManager;
+import utilityClasses.InputHandler;
+import utilityClasses.ResourceLoader;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.*;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,7 +45,7 @@ public class OptionsMenuPanel extends JPanel implements KeyListener {
             cancelLabel = new JLabel();
 
     private final Map<String, JLabel> keyLabels = new HashMap<>();
-    protected static final Map<String, String> keyBindings = new HashMap<>();
+    public static final Map<String, String> keyBindings = new HashMap<>();
     private String lastKey;
     private boolean listening;
     private String key = null;
@@ -59,8 +61,11 @@ public class OptionsMenuPanel extends JPanel implements KeyListener {
             changeKeyBindingsLabel = new JLabel();
 
     // To read and write keyBindings
-    Gson gson = new Gson();
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private JsonObject jsonKeys;
+
+    // To load resources
+    ResourceLoader rl = ResourceLoader.getResourceLoader();
 
     public OptionsMenuPanel() {
 
@@ -71,17 +76,15 @@ public class OptionsMenuPanel extends JPanel implements KeyListener {
 
     private void init() {
 
-        File fontFile = new File("src/main/resources/fonts/DePixelBreit.ttf");
-        Font font = null;
-        BufferedImage bufferedBackground = null, bufferedBackgroundHover = null;
-        try {
-            font = Font.createFont(Font.TRUETYPE_FONT, fontFile);
-            bufferedBackground = ImageIO.read(new File("src/main/resources/screen/optionsMenuPanel/keyBackground.png"));
-            bufferedBackgroundHover = ImageIO.read(new File("src/main/resources/screen/optionsMenuPanel/keyBackgroundHover.png"));
-            loadKeyBindings();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Font font = rl.getFontByFilePath("DePixelBreit.ttf");
+
+        BufferedImage bufferedBackground, bufferedBackgroundHover;
+
+        bufferedBackground = rl.getBufferedImage("/screen/optionsMenuPanel/keyBackground.png");
+        bufferedBackgroundHover = rl.getBufferedImage("/screen/optionsMenuPanel/keyBackgroundHover.png");
+
+        loadKeyBindings();
+
 
         keyLabels.put("moveUp", moveUpLabel);
         keyLabels.put("moveLeft", moveLeftLabel);
@@ -485,7 +488,6 @@ public class OptionsMenuPanel extends JPanel implements KeyListener {
                 saveKeyBindings();
                 AudioManager.play("S - c1");
                 if (Main.previousScreen.equals("Game")) {
-                    System.out.println("updating input handler");
                     InputHandler.loadKeyBindings();
                 }
             }
@@ -596,11 +598,12 @@ public class OptionsMenuPanel extends JPanel implements KeyListener {
     private void loadKeyBindings() {
 
         if (jsonKeys == null) {
-            try {
-                jsonKeys = gson.fromJson(new FileReader("src/main/resources/jsonFiles/keyBindings.json"), JsonObject.class);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            String gameDir = System.getProperty("user.dir");
+            File configDir = new File(gameDir, "config");
+            File jsonFile = new File(configDir, "keyBindings.json");
+            
+            jsonKeys = rl.readConfigJsonFile(jsonFile.getPath());
+
         }
         // Loop through every key type/name (walkUp, inventory,..)
         for (String keyName : jsonKeys.keySet()) {
@@ -631,12 +634,17 @@ public class OptionsMenuPanel extends JPanel implements KeyListener {
                 keyChanged = true;
             }
         }
+
         if (keyChanged) {
-            try (FileWriter writer = new FileWriter("src/main/resources/jsonFiles/keyBindings.json")) {
-                gson.toJson(jsonKeys, writer);
-            } catch (Exception e) {
-                e.printStackTrace();
+            String gameDir = System.getProperty("user.dir");
+            File configDir = new File(gameDir, "config");
+            
+            if (!configDir.exists()) {
+                configDir.mkdir();
             }
+            File jsonFile = new File(configDir, "keyBindings.json");
+
+            rl.writeJsonFile(jsonFile.getPath(), jsonKeys);
         }
     }
 
@@ -647,9 +655,11 @@ public class OptionsMenuPanel extends JPanel implements KeyListener {
                 null);
     }
 
-    public void keyTyped(KeyEvent e) {}
+    public void keyTyped(KeyEvent e) {
+    }
 
-    public void keyReleased(KeyEvent e) {}
+    public void keyReleased(KeyEvent e) {
+    }
 
     @Override
     public void keyPressed(KeyEvent e) {

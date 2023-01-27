@@ -1,14 +1,14 @@
 package GUI;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import main.Main;
 import objectClasses.Abstract.Item;
 import objectClasses.Armor;
 import objectClasses.Enum.RarityType;
 import objectClasses.Weapon;
+import utilityClasses.AudioManager;
+import utilityClasses.ResourceLoader;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -20,9 +20,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.Buffer;
 import java.util.ArrayList;
-import java.util.Map;
 
 public class RewardPanel extends JPanel {
 
@@ -69,11 +67,11 @@ public class RewardPanel extends JPanel {
                         .getAsJsonArray().get(0).getAsJsonObject().get("image").toString().replace("\"", "");
                 RarityType rarityType;
                 switch (rarity) {
-                    case("common")->rarityType = RarityType.Common;
-                    case("rare")->rarityType = RarityType.Rare;
-                    case("epic")->rarityType = RarityType.Epic;
-                    case("legendary")->rarityType = RarityType.Legendary;
-                    case("unique")->rarityType = RarityType.Unique;
+                    case ("common") -> rarityType = RarityType.Common;
+                    case ("rare") -> rarityType = RarityType.Rare;
+                    case ("epic") -> rarityType = RarityType.Epic;
+                    case ("legendary") -> rarityType = RarityType.Legendary;
+                    case ("unique") -> rarityType = RarityType.Unique;
                     default -> rarityType = null;
                 }
                 BufferedImage img = ImageIO.read(new File(fileName));
@@ -124,6 +122,7 @@ public class RewardPanel extends JPanel {
         }
         return items;
     }
+
     private ArrayList<Item> items = new ArrayList<>();
 
     private void loadItems() {
@@ -159,23 +158,18 @@ public class RewardPanel extends JPanel {
 
     private void init() {
 
+        ResourceLoader rl = ResourceLoader.getResourceLoader();
+
         loadItems();
         setRandomRewards();
 
         // Loads the reward background image and fonts for the stats
-        File statFontFile = new File("src/main/resources/fonts/DePixelBreit.ttf");
-        Font font = null;
-        BufferedImage chestImage = null, helmet = null;
-        try {
-            backgroundImage = ImageIO.read(new File("src/main/resources/screen/rewardPanel/reward.png"));
-            chestImage = ImageIO.read(new File("src/main/resources/screen/rewardPanel/rewardChest.png"));
-            font = Font.createFont(Font.TRUETYPE_FONT, statFontFile);
 
-            helmet = ImageIO.read(new File("src/main/resources/item/armor/hat/headClothRare.png"));
+        Font font = rl.getFontByFilePath("DePixelBreit.ttf");
+        BufferedImage chestImage = null, helmet;
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        backgroundImage = rl.getBufferedImage("/screen/rewardPanel/reward.png");
+        chestImage = rl.getBufferedImage("/screen/rewardPanel/rewardChest.png");
 
         // Creates the chest icon in the top center
         JLabel chestIcon = new JLabel();
@@ -195,13 +189,6 @@ public class RewardPanel extends JPanel {
         rewardItemContainer.setPreferredSize(new Dimension((int) (105 * SCALE_FACTOR), (int) (27 * SCALE_FACTOR)));
         rewardItemContainer.setLayout(new BoxLayout(rewardItemContainer, BoxLayout.X_AXIS));
         rewardItemContainer.setOpaque(false);
-
-        /*leftItem.setIcon(new ImageIcon(rewardItems[0].getImage().getScaledInstance(ICON_SIZE, ICON_SIZE, Image.SCALE_SMOOTH)));
-        leftItem.setBackground(new Color(0x67422E1C, true));
-        middleItem.setIcon(new ImageIcon(rewardItems[1].getImage().getScaledInstance(ICON_SIZE, ICON_SIZE, Image.SCALE_SMOOTH)));
-        middleItem.setBackground(new Color(0x67422E1C, true));
-        rightItem.setIcon(new ImageIcon(rewardItems[2].getImage().getScaledInstance(ICON_SIZE, ICON_SIZE, Image.SCALE_SMOOTH)));
-        rightItem.setBackground(new Color(0x67422E1C, true));*/
 
         rewardItemContainer.add(Box.createHorizontalStrut((int) (1 * SCALE_FACTOR)));
         rewardItemContainer.add(leftItem);

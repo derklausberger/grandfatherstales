@@ -8,7 +8,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import GUI.AnimationFrame;
+import objectClasses.Enum.AnimationType;
+import utilityClasses.AnimationFrame;
 import GUI.GamePanel;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -17,52 +18,43 @@ import com.google.gson.JsonObject;
 import objectClasses.Enum.EntityType;
 import objectClasses.Game;
 import objectClasses.KnockBack;
+import utilityClasses.ResourceLoader;
 
 import javax.imageio.ImageIO;
 
 public abstract class Entity implements KnockBack {
 
+    private EntityType entityType;
+    private int maxHealthPoints;
+    private int currentHealthPoints;
+
     private int positionX;
     private int positionY;
     private int movementSpeed;
 
-    private EntityType entityType;
-    private boolean knockBack = false;
     private int momentum;
     private int knockBackDuration;
+    private boolean knockBack = false;
 
-    // damage and amount store the combined value of all items
-    // -> Easier to implement possible temporary buffs
-    private int attackDamage;
-    private int blockAmount;
+    private int attackDamage; // damage and amount store the combined value of all items
+    private int blockAmount; // -> Easier to implement possible temporary buffs
 
-    // cooldown -> time between attacks
-    // For enemies, cooldown also determines
-    // when it can move again after attacking
-    // Value is actively set and reduced
-    private int cooldown;
+    private int cooldown; // cooldown -> time between attacks // For enemies, cooldown also determines // when it can move again after attacking // Value is actively set and reduced
+    private int attackDelay; // attackDelay -> time between attacks // A value for the cooldown to refer to // that is set for all entities after creation
 
-    // attackDelay -> time between attacks
-    // A value for the cooldown to refer to,
-    // that is set for all entities after creation
-    private int attackDelay;
-
-    private int maxHealthPoints;
-    private int currentHealthPoints;
-
-    // entityFrames -> holds all frames of all animations
-    // currentAnimationType -> indicates the current type
-    // currentFrame -> indicates the current frame of the current animation
-    private Map<String, AnimationFrame[]> entityFrames = new HashMap<>();
+    private Map<String, AnimationFrame[]> entityFrames = new HashMap<>(); // entityFrames -> holds all frames of all animations // currentAnimationType -> indicates the current type // currentFrame -> indicates the current frame of the current animation
     private String currentAnimationType;
     private int currentFrame;
 
-    // Indicates the number of frames for one
-    // direction of the attack animation,
-    // because it differs between enemies
-    private int attackAnimationFrameLimit;
+    private int
+            walkingAnimationDirections,
+            attackAnimationDirections,
+            dyingAnimationDirections;
 
-    public Entity(int positionX, int positionY, int movementSpeed, int healthPoints, EntityType entityType) {
+    private int viewDirection;
+
+
+    public Entity(int positionX, int positionY, int movementSpeed, int healthPoints, EntityType entityType, int viewDirection) {
 
         this.positionX = positionX;
         this.positionY = positionY;
@@ -72,7 +64,17 @@ public abstract class Entity implements KnockBack {
         this.maxHealthPoints = healthPoints;
         this.entityType = entityType;
 
+        this.viewDirection = 0;
+
         loadAnimationFrames(entityType.toString());
+    }
+
+    public int getViewDirection() {
+        return viewDirection;
+    }
+
+    public void setViewDirection(int viewDirection) {
+        this.viewDirection = viewDirection;
     }
 
     public boolean isKnockBack() {
@@ -211,21 +213,34 @@ public abstract class Entity implements KnockBack {
         return entityFrames.get(animationName);
     }
 
-    public int getAttackAnimationFrameLimit() {
-        return attackAnimationFrameLimit;
+    public int getAnimationFrameLimit(String animationType) {
+        return entityFrames.get(animationType).length / (getAnimationDirections());
+    }
+
+    public int getAnimationDirections() {
+
+        int directions = 1;
+        switch (getCurrentAnimationType()) {
+            case "walking" -> directions = walkingAnimationDirections;
+            case "attacking" -> directions = attackAnimationDirections;
+            case "dying" -> directions = dyingAnimationDirections;
+        }
+        return directions;
+    }
+
+
+    public void setCurrentAnimationFrame(int currentFrame) {
+        int factor = getViewDirection() / (getEntityFrames(getCurrentAnimationType()).length /
+                        getAnimationDirections());
+        setCurrentFrame(currentFrame + getAnimationFrameLimit(getCurrentAnimationType()) * factor);
     }
 
     public void loadAnimationFrames(String entityType) {
 
         // Read the file into a JsonObject
-        Gson gson = new Gson();
-        JsonObject root = null;
+        ResourceLoader rl = ResourceLoader.getResourceLoader();
+        JsonObject root = rl.readStaticJsonFile("animationFrames.json");
 
-        try {
-            root = gson.fromJson(new FileReader("src/main/resources/jsonFiles/animationFrames.json"), JsonObject.class);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
 
         // Accesses the entity object (character/skeleton/..)
         JsonObject entity = root.getAsJsonObject(entityType);
@@ -242,6 +257,14 @@ public abstract class Entity implements KnockBack {
             AnimationFrame[] animationFrames =
                     new AnimationFrame[animationType.getAsJsonArray("down").size() * animationType.keySet().size()];
 
+            if (animationName.equals(AnimationType.walking.toString())) {
+                walkingAnimationDirections = animationType.keySet().size();
+            } else if (animationName.equals(AnimationType.attacking.toString())) {
+                attackAnimationDirections = animationType.keySet().size();
+            } else if (animationName.equals(AnimationType.dying.toString())) {
+                dyingAnimationDirections = animationType.keySet().size();
+            }
+
             int width, height, xOffset, yOffset, index = 0;
 
             // Loops through the "down", "up", "left" and "right" arrays
@@ -249,10 +272,6 @@ public abstract class Entity implements KnockBack {
 
                 // Holds all frames from a direction
                 JsonArray frames = animationType.getAsJsonArray(direction);
-
-                if (animationName.equals("attacking")) {
-                    attackAnimationFrameLimit = frames.size();
-                }
 
                 // Loops through every frame of the direction, creates an AnimationFrame
                 // with the values and saves it to the according frame array

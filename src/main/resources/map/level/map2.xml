@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.8" tiledversion="1.8.6" orientation="orthogonal" renderorder="right-down" width="32" height="32" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="1">
- <tileset firstgid="1" source="../../../../../arbitraryResources/tiled/tileBiomCave.xml"/>
- <tileset firstgid="300" source="../../../../../arbitraryResources/tiled/tileAssetsWater.xml"/>
- <tileset firstgid="348" source="../../../../../arbitraryResources/tiled/tileBiomPlains.xml"/>
- <tileset firstgid="532" source="../../../../../arbitraryResources/tiled/tileBiomTaiga.xml"/>
+ <tileset firstgid="1" source="/map/tiled/tileBiomCave.xml"/>
+ <tileset firstgid="300" source="/map/tiled/tileAssetsWater.xml"/>
+ <tileset firstgid="348" source="/map/tiled/tileBiomPlains.xml"/>
+ <tileset firstgid="532" source="/map/tiled/tileBiomTaiga.xml"/>
  <layer id="1" name="solid" width="32" height="32">
   <properties>
    <property name="Class" value="solid"/>

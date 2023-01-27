@@ -7,6 +7,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import utilityClasses.ResourceLoader;
 
 import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
@@ -15,6 +16,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
@@ -28,7 +30,7 @@ public class Level {
     private File mapXMLFile;
     private int obstacles = -1, chests = -1, solid = -1, trees = -1, enterPos = -1, torches = -1, exit = -1;
 
-    public Level(File mapXMLFile) throws ParserConfigurationException, IOException, SAXException {
+    public Level(File mapXMLFile) {
         this.mapXMLFile = mapXMLFile;
         int map_width = 32;
         int map_height = 32;
@@ -36,8 +38,14 @@ public class Level {
 
         tileSets = new Hashtable<>();
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document doc = builder.parse(mapXMLFile);
+        DocumentBuilder builder;
+        Document doc;
+        try {
+            builder = factory.newDocumentBuilder();
+            doc = builder.parse(mapXMLFile);
+        } catch (ParserConfigurationException | IOException | SAXException e) {
+            throw new RuntimeException(e);
+        }
 
         NodeList nodeList = doc.getElementsByTagName("tileset");
         Node n;
@@ -46,9 +54,13 @@ public class Level {
             n = nodeList.item(i);
             e = (Element) n;
 
-            tileSets.put(Integer.valueOf(e.getAttribute("firstgid")), Game
-                    .getTilesetFromXMLFileName(e.getAttribute("source")
-                            .replace("../", "")));
+            tileSets.put(
+                    Integer.valueOf(e.getAttribute("firstgid")),
+                    Game.getTilesetFromXMLFileName(
+                            getClass().getResource(e.getAttribute("source")).toString()
+                                    .replace("file:/", "")
+                                    .replace('/', (char) 92)));
+
         }
 
         nodeList = doc.getElementsByTagName("layer");
@@ -79,14 +91,17 @@ public class Level {
                 }
                 tileSet = tileSets.get(tileSetKey);
 
+                ResourceLoader rl = ResourceLoader.getResourceLoader();
+
                 if (tileSet != null) {
                     field -= tileSetKey;
                     fieldX = (field % tileSet.getWidthTiles()) * 16;
                     fieldY = (field / tileSet.getWidthTiles()) * 16;
-                    map[i][j / map_height][j % map_width] = ImageIO.read(new File(tileSet.getPngFileName())).getSubimage(fieldX, fieldY, 16, 16);
+                    map[i][j / map_height][j % map_width] =
+                            rl.getBufferedImage(tileSet.getPngFileName())
+                                    .getSubimage(fieldX, fieldY, 16, 16);
                     if (e.getAttribute("name").equals("enter")) {
                         enterPos = j;
-                        System.out.println("enter:" +  j);
                     }
                 } else {
                     map[i][(int) (j / map_height)][j % map_width] = null;
@@ -153,7 +168,7 @@ public class Level {
 
     public boolean setChest(int x, int y, BufferedImage chest) {
         if (isChest(x, y)) {
-            map[chests][y / GamePanel.NEW_TILE_SIZE][ x / GamePanel.NEW_TILE_SIZE] = chest;
+            map[chests][y / GamePanel.NEW_TILE_SIZE][x / GamePanel.NEW_TILE_SIZE] = chest;
 
             return true;
         }
@@ -206,14 +221,14 @@ public class Level {
                 x = random.nextInt(32) * GamePanel.NEW_TILE_SIZE;
                 y = random.nextInt(32) * GamePanel.NEW_TILE_SIZE;
 
-            } while (!isSolid(x,y));
+            } while (!isSolid(x, y));
 
             Enemy enemy;
-            if (i % 2 == 0) {
-                enemy = new Enemy(x, y,1,52, 200, 80, EntityType.skeletonWarrior);
-            } else {
-                enemy = new Enemy(x, y,1,52, 300, 250, EntityType.skeletonArcher);
-            }
+            //if (i % 2 == 0) {
+                enemy = new Enemy(x, y, 1, 52, 200, 90, EntityType.skeletonWarrior, 0);
+            //}// else {
+                //enemy = new Enemy(x, y, 1, 52, 300, 250, EntityType.skeletonArcher, 0);
+            //}
             enemies.add(enemy);
         }
         return enemies;

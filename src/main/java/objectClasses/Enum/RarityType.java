@@ -5,5 +5,11 @@ public enum RarityType {
     Rare,
     Epic,
     Legendary,
-    Unique
+    Unique;
+
+    @Override
+    public String
+    toString() {
+        return super.toString();
+    }
 }

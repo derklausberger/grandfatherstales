@@ -5,6 +5,9 @@ import objectClasses.Enemy;
 import objectClasses.Game;
 import objectClasses.Player;
 import org.xml.sax.SAXException;
+import utilityClasses.AudioManager;
+import utilityClasses.InputHandler;
+import utilityClasses.ResourceLoader;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -15,7 +18,6 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
 
 
 public class GamePanel extends JPanel implements Runnable, ActionListener {
@@ -69,13 +71,11 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
 
         loadAudio();
 
-        try {
-            lifeImages[0] = ImageIO.read(new File("src/main/resources/screen/inventoryPanel/oneLife.png"));
-            lifeImages[1] = ImageIO.read(new File("src/main/resources/screen/inventoryPanel/twoLives.png"));
-            lifeImages[2] = ImageIO.read(new File("src/main/resources/screen/inventoryPanel/threeLives.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ResourceLoader rl = ResourceLoader.getResourceLoader();
+
+        lifeImages[0] = rl.getBufferedImage("/screen/inventoryPanel/oneLife.png");
+        lifeImages[1] = rl.getBufferedImage("/screen/inventoryPanel/twoLives.png");
+        lifeImages[2] = rl.getBufferedImage("/screen/inventoryPanel/threeLives.png");
 
         startPlayerThread();
 
@@ -167,14 +167,14 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
 
     private void loadAudio() {
 
-        AudioManager.load("src/main/resources/audio/sounds/attack/Sword Swipe 1.wav", "S - swordSwipe1");
-        AudioManager.load("src/main/resources/audio/sounds/attack/Sword Swipe 2.wav", "S - swordSwipe2");
-        AudioManager.load("src/main/resources/audio/sounds/attack/Sword Swipe 3.wav", "S - swordSwipe3");
-        AudioManager.load("src/main/resources/audio/sounds/attack/characterHit.wav", "S - characterHit");
-        AudioManager.load("src/main/resources/audio/sounds/Walking Hard Ground.wav", "S - characterWalking");
-        AudioManager.load("src/main/resources/audio/sounds/skeletonHit.wav", "S - skeletonHit");
-        AudioManager.load("src/main/resources/audio/sounds/skeletonWalk.wav", "S - skeletonWalking");
-        AudioManager.load("src/main/resources/audio/sounds/openingChest.wav", "S - openingChest");
+        AudioManager.load("/sounds/attack/Sword Swipe 1.wav", "S - swordSwipe1");
+        AudioManager.load("/sounds/attack/Sword Swipe 2.wav", "S - swordSwipe2");
+        AudioManager.load("/sounds/attack/Sword Swipe 3.wav", "S - swordSwipe3");
+        AudioManager.load("/sounds/attack/characterHit.wav", "S - characterHit");
+        AudioManager.load("/sounds/Walking Hard Ground.wav", "S - characterWalking");
+        AudioManager.load("/sounds/skeletonHit.wav", "S - skeletonHit");
+        AudioManager.load("/sounds/skeletonWalk.wav", "S - skeletonWalking");
+        AudioManager.load("/sounds/openingChest.wav", "S - openingChest");
     }
 
     @Override
@@ -223,7 +223,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
     public void update() throws IOException {
 
         for (Enemy enemy : game.getCurrentLevel().getEnemies()) {
-            enemy.moveProjectiles(game);
+            game.moveProjectiles(enemy);
         }
 
         if (isDead) {
@@ -255,6 +255,7 @@ public class GamePanel extends JPanel implements Runnable, ActionListener {
 
             if (game.getPlayer().getKeyHandler().walkingDirection == InputHandler.upKey) {
                 game.getPlayer().setCurrentFrame(currentFrame + 27);
+
 
                 if (game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() + Math.floorDiv(player_width * 4, 10), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed() + Math.floorDiv(player_height * 2, 10)) &&
                         game.getCurrentLevel().isSolid(game.getPlayer().getPositionX() - Math.floorDiv(player_width * 4, 10), game.getPlayer().getPositionY() - game.getPlayer().getMovementSpeed() + Math.floorDiv(player_height * 2, 10))) {

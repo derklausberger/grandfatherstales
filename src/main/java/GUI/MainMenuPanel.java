@@ -1,6 +1,9 @@
 package GUI;
 
 import main.Main;
+import utilityClasses.AudioManager;
+import utilityClasses.ResourceLoader;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -18,7 +21,7 @@ public class MainMenuPanel extends JPanel {
             LOGO_WIDTH = (int) (1274 * Main.SCALING_FACTOR / 2),
             LOGO_HEIGHT = (int) (735 * Main.SCALING_FACTOR / 2);
 
-    public static Image backgroundImage = null;
+    public static BufferedImage backgroundImage = null;
 
     private final Map<String, ImageIcon> buttonImages = new HashMap<>();
 
@@ -44,24 +47,18 @@ public class MainMenuPanel extends JPanel {
 
     private void init() {
 
-        // Loads static background image
-        try {
-            backgroundImage = new ImageIcon(ImageIO.read(new File("src/main/resources/screen/mainMenuPanel/mainMenu.png"))).getImage();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ResourceLoader rl = ResourceLoader.getResourceLoader();
 
+        // Loads static background image
+        backgroundImage = rl.getBufferedImage("/screen/mainMenuPanel/mainMenu.png");
+        
         // Loads the logo image and adds it to the main menu screen
         logo.setPreferredSize(new Dimension(LOGO_WIDTH, LOGO_HEIGHT));
 
-        try {
-            BufferedImage bufferedLogo = ImageIO.read(new File("src/main/resources/screen/mainMenuPanel/logo.png"));
-            logo.setIcon(new ImageIcon(
-                    Objects.requireNonNull(bufferedLogo)
-                            .getScaledInstance(LOGO_WIDTH, LOGO_HEIGHT, Image.SCALE_SMOOTH)));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        BufferedImage bufferedLogo = rl.getBufferedImage("/screen/mainMenuPanel/logo.png");
+        logo.setIcon(new ImageIcon((bufferedLogo)
+                .getScaledInstance(LOGO_WIDTH, LOGO_HEIGHT, Image.SCALE_SMOOTH)));
+
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 0;
@@ -70,52 +67,46 @@ public class MainMenuPanel extends JPanel {
         c.insets = new Insets(10, 10, 10, 10);
         c.anchor = GridBagConstraints.CENTER;
 
-        logo.setVisible(true);
         this.add(logo, c);
 
 
         // reads menu button images and saves them to a map
         // to not have to reload a file for every mouse event
-        BufferedImage bufferedNew;
-        BufferedImage bufferedOptions;
-        BufferedImage bufferedQuit;
-        BufferedImage bufferedNewHover;
-        BufferedImage bufferedOptionsHover;
-        BufferedImage bufferedQuitHover;
-        try {
-            bufferedNew = ImageIO.read(new File("src/main/resources/screen/optionsMenuPanel/new.png"));
-            bufferedOptions = ImageIO.read(new File("src/main/resources/screen/optionsMenuPanel/options.png"));
-            bufferedQuit = ImageIO.read(new File("src/main/resources/screen/optionsMenuPanel/quit.png"));
+        BufferedImage bufferedImage;
 
-            bufferedNewHover = ImageIO.read(new File("src/main/resources/screen/optionsMenuPanel/newShadow.png"));
-            bufferedOptionsHover = ImageIO.read(new File("src/main/resources/screen/optionsMenuPanel/optionsShadow.png"));
-            bufferedQuitHover = ImageIO.read(new File("src/main/resources/screen/optionsMenuPanel/quitShadow.png"));
+        bufferedImage = rl.getBufferedImage("/screen/optionsMenuPanel/new.png");
+        buttonImages.put("new", new ImageIcon(
+                bufferedImage.getScaledInstance(
+                        (int) (bufferedImage.getWidth() * Main.SCALING_FACTOR),
+                        -1, Image.SCALE_SMOOTH)));
 
-            buttonImages.put("new", new ImageIcon(
-                    bufferedNew.getScaledInstance(
-                            (int) (bufferedNew.getWidth() * Main.SCALING_FACTOR),
-                            -1, Image.SCALE_SMOOTH)));
-            buttonImages.put("options", new ImageIcon(
-                    bufferedOptions.getScaledInstance(
-                            (int) (bufferedOptions.getWidth() * Main.SCALING_FACTOR),
-                            -1, Image.SCALE_SMOOTH)));
-            buttonImages.put("quit", new ImageIcon(
-                    bufferedQuit.getScaledInstance(
-                            (int) (bufferedQuit.getWidth() * Main.SCALING_FACTOR),
-                            -1, Image.SCALE_SMOOTH)));
-            buttonImages.put("newHover", new ImageIcon(
-                    bufferedNewHover.getScaledInstance(
-                            (int) (bufferedNewHover.getWidth() * Main.SCALING_FACTOR), -1, Image.SCALE_SMOOTH)));
-            buttonImages.put("optionsHover", new ImageIcon(
-                    bufferedOptionsHover.getScaledInstance(
-                            (int) (bufferedOptionsHover.getWidth() * Main.SCALING_FACTOR), -1, Image.SCALE_SMOOTH)));
-            buttonImages.put("quitHover", new ImageIcon(
-                    bufferedQuitHover.getScaledInstance(
-                            (int) (bufferedQuitHover.getWidth() * Main.SCALING_FACTOR), -1, Image.SCALE_SMOOTH)));
+        bufferedImage = rl.getBufferedImage("/screen/optionsMenuPanel/options.png");
+        buttonImages.put("options", new ImageIcon(
+                bufferedImage.getScaledInstance(
+                        (int) (bufferedImage.getWidth() * Main.SCALING_FACTOR),
+                        -1, Image.SCALE_SMOOTH)));
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        bufferedImage = rl.getBufferedImage("/screen/optionsMenuPanel/quit.png");
+        buttonImages.put("quit", new ImageIcon(
+                bufferedImage.getScaledInstance(
+                        (int) (bufferedImage.getWidth() * Main.SCALING_FACTOR),
+                        -1, Image.SCALE_SMOOTH)));
+
+        bufferedImage = rl.getBufferedImage("/screen/optionsMenuPanel/newShadow.png");
+        buttonImages.put("newHover", new ImageIcon(
+                bufferedImage.getScaledInstance(
+                        (int) (bufferedImage.getWidth() * Main.SCALING_FACTOR), -1, Image.SCALE_SMOOTH)));
+
+        bufferedImage = rl.getBufferedImage("/screen/optionsMenuPanel/optionsShadow.png");
+        buttonImages.put("optionsHover", new ImageIcon(
+                bufferedImage.getScaledInstance(
+                        (int) (bufferedImage.getWidth() * Main.SCALING_FACTOR), -1, Image.SCALE_SMOOTH)));
+
+        bufferedImage = rl.getBufferedImage("/screen/optionsMenuPanel/quitShadow.png");
+        buttonImages.put("quitHover", new ImageIcon(
+                bufferedImage.getScaledInstance(
+                        (int) (bufferedImage.getWidth() * Main.SCALING_FACTOR), -1, Image.SCALE_SMOOTH)));
+
 
         // Sets icons and centers horizontally inside the container
         startButton.setIcon(buttonImages.get("new"));
@@ -154,10 +145,10 @@ public class MainMenuPanel extends JPanel {
         // Initializes the SoundManager
         AudioManager.init();
         // Loads the audio files
-        AudioManager.load("src/main/resources/audio/music/Main Theme.wav", "M - mainTheme");
-        AudioManager.load("src/main/resources/audio/sounds/GUI/Hover 1.wav", "S - h1");
-        AudioManager.load("src/main/resources/audio/sounds/GUI/Click 1.wav", "S - c1");
-        AudioManager.load("src/main/resources/audio/sounds/GUI/Click 2.wav", "S - c2");
+        AudioManager.load("/music/Main Theme.wav", "M - mainTheme");
+        AudioManager.load("/sounds/GUI/Hover 1.wav", "S - h1");
+        AudioManager.load("/sounds/GUI/Click 1.wav", "S - c1");
+        AudioManager.load("/sounds/GUI/Click 2.wav", "S - c2");
 
         AudioManager.setMusicVolume(1.0f);
         AudioManager.setSoundVolume(1.0f);

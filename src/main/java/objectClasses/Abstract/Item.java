@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 
 public abstract class Item {
     private String itemName;
-
     private String itemStatName;
 
     private RarityType rarity;

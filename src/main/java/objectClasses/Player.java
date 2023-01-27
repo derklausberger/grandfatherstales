@@ -1,13 +1,14 @@
 package objectClasses;
 
-import GUI.AnimationFrame;
+import utilityClasses.AnimationFrame;
 import GUI.GamePanel;
-import GUI.InputHandler;
-import GUI.MissingItemException;
+import utilityClasses.InputHandler;
+import utilityClasses.MissingItemException;
 import objectClasses.Abstract.Entity;
 import objectClasses.Abstract.Item;
 import objectClasses.Enum.EntityType;
 import objectClasses.Enum.RarityType;
+import utilityClasses.ResourceLoader;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -47,9 +48,9 @@ public class Player extends Entity {
     private int invincibilityCooldown;
     private int invincibilityDuration;
 
-    public Player(int positionX, int positionY, int movementSpeed, int healthPoints, int life, EntityType entityType) {
+    public Player(int positionX, int positionY, int movementSpeed, int healthPoints, int life, EntityType entityType, int viewDirection) {
 
-        super(positionX, positionY, movementSpeed, healthPoints, entityType);
+        super(positionX, positionY, movementSpeed, healthPoints, entityType, viewDirection);
         this.life = life;
         this.invincibility = true;
         this.invincibilityCooldown = 0;
@@ -62,22 +63,10 @@ public class Player extends Entity {
     private void loadItems() {
 
         // Load infos from a file, which items the player holds and load all images
-
-        BufferedImage sword = null, shield = null, chestplate = null, helmet = null;
-        try {
-            sword = ImageIO.read(new File("src/main/resources/item/weapon/sable/sableCommon.png"));
-            shield = ImageIO.read(new File("src/main/resources/item/armor/shield/armIronRare.png"));
-            chestplate = ImageIO.read(new File("src/main/resources/item/armor/chestplate/chestChainCommon.png"));
-            helmet = ImageIO.read(new File("src/main/resources/item/armor/helmet/headIronUnique.png"));
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ResourceLoader rl = ResourceLoader.getResourceLoader();
+        BufferedImage sword = rl.getBufferedImage("/item/weapon/sable/sableCommon.png");
 
         setWeapon(new Weapon("sword", RarityType.Common, sword, 10, 100));
-        //addArmorPiece(new Armor("chest", RarityType.Common, chestplate, 1));
-        //addArmorPiece(new Armor("helmet", RarityType.Unique, helmet, 2));
-        //addArmorPiece(new Armor("shield", RarityType.Rare, shield, 3));
     }
 
     public void addItem(Item item) {

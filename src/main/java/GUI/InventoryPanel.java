@@ -1,6 +1,8 @@
 package GUI;
 
 import objectClasses.Player;
+import utilityClasses.MissingItemException;
+import utilityClasses.ResourceLoader;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -40,6 +42,8 @@ public class InventoryPanel extends JPanel {
 
     private void init() {
 
+        ResourceLoader rl = ResourceLoader.getResourceLoader();
+
         /** Echt schirch, bitte verbessern, wenn möglich */
 
         // Creates a map for every label, accessible by the name
@@ -59,23 +63,12 @@ public class InventoryPanel extends JPanel {
             }
             inventoryItems.put(i, icons);
         }
-
-        Player player = GamePanel.player;
-
+        
         // Loads the inventory background image and fonts for the stats container
-        File statValueFontFile = new File("src/main/resources/fonts/DePixelBreit.ttf"),
-                statNameFontFile = new File("src/main/resources/fonts/DePixelKlein.ttf");
-        Font statValueFont = null, statNameFont = null;
-        try {
-            backgroundImage = ImageIO.read(new File("src/main/resources/screen/inventoryPanel/inventory.png"));
-
-            // classloader
-
-            statValueFont = Font.createFont(Font.TRUETYPE_FONT, statValueFontFile);
-            statNameFont = Font.createFont(Font.TRUETYPE_FONT, statNameFontFile);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        backgroundImage = rl.getBufferedImage("/screen/inventoryPanel/inventory.png");
+        Font statValueFont = rl.getFontByFilePath("DePixelBreit.ttf"),
+        statNameFont = rl.getFontByFilePath("DePixelKlein.ttf");
+     
 
         // Creates the passive item container on the left (armor)
         JPanel passiveItemContainer = new JPanel();
