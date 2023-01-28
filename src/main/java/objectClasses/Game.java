@@ -31,6 +31,8 @@ public class Game {
     private int currentLevelNumber;
     private static List<TileSet> tileSets;
 
+    private Boolean[][] mapWalkedOn;
+
     // Arrows for every direction, ordered alphabetically
     // 0 is Down, 1 is Left, 2 is Right, 3 is Up
     private BufferedImage[] arrows = new BufferedImage[4];
@@ -55,6 +57,12 @@ public class Game {
         loadChestImages();
         loadProjectileImages();
         chestsToOpen = new HashMap<>();
+
+
+        mapWalkedOn = new Boolean[32][32];
+        for (int j = 0; j < 32 * 32; j++) {
+            mapWalkedOn[j / 32][j % 32] = false;
+        }
     }
 
     public void reloadLevel() {
@@ -126,14 +134,13 @@ public class Game {
     }
 
     private void loadChestImages() {
-
         ResourceLoader rl = ResourceLoader.getResourceLoader();
         // Create a File object for the directory
         File dir = rl.getFile("/entities/chest");
 
         chests = new BufferedImage[3];
         for (int i = 0; i < dir.listFiles().length; i++) {
-            torches[i] = rl.getBufferedImage("/entities/chest/" + dir.list()[i]);
+            chests[i] = rl.getBufferedImage("/entities/chest/" + dir.list()[i]);
         }
     }
 
@@ -201,6 +208,46 @@ public class Game {
                             GamePanel.NEW_TILE_SIZE * (j / 32) - player.getPositionY() + (GamePanel.WINDOW_HEIGHT / 2),
                             GamePanel.NEW_TILE_SIZE, GamePanel.NEW_TILE_SIZE,
                             null);
+
+
+                    /*
+                    if (level.isSolid(
+                            GamePanel.NEW_TILE_SIZE * (j % 32),
+                            GamePanel.NEW_TILE_SIZE * (j / 32))) {
+                        if (level.isSolid(
+                                player.getPositionX() + 15,
+                                player.getPositionY() + 25)
+                        ) {
+                            Shape rec;
+
+                            System.out.println(mapWalkedOn[(j % 32)][(j / 32)]);
+
+                            if (!mapWalkedOn[(j % 32)][(j / 32)]) {
+                                mapWalkedOn[(j % 32)][(j / 32)] = true;
+
+                                System.out.println("hell");
+                                rec = new Rectangle(
+                                        GamePanel.NEW_TILE_SIZE * (j % 32) - player.getPositionX() + (GamePanel.WINDOW_WIDTH / 2),
+                                        GamePanel.NEW_TILE_SIZE * (j / 32) - player.getPositionY() + (GamePanel.WINDOW_HEIGHT / 2),
+                                        GamePanel.NEW_TILE_SIZE,
+                                        GamePanel.NEW_TILE_SIZE);
+                                g.setColor(new Color(0.4f, 0.4f, 0.4f, 0.1f));
+                                g.fill(rec);
+
+                            } else {
+
+                                System.out.println("dunkel");
+                                rec = new Rectangle(
+                                        GamePanel.NEW_TILE_SIZE * (j % 32) - player.getPositionX() + (GamePanel.WINDOW_WIDTH / 2),
+                                        GamePanel.NEW_TILE_SIZE * (j / 32) - player.getPositionY() + (GamePanel.WINDOW_HEIGHT / 2),
+                                        GamePanel.NEW_TILE_SIZE,
+                                        GamePanel.NEW_TILE_SIZE);
+                                g.setColor(new Color(0.4f, 0.4f, 0.4f, 0.3f));
+                                g.fill(rec);
+                            }
+                        }
+                    }
+                     */
                 }
             }
         }
@@ -328,8 +375,13 @@ public class Game {
                 AudioManager.play("S - characterHit");
                 player.setCurrentHealthPoints(player.getCurrentHealthPoints() + player.getBlockAmount() - enemy.getAttackDamage());
                 InventoryPanel.loadInventory();
-            } if (player.getCurrentHealthPoints() <= 0) { GamePanel.isDead = true;}
-        } else { player.triggerInvincibility(); }
+            }
+            if (player.getCurrentHealthPoints() <= 0) {
+                GamePanel.isDead = true;
+            }
+        } else {
+            player.triggerInvincibility();
+        }
     }
 
     public void moveProjectiles(Enemy enemy) {

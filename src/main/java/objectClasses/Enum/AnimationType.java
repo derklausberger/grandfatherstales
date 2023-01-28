@@ -8,8 +8,8 @@ public enum AnimationType {
             System.out.println("is walking");
         }
     },
-    attacking
-     {
+
+    attacking {
         @Override
         public void getAnimationType() {
             System.out.println("is attacking");

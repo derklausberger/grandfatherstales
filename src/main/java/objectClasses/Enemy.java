@@ -275,13 +275,15 @@ public class Enemy extends Entity {
                 getPositionY() + 25);
 
         Shape enemy = new Rectangle2D.Double(
-                getPositionX(),
-                getPositionY(),
+                 getPositionX() + getEntityFrames(getCurrentAnimationType())[getCurrentFrame()].getXOffset(),
+                getPositionY() + getEntityFrames(getCurrentAnimationType())[getCurrentFrame()].getYOffset(),
                 getEntityFrames(getCurrentAnimationType())[getCurrentFrame()].getWidth(),
                 getEntityFrames(getCurrentAnimationType())[getCurrentFrame()].getHeight());
 
         graph2D.setColor(Color.ORANGE);
         graph2D.fill(enemy);
+
+
 
         Shape player = new Rectangle2D.Double(
                 game.getPlayer().getPositionX(),

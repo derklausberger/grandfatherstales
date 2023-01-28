@@ -55,9 +55,12 @@ public class MainMenuPanel extends JPanel {
         // Loads the logo image and adds it to the main menu screen
         logo.setPreferredSize(new Dimension(LOGO_WIDTH, LOGO_HEIGHT));
 
-        BufferedImage bufferedLogo = rl.getBufferedImage("/screen/mainMenuPanel/logo.png");
-        logo.setIcon(new ImageIcon((bufferedLogo)
-                .getScaledInstance(LOGO_WIDTH, LOGO_HEIGHT, Image.SCALE_SMOOTH)));
+
+        //BufferedImage bufferedLogo = rl.getImageIcon("/screen/mainMenuPanel/logo.png", LOGO_WIDTH, LOGO_HEIGHT);
+        logo.setIcon(rl.getImageIcon("/screen/mainMenuPanel/logo.png", LOGO_WIDTH, LOGO_HEIGHT));
+
+
+
 
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
@@ -73,6 +76,7 @@ public class MainMenuPanel extends JPanel {
         // reads menu button images and saves them to a map
         // to not have to reload a file for every mouse event
         BufferedImage bufferedImage;
+
 
         bufferedImage = rl.getBufferedImage("/screen/optionsMenuPanel/new.png");
         buttonImages.put("new", new ImageIcon(
