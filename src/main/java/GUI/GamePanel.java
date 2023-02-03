@@ -45,6 +45,7 @@ public class GamePanel extends JPanel implements Runnable {
         setDoubleBuffered(true); // improves rendering
         setFocusable(true); // GamePanel "focused" to receive key input
 
+        isLoading = true;
         allowThreadRemoval = false;
         game = new Game();
         addKeyListener(game.getPlayer().getKeyHandler());
@@ -57,15 +58,18 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public static void loadNextLevel() {
+        isLoading = true;
         Main.showBlackScreen("Loading Next Level");
     }
 
     public static void reloadLevel() {
         reloadLevel = true;
+        isLoading = true;
         Main.showBlackScreen("Reloading Level");
     }
 
     public static void showVictoryScreen() {
+        isLoading = true;
         Main.showBlackScreen("Congrats!");
     }
 
@@ -187,22 +191,25 @@ public class GamePanel extends JPanel implements Runnable {
     private boolean updateGame() {
         if (reloadLevel) {
             reloadLevel = false;
+            isLoading = true;
             game.reloadLevel();
         }
 
-        if (game.isLoadingLevel() || isLoading) {
-            AudioManager.stopAllSounds();
-            if (Main.allowContinue()) {
-                if (game.getPlayer().interactPressed()) {
+        if (isLoading) {
+            if (game.isLoadingLevel()) {
+                AudioManager.stopAllSounds();
+                if (Main.allowContinue()) {
+                    if (game.getPlayer().interactPressed()) {
 
-                    if (game.isGameWon() || game.isGameOver()) {
-                        Main.showMainScreen();
-                        allowThreadRemoval = true;
-                    } else {
-                        game.displayLevel();
+                        if (game.isGameWon() || game.isGameOver()) {
+                            Main.showMainScreen();
+                            allowThreadRemoval = true;
+                        } else {
+                            game.displayLevel();
+                        }
+                        Main.discardBlackScreen();
+                        isLoading = false;
                     }
-                    Main.discardBlackScreen();
-                    isLoading = false;
                 }
             }
             return true;
@@ -246,11 +253,11 @@ public class GamePanel extends JPanel implements Runnable {
             game.animateCharacterAttacking();
             game.checkPlayerAttack();
 
-        // If standing
+            // If standing
         } else if (game.getPlayer().isResting()) {
             game.animateCharacterResting();
 
-        // If walking
+            // If walking
         } else if (game.getPlayer().isWalking()) {
             game.animateCharacterWalking();
         }
@@ -261,7 +268,7 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(graph);
         Graphics2D graph2D = (Graphics2D) graph;
 
-        if (game.isLoadingLevel()) {
+        if (isLoading) {
             return;
         }
 
@@ -296,5 +303,4 @@ public class GamePanel extends JPanel implements Runnable {
         game.renderCharacterHealthBar(graph2D);
         game.renderLives(graph2D);
     }
-
 }

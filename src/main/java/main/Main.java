@@ -9,7 +9,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
 public class Main {
@@ -18,6 +17,7 @@ public class Main {
     private static JFrame window;
 
     private static GamePanel gamePanel;
+    private static boolean gameCreated;
 
     // Window size for all screens
     public static final int
@@ -29,6 +29,7 @@ public class Main {
             SCALING_FACTOR = 1.2f;
 
     public static String currentScreen, previousScreen;
+    private static JLabel continueMessage;
     private static JPanel rootPanel, blackScreen;
     private static JLayeredPane layeredPane;
 
@@ -53,9 +54,17 @@ public class Main {
 
     public static void showLoadingScreen() {
 
+        LoadingPanel loadingPanel = new LoadingPanel();
+        rootPanel.add(loadingPanel, "Loading");
+
         cardLayout.show(rootPanel, "Loading");
         currentScreen = "Loading";
         createGamePanel();
+    }
+
+    public static boolean updateLoadingScreen() {
+
+        return gameCreated;
     }
 
     private static void createGamePanel() {
@@ -72,7 +81,7 @@ public class Main {
                     }
                     gamePanel = new GamePanel();
                     createGameScreenComponents();
-                    showGameScreen();
+                    gameCreated = true;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -138,11 +147,10 @@ public class Main {
 
     public static void showGameScreen() {
 
+        GamePanel.isLoading = false;
         cardLayout.show(rootPanel, "Game");
         currentScreen = "Game";
     }
-
-    private static JLabel continueMessage;
 
     private static void startBlackScreenTimer(JLabel gameStateMessage) {
 
@@ -215,7 +223,7 @@ public class Main {
 
         blackScreen.add(gameStateMessage, constraints);
 
-        continueMessage = new JLabel("Press " + InputHandler.getKey("interact") + " to continue");
+        continueMessage = new JLabel("Press " + InputHandler.getKeyName("interact") + " to continue");
         continueMessage.setFont(font.deriveFont(16f));
         continueMessage.setForeground(new Color(0xe0d9ae));
         continueMessage.setVisible(false);
@@ -282,9 +290,6 @@ public class Main {
 
         OptionsMenuPanel optionsPanel = new OptionsMenuPanel();
         rootPanel.add(optionsPanel, "Options");
-
-        LoadingPanel loadingPanel = new LoadingPanel();
-        rootPanel.add(loadingPanel, "Loading");
     }
 
     public static void closeWindow() {
@@ -300,7 +305,6 @@ public class Main {
         window.setPreferredSize(new Dimension(
                 (int) (DEFAULT_WINDOW_WIDTH * SCALING_FACTOR),
                 (int) (DEFAULT_WINDOW_HEIGHT * SCALING_FACTOR)));
-
 
         createPrimaryScreens();
 

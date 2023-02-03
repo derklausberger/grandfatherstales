@@ -40,12 +40,21 @@ public class InputHandler implements KeyListener {
         else return lastDirection;
     }
 
-    public static String getKey(String name) {
+    public static String getKeyName(String name) {
 
         return switch (name) {
             case "interact" -> KeyEvent.getKeyText(interactKey);
             case "inventory" -> KeyEvent.getKeyText(inventoryKey);
             default -> "";
+        };
+    }
+
+    public static int getKeyCode(String name) {
+
+        return switch (name) {
+            case "interact" -> interactKey;
+            case "inventory" -> inventoryKey;
+            default -> 0;
         };
     }
 

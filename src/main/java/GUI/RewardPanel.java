@@ -154,7 +154,7 @@ public class RewardPanel extends JPanel {
         confirmButton.setMinimumSize(new Dimension((int) (135 * SCALE_FACTOR), (int) (12 * SCALE_FACTOR)));
         confirmButton.setMaximumSize(new Dimension((int) (135 * SCALE_FACTOR), (int) (12 * SCALE_FACTOR)));
         confirmButton.setHorizontalAlignment(JLabel.CENTER);
-        confirmButton.setText("Confirm");
+        confirmButton.setText("Skip Reward");
         confirmButton.setFont(font.deriveFont(20f));
         confirmButton.setForeground(new Color(0x422E1C));
 
@@ -283,6 +283,8 @@ public class RewardPanel extends JPanel {
             }
         } else if (eventType == 1) {
             // If a label was clicked, not hovered
+            confirmButton.setText("Confirm");
+
             leftItem.setOpaque(false);
             middleItem.setOpaque(false);
             rightItem.setOpaque(false);
@@ -329,6 +331,8 @@ public class RewardPanel extends JPanel {
             valueChangeArrow.setText("->");
             newStatLabel.setText(String.valueOf(newValue));
 
+            //confirmButton.setText("Confirm");
+
         } else {
             // If nothing is hovered or selected,
             // asks the player to do so
@@ -337,15 +341,19 @@ public class RewardPanel extends JPanel {
             }
             valueChangeArrow.setText("Choose a reward");
             valueChangeArrow.setVisible(true);
+            confirmButton.setText("Skip Reward");
         }
     }
 
     private boolean confirmItem() {
 
-        if (selectedItem == -1) return false;
+        game.setOpeningChest(false);
+
+        if (selectedItem == -1) {
+            return false;
+        }
 
         game.getPlayer().addItem(rewardItems[selectedItem]);
-        game.setOpeningChest(false);
         rewardItemPool.remove(rewardItems[selectedItem]);
 
         // Don't set selected item to -1 before calling the function
@@ -449,9 +457,9 @@ public class RewardPanel extends JPanel {
                 super.mousePressed(e);
 
                 if (confirmItem()) {
-                    Main.toggleRewardScreen();
                     game.getPlayer().getInventory().loadInventory();
                 }
+                Main.toggleRewardScreen();
                 AudioManager.play("S - click1");
             }
         });

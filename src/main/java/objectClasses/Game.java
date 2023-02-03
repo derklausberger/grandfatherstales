@@ -79,6 +79,7 @@ public class Game {
 
     private void resetVariables() {
 
+        player.setInvincible(false);
         player.setCurrentHealthPoints(player.getMaxHealthPoints());
         player.getKeyHandler().initVariables();
         InventoryPanel.loadInventory(player);
@@ -463,6 +464,7 @@ public class Game {
 
     public boolean isLoadingLevel() {
 
+        if (player.isDead()) return true;
         return loadingLevel;
     }
 
@@ -534,6 +536,7 @@ public class Game {
     public void animateCharacterDying() {
 
         player.setCurrentAnimationType("dying");
+        player.adaptViewDirection(1);
         player.setCurrentAnimationFrame(player.getDyingAnimationFrame());
 
         player.startAnimationTimer();

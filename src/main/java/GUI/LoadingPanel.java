@@ -1,6 +1,7 @@
 package GUI;
 
 import main.Main;
+import utilityClasses.InputHandler;
 import utilityClasses.ResourceLoader;
 
 import javax.swing.*;
@@ -12,6 +13,8 @@ import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Objects;
 
 public class LoadingPanel extends JPanel implements ActionListener {
@@ -20,6 +23,7 @@ public class LoadingPanel extends JPanel implements ActionListener {
     private Timer timer;
     private int currentFrame;
 
+    JLabel continueMessage;
     private JLabel characterImage, enemyImage;
     private JTextPane hintTextPane;
 
@@ -35,6 +39,7 @@ public class LoadingPanel extends JPanel implements ActionListener {
         createContainers();
         loadImages();
         currentFrame = 0;
+        timer = new Timer(103, this);
 
         new Timer(10, new ActionListener() {
             @Override
@@ -42,21 +47,71 @@ public class LoadingPanel extends JPanel implements ActionListener {
 
                 if (Main.currentScreen.equals("Loading")) {
                     ((Timer) e.getSource()).stop();
-                    setVisible(false);
-                    setVisible(true);
                     timer.start();
                     characterImage.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/screen/loadingPanel/character.gif"))));
                     enemyImage.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/screen/loadingPanel/skeleton.gif"))));
+                    setVisible(false);
+                    setVisible(true);
                 }
             }
         }).start();
+    }
 
-        timer = new Timer(103, this);
+    private void createInputHandler() {
+
+        requestFocusInWindow();
+
+        addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                int keyCode = e.getKeyCode();
+
+                if (keyCode == InputHandler.getKeyCode("interact")) {
+                    e.consume();
+                    discardLoadingScreen(this);
+
+                    //((JPanel) e.getSource()).removeKeyListener(this);
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+            }
+        });
+    }
+
+    private void discardLoadingScreen(KeyListener listener) {
+
+        Main.showGameScreen();
+        removeKeyListener(listener);
+    }
+
+    private void updateLoadingScreen() {
+
+        bottomImageContainer.removeAll();
+        bottomImageContainer.setBorder(null);
+        bottomImageContainer.add(Box.createHorizontalGlue());
+        bottomImageContainer.add(characterImage);
+        bottomImageContainer.add(Box.createHorizontalStrut(100));
+        bottomImageContainer.add(enemyImage);
+        bottomImageContainer.add(Box.createHorizontalGlue());
+
+        ResourceLoader rl = ResourceLoader.getResourceLoader();
+        characterImage.setIcon(rl.getImageIcon("/character/walking/R1.png"));
+        enemyImage.setIcon(rl.getImageIcon("/enemy/skeletonWarrior/walking/L1.png"));
+
+        continueMessage.setText("Press " + InputHandler.getKeyName("interact") + " to continue");
+        createInputHandler();
     }
 
     public void actionPerformed(ActionEvent e) {
 
-        if (!Main.currentScreen.equals("Loading")) {
+        if (Main.updateLoadingScreen()) {
+            updateLoadingScreen();
             timer.stop();
             return;
         }
@@ -89,10 +144,32 @@ public class LoadingPanel extends JPanel implements ActionListener {
 
         add(container, BorderLayout.SOUTH);
 
+        container.add(createContinueLabel());
+        container.add(Box.createVerticalStrut(20));
         createBottomImageContainer();
         container.add(bottomImageContainer);
         container.add(Box.createVerticalStrut(20));
         container.add(createHintContainer());
+    }
+
+    private JPanel createContinueLabel() {
+
+        ResourceLoader rl = ResourceLoader.getResourceLoader();
+        Font font = rl.getDefaultTextFont();
+
+        JPanel msgContainer = new JPanel();
+        msgContainer.setLayout(new BoxLayout(msgContainer, BoxLayout.X_AXIS));
+        msgContainer.setBorder(new EmptyBorder(0, 0, 0, 50));
+        msgContainer.setOpaque(false);
+
+        continueMessage = new JLabel();
+        continueMessage.setFont(font.deriveFont(16f));
+        continueMessage.setForeground(new Color(0xe0d9ae));
+
+        msgContainer.add(Box.createHorizontalGlue());
+        msgContainer.add(continueMessage);
+
+        return msgContainer;
     }
 
     private JPanel createHintContainer() {
@@ -134,7 +211,6 @@ public class LoadingPanel extends JPanel implements ActionListener {
         // Creates the image container to hold the character and enemy
         bottomImageContainer = new JPanel();
         bottomImageContainer.setOpaque(false);
-        bottomImageContainer.setBackground(new Color(0, 0, 0, 0));
         bottomImageContainer.setLayout(new BoxLayout(bottomImageContainer, BoxLayout.X_AXIS));
         bottomImageContainer.setBorder(new EmptyBorder(0, 100, 0, 100));
 

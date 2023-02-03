@@ -65,6 +65,7 @@ public abstract class Entity implements KnockBack {
     private int viewDirection;
 
     private final Timer animationTimer;
+    private boolean stopAnimationTimer;
 
     public Entity(int positionX, int positionY, int movementSpeed, int healthPoints, EntityType entityType, int viewDirection) {
 
@@ -93,7 +94,7 @@ public abstract class Entity implements KnockBack {
     public void stopAnimationTimer() {
 
         if (!animationTimer.isRunning()) return;
-        animationTimer.stop();
+        stopAnimationTimer = true;
     }
 
     public void setAnimationDelay(int delay) {
@@ -418,6 +419,12 @@ public abstract class Entity implements KnockBack {
     private class AnimationHandler implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+
+            if (stopAnimationTimer) {
+                animationTimer.stop();
+                stopAnimationTimer = false;
+                return;
+            }
             handleAnimation();
         }
     }
