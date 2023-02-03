@@ -4,9 +4,9 @@ import java.awt.*;
 
 public class AnimationFrame {
 
-    private Image image;
-    private int width, height;
-    private int xOffset, yOffset;
+    private final Image image;
+    private final int width, height;
+    private final int xOffset, yOffset;
 
     public AnimationFrame(Image image, int width, int height, int xOffset, int yOffset) {
         this.image = image;

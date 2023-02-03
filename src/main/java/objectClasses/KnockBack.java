@@ -1,7 +1,7 @@
 package objectClasses;
 
 public interface KnockBack {
-    void update(Game game);
-    void hit();
+    void updateKnockBack(Game game);
+    void startKnockBack();
 }
 

@@ -180,8 +180,6 @@ public class Level {
         int map_y = y / GamePanel.NEW_TILE_SIZE;
         int map_x = x / GamePanel.NEW_TILE_SIZE;
 
-        //System.out.println(x + ", " + y);
-
         if (y < 0 || x < 0 || map_y > 31 || map_x > 31) {
             return false;
             //variables für solid/chest/deko/eingang im konstruktor setzen
@@ -215,7 +213,7 @@ public class Level {
         enemies = new ArrayList<>();
         Random random = new Random();
         // Biome, Level, Number of enemies should be contained in the xml file
-        for (int i = 0; i < id * 5; i++) {
+        for (int i = 0; i < id * 5; i++) {  //id * 5
             int x, y;
             do {
                 x = random.nextInt(32) * GamePanel.NEW_TILE_SIZE;
@@ -224,11 +222,11 @@ public class Level {
             } while (!isSolid(x, y));
 
             Enemy enemy;
-            //if (i % 2 == 0) {
+            if (i % 2 == 0) {
                 enemy = new Enemy(x, y, 1, 52, 200, 90, EntityType.skeletonWarrior, 0);
-            //}// else {
-                //enemy = new Enemy(x, y, 1, 52, 300, 250, EntityType.skeletonArcher, 0);
-            //}
+            } else {
+                enemy = new Enemy(x, y, 1, 52, 300, 250, EntityType.skeletonArcher, 0);
+            }
             enemies.add(enemy);
         }
         return enemies;

@@ -1,17 +1,15 @@
 package objectClasses.Abstract;
 
 import java.awt.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import GUI.GamePanel;
 import objectClasses.Enum.AnimationType;
 import utilityClasses.AnimationFrame;
-import GUI.GamePanel;
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -20,9 +18,11 @@ import objectClasses.Game;
 import objectClasses.KnockBack;
 import utilityClasses.ResourceLoader;
 
-import javax.imageio.ImageIO;
+import javax.swing.*;
 
 public abstract class Entity implements KnockBack {
+
+    Double[] factor = {1.0, 0.98, 0.95, 0.88, 0.70, 0.56, 0.47, 0.40, 0.35, 0.30, 0.27, 0.25, 0.21, 0.20, 0.19};
 
     private EntityType entityType;
     private int maxHealthPoints;
@@ -36,25 +36,40 @@ public abstract class Entity implements KnockBack {
     private int knockBackDuration;
     private boolean knockBack = false;
 
-    private int attackDamage; // damage and amount store the combined value of all items
-    private int blockAmount; // -> Easier to implement possible temporary buffs
+    private int attackDamage;
+    private int blockAmount;
 
-    private int cooldown; // cooldown -> time between attacks // For enemies, cooldown also determines // when it can move again after attacking // Value is actively set and reduced
-    private int attackDelay; // attackDelay -> time between attacks // A value for the cooldown to refer to // that is set for all entities after creation
+    // Indicates when an enemy can move again after attacking
+    private int coolDown;
+    // Value for the coolDown to refer to that is set for all entities after creation
+    private int attackDelay;
 
-    private Map<String, AnimationFrame[]> entityFrames = new HashMap<>(); // entityFrames -> holds all frames of all animations // currentAnimationType -> indicates the current type // currentFrame -> indicates the current frame of the current animation
+    // entityFrames -> holds all frames of all animations
+    // currentAnimationType -> indicates the current type
+    // currentFrame -> indicates the current frame of the current animation
+    private Map<String, AnimationFrame[]> entityFrames = new HashMap<>();
     private String currentAnimationType;
     private int currentFrame;
 
     private int
             walkingAnimationDirections,
             attackAnimationDirections,
-            dyingAnimationDirections;
+            dyingAnimationDirections,
+            restingAnimationDirections;
+
+    private int walkingAnimationFrame,
+            attackAnimationFrame,
+            dyingAnimationFrame,
+            restingAnimationFrame;
 
     private int viewDirection;
 
+    private final Timer animationTimer;
 
     public Entity(int positionX, int positionY, int movementSpeed, int healthPoints, EntityType entityType, int viewDirection) {
+
+        int animationDelay = 100;
+        animationTimer = new Timer(animationDelay, new AnimationHandler());
 
         this.positionX = positionX;
         this.positionY = positionY;
@@ -64,10 +79,68 @@ public abstract class Entity implements KnockBack {
         this.maxHealthPoints = healthPoints;
         this.entityType = entityType;
 
-        this.viewDirection = 0;
+        this.viewDirection = viewDirection;
 
         loadAnimationFrames(entityType.toString());
     }
+
+    public void startAnimationTimer() {
+
+        if (animationTimer.isRunning()) return;
+        animationTimer.start();
+    }
+
+    public void stopAnimationTimer() {
+
+        if (!animationTimer.isRunning()) return;
+        animationTimer.stop();
+    }
+
+    public void setAnimationDelay(int delay) {
+
+        animationTimer.setDelay(delay);
+    }
+
+    public int getWalkingAnimationFrame() {
+
+        return walkingAnimationFrame;
+    }
+
+    public int getAttackAnimationFrame() {
+
+        return attackAnimationFrame;
+    }
+
+    public int getRestingAnimationFrame() {
+
+        return restingAnimationFrame;
+    }
+
+    public int getDyingAnimationFrame() {
+
+        return dyingAnimationFrame;
+    }
+
+    public void setWalkingAnimationFrame(int walkingAnimationFrame) {
+        this.walkingAnimationFrame = walkingAnimationFrame;
+    }
+
+    public void setAttackAnimationFrame(int attackAnimationFrame) {
+        this.attackAnimationFrame = attackAnimationFrame;
+    }
+
+    public void setDyingAnimationFrame(int dyingAnimationFrame) {
+        this.dyingAnimationFrame = dyingAnimationFrame;
+    }
+
+    public void setRestingAnimationFrame(int restingAnimationFrame) {
+        this.restingAnimationFrame = restingAnimationFrame;
+    }
+
+    public boolean isDead() {
+        return getCurrentHealthPoints() <= 0;
+    }
+
 
     public int getViewDirection() {
         return viewDirection;
@@ -77,7 +150,7 @@ public abstract class Entity implements KnockBack {
         this.viewDirection = viewDirection;
     }
 
-    public boolean isKnockBack() {
+    public boolean isKnockedBack() {
         return knockBack;
     }
 
@@ -101,29 +174,65 @@ public abstract class Entity implements KnockBack {
         this.knockBackDuration = knockBackDuration;
     }
 
-    public void reduceCooldown() {
+    public boolean reduceKnockBackDuration() {
+        knockBackDuration--;
+        return knockBackDuration == 0;
+    }
 
-        if (cooldown < 0) {
-            cooldown = 0;
-        } else {
-            cooldown--;
+    public boolean allowKnockBack(Game game, int viewDirection) {
+
+        // up, down, left, right
+        switch (viewDirection) {
+            case 0 -> {
+                if (game.getCurrentLevel().isSolid(getPositionX(), getPositionY() - (int) (getMomentum() * factor[15 - getKnockBackDuration()])) &&
+                        game.getCurrentLevel().isSolid(getPositionX() + GamePanel.NEW_TILE_SIZE, getPositionY() - (int) (getMomentum() * factor[15 - getKnockBackDuration()]))) {
+                    setPositionY(getPositionY() - (int) (getMomentum() * factor[15 - getKnockBackDuration()]));
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            case 1 -> {
+                if (game.getCurrentLevel().isSolid(getPositionX(), getPositionY() + (int) (getMomentum() * factor[15 - getKnockBackDuration()]) + GamePanel.NEW_TILE_SIZE) &&
+                        game.getCurrentLevel().isSolid(getPositionX() + GamePanel.NEW_TILE_SIZE, getPositionY() + (int) (getMomentum() * factor[15 - getKnockBackDuration()]) + GamePanel.NEW_TILE_SIZE)) {
+                    setPositionY(this.getPositionY() + (int) (getMomentum() * factor[15 - getKnockBackDuration()]));
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            case 2 -> {
+                if (game.getCurrentLevel().isSolid(getPositionX() - (int) (getMomentum() * factor[15 - getKnockBackDuration()]), getPositionY()) &&
+                        game.getCurrentLevel().isSolid(getPositionX() - (int) (getMomentum() * factor[15 - getKnockBackDuration()]), getPositionY() + GamePanel.NEW_TILE_SIZE)) {
+                    setPositionX(getPositionX() - (int) (getMomentum() * factor[15 - getKnockBackDuration()]));
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            case 3 -> {
+                if (game.getCurrentLevel().isSolid(getPositionX() + (int) (getMomentum() * factor[15 - getKnockBackDuration()]) + GamePanel.NEW_TILE_SIZE, getPositionY()) &&
+                        game.getCurrentLevel().isSolid(getPositionX() + (int) (getMomentum() * factor[15 - getKnockBackDuration()]) + GamePanel.NEW_TILE_SIZE, getPositionY() + GamePanel.NEW_TILE_SIZE)) {
+                    setPositionX(getPositionX() + (int) (getMomentum() * factor[15 - getKnockBackDuration()]));
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         }
+        return false;
     }
 
     public EntityType getEntityType() {
         return entityType;
     }
 
-    public void setEntityType(EntityType entityType) {
-        this.entityType = entityType;
+    public int getCoolDown() {
+        return coolDown;
     }
 
-    public int getCooldown() {
-        return cooldown;
-    }
-
-    public void setCooldown(int cooldown) {
-        this.cooldown = cooldown;
+    public void setCoolDown(int coolDown) {
+        this.coolDown = coolDown;
     }
 
     public int getAttackDelay() {
@@ -134,7 +243,6 @@ public abstract class Entity implements KnockBack {
         this.attackDelay = attackDelay;
     }
 
-    // Weapon functions
     public void setAttackDamage(int damage) {
         this.attackDamage = damage;
     }
@@ -143,7 +251,6 @@ public abstract class Entity implements KnockBack {
         return this.attackDamage;
     }
 
-    // Armor functions
     public void setBlockAmount(int blockAmount) {
         this.blockAmount = blockAmount;
     }
@@ -219,17 +326,28 @@ public abstract class Entity implements KnockBack {
 
     public int getAnimationDirections() {
 
-        int directions = 1;
-        switch (getCurrentAnimationType()) {
-            case "walking" -> directions = walkingAnimationDirections;
-            case "attacking" -> directions = attackAnimationDirections;
-            case "dying" -> directions = dyingAnimationDirections;
-        }
-        return directions;
+        return switch (getCurrentAnimationType()) {
+            case "resting" -> restingAnimationDirections;
+            case "walking" -> walkingAnimationDirections;
+            case "attacking" -> attackAnimationDirections;
+            case "dying" -> dyingAnimationDirections;
+            default -> 1;
+        };
     }
 
+    public void adaptViewDirection(int direction) {
+
+        // up, down, left, right
+        switch (direction) {
+            case 0 -> setViewDirection(getAnimationFrameLimit(getCurrentAnimationType()) * 3);
+            case 1 -> setViewDirection(0);
+            case 2 -> setViewDirection(getAnimationFrameLimit(getCurrentAnimationType()));
+            case 3 -> setViewDirection(getAnimationFrameLimit(getCurrentAnimationType()) * 2);
+        }
+    }
 
     public void setCurrentAnimationFrame(int currentFrame) {
+
         int factor = getViewDirection() / (getEntityFrames(getCurrentAnimationType()).length /
                         getAnimationDirections());
         setCurrentFrame(currentFrame + getAnimationFrameLimit(getCurrentAnimationType()) * factor);
@@ -240,7 +358,6 @@ public abstract class Entity implements KnockBack {
         // Read the file into a JsonObject
         ResourceLoader rl = ResourceLoader.getResourceLoader();
         JsonObject root = rl.readStaticJsonFile("animationFrames.json");
-
 
         // Accesses the entity object (character/skeleton/..)
         JsonObject entity = root.getAsJsonObject(entityType);
@@ -263,6 +380,8 @@ public abstract class Entity implements KnockBack {
                 attackAnimationDirections = animationType.keySet().size();
             } else if (animationName.equals(AnimationType.dying.toString())) {
                 dyingAnimationDirections = animationType.keySet().size();
+            } else if (animationName.equals(AnimationType.resting.toString())) {
+                restingAnimationDirections = animationType.keySet().size();
             }
 
             int width, height, xOffset, yOffset, index = 0;
@@ -278,12 +397,7 @@ public abstract class Entity implements KnockBack {
                 for (JsonElement element : frames) {
                     JsonObject frame = element.getAsJsonObject();
 
-                    Image image = null;
-                    try {
-                        image = ImageIO.read(new File(frame.get("image").getAsString()));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    Image image = rl.getImage(frame.get("image").getAsString());
                     width = frame.get("width").getAsInt();
                     height = frame.get("height").getAsInt();
                     xOffset = frame.get("xOffset").getAsInt();
@@ -295,8 +409,33 @@ public abstract class Entity implements KnockBack {
             }
             entityFrames.put(animationName, animationFrames);
         }
-        setCurrentAnimationType("walking");
+        setCurrentAnimationType(AnimationType.walking.toString());
     }
 
-    public abstract void draw(Graphics2D graph2D, Game game, GamePanel gamePanel) throws IOException;
+    public abstract void draw(Graphics2D graph2D, Game game) throws IOException;
+
+
+    private class AnimationHandler implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            handleAnimation();
+        }
+    }
+    protected abstract void handleAnimation();
+    protected abstract void endRestingAnimation();
+    protected abstract void endWalkingAnimation();
+    protected abstract void endAttackingAnimation();
+    protected abstract void endDyingAnimation();
+
+    protected boolean proceedAnimationFrame(String animationType, int frameLimit) {
+
+        int animationFrame = switch (animationType) {
+            case "resting" -> restingAnimationFrame++;
+            case "walking" -> walkingAnimationFrame++;
+            case "attacking" -> attackAnimationFrame++;
+            case "dying" -> dyingAnimationFrame++;
+            default -> 0;
+        };
+        return animationFrame + 1 >= frameLimit;
+    }
 }

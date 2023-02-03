@@ -1,95 +1,158 @@
 package GUI;
 
-
 import main.Main;
 import utilityClasses.ResourceLoader;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.Objects;
 
 public class LoadingPanel extends JPanel implements ActionListener {
 
-    private JPanel container;
+    private JPanel bottomImageContainer;
     private Timer timer;
-    private int currentFrame = 0;
-    private BufferedImage[] images;
+    private int currentFrame;
 
-    private JLabel character;
+    private JLabel characterImage, enemyImage;
+    private JTextPane hintTextPane;
 
     public LoadingPanel() {
 
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        loadImages();
+        init();
+    }
 
-        timer = new Timer(110, this);
-        timer.start();
+    private void init() {
+
+        setLayout(new BorderLayout());
+
+        createContainers();
+        loadImages();
+        currentFrame = 0;
+
+        new Timer(10, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                if (Main.currentScreen.equals("Loading")) {
+                    ((Timer) e.getSource()).stop();
+                    setVisible(false);
+                    setVisible(true);
+                    timer.start();
+                    characterImage.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/screen/loadingPanel/character.gif"))));
+                    enemyImage.setIcon(new ImageIcon(Objects.requireNonNull(getClass().getResource("/screen/loadingPanel/skeleton.gif"))));
+                }
+            }
+        }).start();
+
+        timer = new Timer(103, this);
     }
 
     public void actionPerformed(ActionEvent e) {
 
+        if (!Main.currentScreen.equals("Loading")) {
+            timer.stop();
+            return;
+        }
+        setVisible(false);
+        setVisible(true);
+
+        if (currentFrame <= 15) {
+            // Moves the images closer together by increasing
+            // the left and right border inset
+            Border currentBorder = bottomImageContainer.getBorder();
+            Border newBorder = BorderFactory.createCompoundBorder(currentBorder, BorderFactory.createEmptyBorder(0, 1, 0, 1));
+            bottomImageContainer.setBorder(newBorder);
+        }
+
+        // Increases the frame. If the last one is
+        // reached, starts over from the beginning
         currentFrame++;
 
-        // If we've reached the end of the animation, start over from the beginning
-        if (currentFrame >= 9) {
+        if (currentFrame >= 20) {
             currentFrame = 0;
         }
-        character.setIcon(new ImageIcon(Objects.requireNonNull(images[currentFrame])));
+    }
+
+    private void createContainers() {
+
+        // Creates the vertical container to hold hints and images
+        JPanel container = new JPanel();
+        container.setOpaque(false);
+        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+
+        add(container, BorderLayout.SOUTH);
+
+        createBottomImageContainer();
+        container.add(bottomImageContainer);
+        container.add(Box.createVerticalStrut(20));
+        container.add(createHintContainer());
+    }
+
+    private JPanel createHintContainer() {
+
+        // Loads the font for the hints
+        ResourceLoader rl = ResourceLoader.getResourceLoader();
+        Font font = rl.getDefaultTextFont();
+
+        // Creates the hint container
+        JPanel hintContainer = new JPanel();
+        hintContainer.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
+        hintContainer.setBackground(new Color(0xB3E0D9AE, true));
+        hintContainer.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        // Creates the pane to hold the hint text
+        hintTextPane = new JTextPane();
+        hintTextPane.setOpaque(false);
+        hintTextPane.setEditable(false);
+        hintTextPane.setFocusable(false);
+        hintTextPane.setPreferredSize(new Dimension((int) (Main.DEFAULT_WINDOW_WIDTH * Main.SCALING_FACTOR / 6 * 5), 30));
+
+        // Style used to center the text within the text pane
+        StyledDocument doc = hintTextPane.getStyledDocument();
+        SimpleAttributeSet center = new SimpleAttributeSet();
+        StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+        doc.setParagraphAttributes(0, doc.getLength(), center, false);
+
+        hintTextPane.setText("You can only carry one item of each type at a time");
+        hintTextPane.setFont(font.deriveFont(19f));
+        hintTextPane.setForeground(new Color(0x262F3F));
+        hintTextPane.setBackground(Color.red);
+        hintContainer.add(hintTextPane);
+
+        return hintContainer;
+    }
+
+    private void createBottomImageContainer() {
+
+        // Creates the image container to hold the character and enemy
+        bottomImageContainer = new JPanel();
+        bottomImageContainer.setOpaque(false);
+        bottomImageContainer.setBackground(new Color(0, 0, 0, 0));
+        bottomImageContainer.setLayout(new BoxLayout(bottomImageContainer, BoxLayout.X_AXIS));
+        bottomImageContainer.setBorder(new EmptyBorder(0, 100, 0, 100));
+
+        characterImage = new JLabel();
+        bottomImageContainer.add(characterImage);
+
+        // Adds a filling between the images to separate them evenly
+        bottomImageContainer.add(Box.createHorizontalGlue());
+
+        enemyImage = new JLabel();
+        bottomImageContainer.add(enemyImage);
     }
 
     private void loadImages() {
 
         ResourceLoader rl = ResourceLoader.getResourceLoader();
 
-        // Create a File object for the directory
-        File dir = rl.getFile("/character/walking");
-
-        // Create an array to hold the images
-        images = new BufferedImage[9];
-
-        int index = 0;
-        for (int i = 0; i < dir.listFiles().length; i++) {
-
-            if (i >= 18 && i <= 26) {
-
-                images[index] = rl.getBufferedImage("/character/walking/" + dir.list()[i]);
-                index++;
-
-            }
-        }
-
-        container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-
-        JPanel content = new JPanel();
-        content.setOpaque(false);
-        content.setPreferredSize(new Dimension(600, 330));
-
-        JPanel content2 = new JPanel();
-        content2.setAlignmentX(JComponent.RIGHT_ALIGNMENT);
-        content2.setOpaque(false);
-
-        JLabel logo = new JLabel();
-        logo.setOpaque(false);
-
-        character = new JLabel();
-
-        container.add(Box.createVerticalStrut(50));
-        content.add(logo);
-
-        content2.add(character);
-        content2.add(Box.createHorizontalStrut(500));
-
-        container.add(content);
-        container.add(Box.createVerticalStrut(20));
-        container.add(content2);
-        this.add(container);
-
+        enemyImage.setIcon(rl.getImageIcon("/enemy/skeletonWarrior/walking/L1.png"));
     }
 
     public void paintComponent(Graphics g) {

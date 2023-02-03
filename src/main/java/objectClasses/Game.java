@@ -7,21 +7,17 @@ import main.Main;
 import objectClasses.Enum.EntityType;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
-import utilityClasses.InputHandler;
 import utilityClasses.ResourceLoader;
 
-import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.geom.Arc2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.*;
 import java.util.List;
 
@@ -33,28 +29,39 @@ public class Game {
 
     private Boolean[][] mapWalkedOn;
 
+    private boolean loadingLevel, openingChest, gameWon;
+
     // Arrows for every direction, ordered alphabetically
     // 0 is Down, 1 is Left, 2 is Right, 3 is Up
     private BufferedImage[] arrows = new BufferedImage[4];
 
-    // 12 items, but 6 torch-images: 0+6 is one torch (0 is flame, 6 is
+    private BufferedImage[] lifeImages = new BufferedImage[3];
+
     private BufferedImage[] torches;
     private int torchFrame;
 
     private BufferedImage[] chests;
     private Map<Integer, Integer> chestsToOpen;
 
-    public Game() throws IOException, ParserConfigurationException, SAXException {
-        loadTileSetsFromFiles();
-        loadLevelsFromFile();
+    public Game() {
+
+        init();
+    }
+
+    private void init() {
+
         currentLevelNumber = 1;
 
-        int x = (int) ((getCurrentLevel().getEnterPos() % 32 + 0.5) * GamePanel.NEW_TILE_SIZE);
-        int y = (getCurrentLevel().getEnterPos() / 32 + 1) * GamePanel.NEW_TILE_SIZE;
-        this.player = new Player(x, y, 3, 100, 3, EntityType.character, 0);
+        try {
+            loadTileSetsFromFiles();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        loadLevelsFromFile();
 
         loadTorchImages();
         loadChestImages();
+        loadLifeImages();
         loadProjectileImages();
         chestsToOpen = new HashMap<>();
 
@@ -63,9 +70,24 @@ public class Game {
         for (int j = 0; j < 32 * 32; j++) {
             mapWalkedOn[j / 32][j % 32] = false;
         }
+
+        int x = (int) ((getCurrentLevel().getEnterPos() % 32 + 0.5) * GamePanel.NEW_TILE_SIZE);
+        int y = (getCurrentLevel().getEnterPos() / 32 + 1) * GamePanel.NEW_TILE_SIZE;
+        player = new Player(x, y, 3, 100, 3, EntityType.character, 1);
+
+    }
+
+    private void resetVariables() {
+
+        player.setCurrentHealthPoints(player.getMaxHealthPoints());
+        player.getKeyHandler().initVariables();
+        InventoryPanel.loadInventory(player);
     }
 
     public void reloadLevel() {
+
+        loadingLevel = true;
+
         try {
             Level level = new Level(getCurrentLevel().getMapXMLFile());
             level.setId(currentLevelNumber);
@@ -74,12 +96,8 @@ public class Game {
             System.out.println(e);
         }
 
-        displayLevel();
-        player.setCurrentHealthPoints(player.getMaxHealthPoints());
-        player.setLife(player.getLife() - 1);
-        player.getKeyHandler().clearVariables();
-        InventoryPanel.loadInventory();
-        GamePanel.isDead = false;
+        player.setCurrentAnimationType("resting");
+        resetVariables();
     }
 
     public void displayLevel() {
@@ -89,15 +107,14 @@ public class Game {
         this.player.setPositionY(y);
 
         chestsToOpen = new HashMap<>();
-
+        loadingLevel = false;
     }
 
     public boolean loadNextLevel() {
-        player.getKeyHandler().clearVariables();
+
         if (currentLevelNumber >= levels.size()) {
             return false;
         }
-
         currentLevelNumber++;
         return true;
     }
@@ -105,15 +122,15 @@ public class Game {
     private void loadProjectileImages() {
         ResourceLoader rl = ResourceLoader.getResourceLoader();
 
-        arrows[0] = rl.getBufferedImage("/entities/projectile/arrowDown.png");
-        arrows[1] = rl.getBufferedImage("/entities/projectile/arrowLeft.png");
-        arrows[2] = rl.getBufferedImage("/entities/projectile/arrowRight.png");
-        arrows[3] = rl.getBufferedImage("/entities/projectile/arrowUp.png");
+        arrows[0] = rl.getBufferedImage("/entities/projectile/arrowUp.png");
+        arrows[1] = rl.getBufferedImage("/entities/projectile/arrowDown.png");
+        arrows[2] = rl.getBufferedImage("/entities/projectile/arrowLeft.png");
+        arrows[3] = rl.getBufferedImage("/entities/projectile/arrowRight.png");
     }
 
     public BufferedImage getProjectileImage(int direction) {
 
-        return arrows[direction / 9];
+        return arrows[direction];
     }
 
     private void loadTorchImages() {
@@ -123,13 +140,13 @@ public class Game {
         File dir = rl.getFile("/entities/torch");
 
         torches = new BufferedImage[7];
-        BufferedImage img;
+        BufferedImage img = null;
         for (int i = 0; i < dir.listFiles().length; i++) {
             img = rl.getBufferedImage("/entities/torch/" + dir.list()[i]);
             torches[i] = img.getSubimage(0, 0, img.getWidth(), img.getHeight() / 2);
-            torches[6] = img.getSubimage(0, img.getHeight() / 2, img.getWidth(), img.getHeight() / 2);
         }
-
+        assert img != null;
+        torches[6] = img.getSubimage(0, img.getHeight() / 2, img.getWidth(), img.getHeight() / 2);
         torchFrame = 0;
     }
 
@@ -142,6 +159,24 @@ public class Game {
         for (int i = 0; i < dir.listFiles().length; i++) {
             chests[i] = rl.getBufferedImage("/entities/chest/" + dir.list()[i]);
         }
+    }
+
+    private void loadLifeImages() {
+
+        ResourceLoader rl = ResourceLoader.getResourceLoader();
+        lifeImages[0] = rl.getBufferedImage("/screen/inventoryPanel/oneLife.png");
+        lifeImages[1] = rl.getBufferedImage("/screen/inventoryPanel/twoLives.png");
+        lifeImages[2] = rl.getBufferedImage("/screen/inventoryPanel/threeLives.png");
+
+    }
+
+    public BufferedImage getLifeImage() {
+
+        return switch (player.getLife()) {
+            case 3 -> lifeImages[2];
+            case 2 -> lifeImages[1];
+            default -> lifeImages[0];
+        };
     }
 
     public Player getPlayer() {
@@ -208,7 +243,6 @@ public class Game {
                             GamePanel.NEW_TILE_SIZE * (j / 32) - player.getPositionY() + (GamePanel.WINDOW_HEIGHT / 2),
                             GamePanel.NEW_TILE_SIZE, GamePanel.NEW_TILE_SIZE,
                             null);
-
 
                     /*
                     if (level.isSolid(
@@ -302,7 +336,6 @@ public class Game {
                 i++;
             }
         }
-
     }
 
     public void renderTrees(Graphics2D graph2D) {
@@ -353,248 +386,348 @@ public class Game {
         }
     }
 
+    public void renderLives(Graphics2D graph2D) {
+
+        graph2D.drawImage(getLifeImage(),
+                46,
+                34,
+                100,
+                18,
+                null);
+    }
+
+    public void renderCharacterHealthBar(Graphics2D graph2D) {
+
+        double healthBarWidth = (double) 262 / (double) player.getMaxHealthPoints() * (double) player.getCurrentHealthPoints();
+        Shape healthBar = new Rectangle2D.Double(
+                24,
+                64,
+                healthBarWidth,
+                14);
+
+        graph2D.setPaint(new Color(0x7d0027));
+        graph2D.fill(healthBar);
+
+        if (player.getCurrentHealthPoints() < player.getMaxHealthPoints()) {
+            Shape healthBarBackground = new Rectangle2D.Double(
+                    24 + healthBarWidth,
+                    64,
+                    262 - healthBarWidth,
+                    14);
+
+            graph2D.setPaint(new Color(0xA6505050, true));
+            graph2D.fill(healthBarBackground);
+        }
+    }
+
     public boolean enemyAttack(double angle, int viewDirection) {
 
         boolean hit = false;
-        if (viewDirection == 18 && angle >= 315 && angle < 359 || angle >= 0 && angle < 45) { // -> von 315 bis 45 -> Up
+        if (viewDirection == 0 && angle >= 315 && angle < 359 || angle >= 0 && angle < 45) { // -> von 315 bis 45 -> Up
             hit = true;
-        } else if (viewDirection == 12 && angle >= 45 && angle < 135) { // -> von 45 bis 135 -> Right
+        } else if (viewDirection == 3 && angle >= 45 && angle < 135) { // -> von 45 bis 135 -> Right
             hit = true;
-        } else if (viewDirection == 0 && angle >= 135 && angle < 225) { // -> von 135 bis 225 -> Down
+        } else if (viewDirection == 1 && angle >= 135 && angle < 225) { // -> von 135 bis 225 -> Down
             hit = true;
-        } else if (viewDirection == 6 && angle >= 225 && angle < 315) { // -> von 225 bis 315 -> Left
+        } else if (viewDirection == 2 && angle >= 225 && angle < 315) { // -> von 225 bis 315 -> Left
             hit = true;
         }
         return hit;
     }
 
-    public void dealDamage(Enemy enemy) {
+    public void dealDamageToPlayer(Enemy enemy) {
+
         if (!player.isInvincible()) {
-            if (player.getBlockAmount() >= enemy.getAttackDamage()) { // Block sound
+            if (player.getBlockAmount() >= enemy.getAttackDamage()) {
+                // Block sound
             } else {
                 AudioManager.play("S - characterHit");
                 player.setCurrentHealthPoints(player.getCurrentHealthPoints() + player.getBlockAmount() - enemy.getAttackDamage());
-                InventoryPanel.loadInventory();
-            }
-            if (player.getCurrentHealthPoints() <= 0) {
-                GamePanel.isDead = true;
-            }
-        } else {
-            player.triggerInvincibility();
-        }
-    }
+                InventoryPanel.loadInventory(player);
 
-    public void moveProjectiles(Enemy enemy) {
-        Projectile p;
-        for (int i = enemy.getProjectiles().size() - 1; i >= 0; i--) {
-            p = enemy.getProjectiles().get(i);
-            if (p.outOfScreen()) {
-                enemy.getProjectiles().remove(i);
-            } else {
-                p.move();
-
-                int arrowOffset = 5;
-                int playerXLeft = player.getPositionX(), playerXRight = player.getPositionX() + 30;
-                int playerYUp = player.getPositionY(), playerYDown = player.getPositionY() + 50;
-                switch (p.getDirection()) {
-                    case 9, 18 -> {
-                        if (player.getKeyHandler().walkingDirection == InputHandler.upKey
-                                || player.getKeyHandler().walkingDirection == InputHandler.downKey) {
-                            playerXLeft -= 25;
-                            playerXRight -= 22;
-
-                        } else {
-                            playerXLeft -= 35;
-                            playerXRight -= 22;
-                        }
-                        playerYUp -= 25;
-                        playerYDown -= 25;
-                    }
-                    case 0, 27 -> {
-                        if (player.getKeyHandler().walkingDirection == InputHandler.upKey
-                                || player.getKeyHandler().walkingDirection == InputHandler.downKey) {
-                            playerXLeft -= 15;
-                            playerXRight -= 12;
-                        } else {
-                            playerXLeft -= 15;
-                            playerXRight -= 18;
-                        }
-                        playerYUp -= 40;
-                        playerYDown -= 25;
-                    }
-                }
-
-                if (p.getX() < playerXRight && p.getX() + arrowOffset > playerXLeft
-                        && p.getY() < playerYDown && p.getY() + arrowOffset > playerYUp) {
-
-                    dealDamage(enemy);
-                    enemy.getProjectiles().remove(i);
-                }
+                if (player.isDead()) player.setInvincible(true);
+                else player.triggerInvincibility();
             }
         }
     }
 
-    public void checkPlayerAttack(int attackFrame) {
-        int startAngle = 0, arcAngle = 0;
+    public void setOpeningChest(boolean opening) {
 
-        //System.out.println(attackFrame);
-        if (player.getKeyHandler().attackPressed
-                && player.getCooldown() == 0) {     //&& attackFrame == 4
-            switch (player.getKeyHandler().lastDirection) {
-                case (KeyEvent.VK_W) -> {
-                    startAngle = 45;
-                    arcAngle = 90;
-                }
-                case (KeyEvent.VK_A) -> {
-                    startAngle = 135;
-                    arcAngle = 90;
-                }
-                case (KeyEvent.VK_S) -> {
-                    startAngle = 225;
-                    arcAngle = 90;
-                }
-                case (KeyEvent.VK_D) -> {
-                    startAngle = 315;
-                    arcAngle = 90;
+        openingChest = opening;
+    }
+
+    public boolean isOpeningChest() {
+
+        return openingChest;
+    }
+
+    public boolean isLoadingLevel() {
+
+        return loadingLevel;
+    }
+
+    public boolean isGameWon() {
+
+        return gameWon;
+    }
+
+    public boolean isGameOver() {
+
+        return player.getLife() == 0;
+    }
+
+    private void playSwordSwipeSound() {
+
+        // Creates an array of the sound names
+        String[] sounds = {"S - swordSwipe1", "S - swordSwipe2", "S - swordSwipe3"};
+        // Generates a random index
+        int index = (int) (Math.random() * sounds.length);
+        AudioManager.play(sounds[index]);
+    }
+
+    public void animateCharacterAttacking() {
+
+        // Plays the sword sound only once
+        // at the start of the animation
+        if (!player.getCurrentAnimationType().equals("attacking")) {
+            AudioManager.stop("S - characterWalking");
+            playSwordSwipeSound();
+        }
+        player.setCurrentAnimationType("attacking");
+
+        player.adaptViewDirection(player.getAttackDirection());
+        player.setCurrentAnimationFrame(player.getAttackAnimationFrame());
+
+        player.startAnimationTimer();
+    }
+
+    public void animateCharacterWalking() {
+
+        AudioManager.loop("S - characterWalking");
+        player.setCurrentAnimationType("walking");
+
+        player.adaptViewDirection(player.getWalkingDirection());
+        player.setCurrentAnimationFrame(player.getWalkingAnimationFrame());
+        moveCharacter(player.getWalkingDirection());
+
+        player.startAnimationTimer();
+    }
+
+    public void animateCharacterResting() {
+
+        AudioManager.stop("S - characterWalking");
+        player.setCurrentAnimationType("resting");
+
+        player.adaptViewDirection(player.getLastDirection());
+        player.setCurrentAnimationFrame(player.getRestingAnimationFrame());
+
+        player.startAnimationTimer();
+
+        // Prevents the character to "slide" when moving, if a direction key
+        // is spammed really fast
+        //if (lastDirection == InputHandler.upKey
+        //        || lastDirection == InputHandler.downKey) {
+        //    player.setWalkingAnimationFrame(2);
+        //} else player.setWalkingAnimationFrame(1);
+    }
+
+    public void animateCharacterDying() {
+
+        player.setCurrentAnimationType("dying");
+        player.setCurrentAnimationFrame(player.getDyingAnimationFrame());
+
+        player.startAnimationTimer();
+    }
+
+    private void moveCharacter(int direction) {
+
+        int movementSpeed = player.getMovementSpeed();
+        int playerX = player.getPositionX();
+        int playerY = player.getPositionY();
+        int xOffset = Math.floorDiv(30 * 4, 10);
+        int player_height = 50;
+
+        switch (direction) {
+            case 0 -> {
+                if (getCurrentLevel().isSolid(playerX + xOffset, playerY - movementSpeed + Math.floorDiv(player_height * 2, 10)) &&
+                        getCurrentLevel().isSolid(playerX - xOffset, playerY - movementSpeed + Math.floorDiv(player_height * 2, 10))) {
+                    player.setPositionY(player.getPositionY() - player.getMovementSpeed());
                 }
             }
+            case 1 -> {
+                if (getCurrentLevel().isSolid(playerX - xOffset, playerY + movementSpeed + Math.floorDiv(player_height, 2)) &&
+                        getCurrentLevel().isSolid(playerX + xOffset, playerY + movementSpeed + Math.floorDiv(player_height, 2))) {
+                    player.setPositionY(player.getPositionY() + player.getMovementSpeed());
+                }
+            }
+            case 2 -> {
+                if (getCurrentLevel().isSolid(playerX - movementSpeed - xOffset, playerY + Math.floorDiv(player_height, 2)) &&
+                        getCurrentLevel().isSolid(playerX - movementSpeed - xOffset, playerY + Math.floorDiv(player_height * 2, 10))) {
+                    player.setPositionX(player.getPositionX() - player.getMovementSpeed());
+                }
+            }
+            case 3 -> {
+                if (getCurrentLevel().isSolid(playerX + movementSpeed + xOffset, playerY + Math.floorDiv(player_height, 2)) &&
+                        getCurrentLevel().isSolid(playerX + movementSpeed + xOffset, playerY + Math.floorDiv(player_height * 2, 10))) {
+                    player.setPositionX(player.getPositionX() + player.getMovementSpeed());
+                }
+            }
+        }
+    }
 
+    public void characterInteract() {
 
-            //getEntityFrames("attacking")[getCurrentFrame()].getXOffset()
+        int playerX = player.getPositionX();
+        int playerY = player.getPositionY();
+        int yOffset = Math.floorDiv(50, 10);
 
-            player.setCooldown(player.getAttackDelay());
+        if (player.getLastDirection() == 0) {
+            if (getCurrentLevel().isChest(playerX, playerY - yOffset)) {
+                openingChest = true;
+                openChest(playerX, playerY - yOffset);
+                AudioManager.play("S - openingChest");
 
-/*
-            Point2D point2D2 = new Point2D.Double(getPlayer().getPositionX() + GamePanel.NEW_TILE_SIZE / 2, getPlayer().getPositionY() + GamePanel.NEW_TILE_SIZE / 2);
-*/
+            } else if (getCurrentLevel().isExit(playerX, playerY - yOffset)) {
+                loadingLevel = true;
+                player.stopAnimationTimer();
+                if (loadNextLevel()) {
+                    player.getKeyHandler().initVariables();
+                    GamePanel.loadNextLevel();
+                } else {
+                    gameWon = true;
+                    GamePanel.showVictoryScreen();
+                }
+            }
+        }
+        player.getKeyHandler().interactPressed = false;
+    }
+
+    public void handleEnemyProjectiles() {
+
+        for (Enemy enemy : getCurrentLevel().getEnemies()) {
+            for (int i = enemy.getProjectiles().size() - 1; i >= 0; i--) {
+                Projectile p = enemy.getProjectiles().get(i);
+
+                // Removes projectile or deals damage depending
+                // on the position of the projectile
+                switch (moveEnemyProjectiles(p)) {
+                    case 1:
+                        dealDamageToPlayer(enemy);
+                    case 0:
+                        enemy.getProjectiles().remove(i);
+                        break;
+                }
+            }
+        }
+    }
+
+    private int moveEnemyProjectiles(Projectile p) {
+
+        if (p.outOfScreen()) return 0;
+        p.move();
+
+        if (p.checkPlayerCollision(player.getPositionX(), player.getPositionY(), player.getKeyHandler().walkingDirection)) {
+            return 1;
+        }
+        return -1;
+    }
+
+    public void checkPlayerAttack() {
+
+        if (player.attack()) {
+
+            //ArrayList<Enemy> alreadyHit = new ArrayList<>();
+            //int[] angles = getAttackAngles();
 
             Point2D playerMiddle = new Point2D.Double(
-                    player.getPositionX() + player.getEntityFrames(player.getCurrentAnimationType())[player.getCurrentFrame()].getXOffset(),
-                    player.getPositionY() + player.getEntityFrames(player.getCurrentAnimationType())[player.getCurrentFrame()].getYOffset());
+                    player.getPositionX() + 15,
+                    player.getPositionY() + 25);
 
-/*
-            Arc2D arc2D = new Arc2D.Double();
-            arc2D.setArcByCenter(
-                    point2D.getX(),
-                    point2D.getY(),
-                    player.getWeapon().getAttackRange(),
-                    startAngle, arcAngle,
-                    Arc2D.PIE);
-*/
-            ArrayList<Enemy> alreadyHit = new ArrayList<>();
-
-            Point2D enemyMiddle = new Point2D.Double();
             for (Enemy enemy : getCurrentLevel().getEnemies()) {
-                enemyMiddle.setLocation(
-                        enemy.getPositionX() + enemy.getEntityFrames(enemy.getCurrentAnimationType())[enemy.getCurrentFrame()].getXOffset(),
-                        enemy.getPositionY() + enemy.getEntityFrames(enemy.getCurrentAnimationType())[enemy.getCurrentFrame()].getYOffset());
 
-                double angle;
-                double theta = Math.atan2(playerMiddle.getY() - enemyMiddle.getY(), playerMiddle.getX() - enemyMiddle.getX());
-                theta += Math.PI / 2.0;
-                angle = Math.toDegrees(theta);
-
-                if (angle < 0) {
-                    angle += 360;
-                }
-
+                Point2D enemyMiddle = enemy.getEnemyMiddle();
+                double angle = getAngle(playerMiddle, enemyMiddle);
 
                 if (playerMiddle.distance(enemyMiddle) <= player.getWeapon().getAttackRange()) {
-                    if (player.getViewDirection() == 27) {
-                        if (angle >= 315 && angle < 359 || angle >= 0 && angle < 45) { // -> von 315 bis 45 -> Up
-                            if (!alreadyHit.contains(enemy)) {
-                                alreadyHit.add(enemy);
-                                if (enemy.getBlockAmount() >= player.getAttackDamage()) {
-                                    // Implement block sound effect
-                                } else {
-                                    AudioManager.play("S - skeletonHit");
-                                    enemy.setCurrentHealthPoints(enemy.getCurrentHealthPoints() + enemy.getBlockAmount() - player.getAttackDamage());
 
-                                    if (!enemy.isKnockBack()) {
-                                        enemy.hit();
-                                    }
-                                }
-                                if (enemy.getCurrentHealthPoints() <= 0) {
-                                    getCurrentLevel().getEnemies().remove(enemy);
-                                    break;
-                                }
-                            }
+                    if (isHit(angle)) {
+                        //if (!alreadyHit.contains(enemy)) {
+                        //alreadyHit.add(enemy);
+
+                        if (dealDamageToEnemy(enemy)) {
+                            getCurrentLevel().getEnemies().remove(enemy);
                         }
-                    } else if (player.getViewDirection() == 18) {
-                        if (angle >= 45 && angle < 135) { // -> von 45 bis 135 -> Right
-                            if (!alreadyHit.contains(enemy)) {
-
-                                alreadyHit.add(enemy);
-
-                                if (enemy.getBlockAmount() >= player.getAttackDamage()) {
-
-                                    // Implement block sound effect
-                                } else {
-                                    AudioManager.play("S - skeletonHit");
-                                    enemy.setCurrentHealthPoints(enemy.getCurrentHealthPoints() + enemy.getBlockAmount() - player.getAttackDamage());
-
-                                    if (!enemy.isKnockBack()) {
-                                        enemy.hit();
-                                    }
-
-                                }
-                                if (enemy.getCurrentHealthPoints() <= 0) {
-                                    getCurrentLevel().getEnemies().remove(enemy);
-                                    break;
-                                }
-                            }
-                        }
-                    } else if (player.getViewDirection() == 0) {
-                        if (angle >= 135 && angle < 225) { // -> von 135 bis 225 -> Down
-                            if (!alreadyHit.contains(enemy)) {
-
-                                alreadyHit.add(enemy);
-
-                                if (enemy.getBlockAmount() >= player.getAttackDamage()) {
-
-                                    // Implement block sound effect
-                                } else {
-                                    AudioManager.play("S - skeletonHit");
-                                    enemy.setCurrentHealthPoints(enemy.getCurrentHealthPoints() + enemy.getBlockAmount() - player.getAttackDamage());
-
-                                    if (!enemy.isKnockBack()) {
-                                        enemy.hit();
-                                    }
-
-                                }
-                                if (enemy.getCurrentHealthPoints() <= 0) {
-                                    getCurrentLevel().getEnemies().remove(enemy);
-                                    break;
-                                }
-                            }
-                        }
-                    } else if (player.getViewDirection() == 9) {
-                        if (angle >= 225 && angle < 315) { // -> von 225 bis 315 -> Left
-                            if (!alreadyHit.contains(enemy)) {
-
-                                alreadyHit.add(enemy);
-
-                                if (enemy.getBlockAmount() >= player.getAttackDamage()) {
-
-                                    // Implement block sound effect
-                                } else {
-                                    AudioManager.play("S - skeletonHit");
-                                    enemy.setCurrentHealthPoints(enemy.getCurrentHealthPoints() + enemy.getBlockAmount() - player.getAttackDamage());
-
-                                    if (!enemy.isKnockBack()) {
-                                        enemy.hit();
-                                    }
-
-                                }
-                                if (enemy.getCurrentHealthPoints() <= 0) {
-                                    getCurrentLevel().getEnemies().remove(enemy);
-                                    break;
-                                }
-                            }
-                        }
+                        //}
                     }
                 }
             }
         }
     }
+
+    private boolean isHit(double angle) {
+
+        if (player.getAttackDirection() == 0) {
+            return angle >= 315 && angle < 359 || angle >= 0 && angle < 45;
+
+        } else if (player.getAttackDirection() == 1) {
+            return angle >= 135 && angle < 225;
+
+        } else if (player.getAttackDirection() == 2) {
+            return angle >= 225 && angle < 315;
+
+        } else if (player.getAttackDirection() == 3) {
+            return angle >= 45 && angle < 135;
+        }
+        return false;
+    }
+
+    public double getAngle(Point2D playerMiddle, Point2D enemyMiddle) {
+
+        double angle;
+        double theta = Math.atan2(playerMiddle.getY() - enemyMiddle.getY(), playerMiddle.getX() - enemyMiddle.getX());
+        theta += Math.PI / 2.0;
+        angle = Math.toDegrees(theta);
+
+        if (angle < 0) {
+            angle += 360;
+        }
+        return angle;
+    }
+
+    private boolean dealDamageToEnemy(Enemy enemy) {
+
+        if (enemy.getBlockAmount() >= player.getAttackDamage()) {
+            // Implement block sound effect
+        } else {
+            AudioManager.play("S - skeletonHit");
+            enemy.setCurrentHealthPoints(enemy.getCurrentHealthPoints() + enemy.getBlockAmount() - player.getAttackDamage());
+
+            if (!enemy.isKnockedBack()) {
+                enemy.startKnockBack();
+            }
+            return enemy.getCurrentHealthPoints() <= 0;
+        }
+        return false;
+    }
+
+    private int[] getAttackAngles() {
+
+        int startAngle = 0, arcAngle = 0;
+
+        if (player.getAttackDirection() == 0) {
+            startAngle = 45;
+            arcAngle = 90;
+        } else if (player.getAttackDirection() == 1) {
+            startAngle = 225;
+            arcAngle = 90;
+        } else if (player.getAttackDirection() == 2) {
+            startAngle = 135;
+            arcAngle = 90;
+        } else if (player.getAttackDirection() == 3) {
+            startAngle = 315;
+            arcAngle = 90;
+        }
+        return new int[]{startAngle, arcAngle};
+    }
 }
+

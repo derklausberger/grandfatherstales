@@ -127,6 +127,16 @@ public class AudioManager {
     }
 
     // Stops all sounds
+    public static void stopAllSounds() {
+
+        for (String c : clips.keySet()) {
+            if (c.contains("S -")) {
+                stop(c);
+            }
+        }
+    }
+
+    // Stops all sounds
     public static void stopAll() {
 
         for (Clip c : clips.values()) {

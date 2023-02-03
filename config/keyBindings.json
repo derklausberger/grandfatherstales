@@ -22,5 +22,9 @@
   "inventory": {
     "default": "E",
     "current": "E"
+  },
+  "interact": {
+    "default": "F",
+    "current": "F"
   }
 }

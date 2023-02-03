@@ -1,7 +1,6 @@
 package objectClasses.Abstract;
 
 import objectClasses.Enum.RarityType;
-
 import java.awt.image.BufferedImage;
 
 public abstract class Item {
@@ -30,11 +29,10 @@ public abstract class Item {
         return itemStatName;
     }
 
-    public int getStatValue() {
-        return 0;
-    }
-
     public RarityType getRarity() {
         return rarity;
+    }
+    public int getStatValue() {
+        return 0;
     }
 }

@@ -2,280 +2,314 @@
   "character": {
     "walking": {
       "down": [
-        { "image": "src/main/resources/character/walking/D1.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/D2.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/D3.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/D4.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/D5.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/D6.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/D7.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/D8.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/D9.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 }
+        { "image": "/character/walking/D1.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/D2.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/D3.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/D4.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/D5.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/D6.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/D7.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/D8.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/D9.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 }
       ],
       "left": [
-        { "image": "src/main/resources/character/walking/L1.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/L2.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/L3.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/L4.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/L5.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/L6.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/L7.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/L8.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/L9.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 }
+        { "image": "/character/walking/L1.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/L2.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/L3.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/L4.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/L5.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/L6.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/L7.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/L8.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/L9.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 }
       ],
       "right": [
-        { "image": "src/main/resources/character/walking/R1.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/R2.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/R3.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/R4.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/R5.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/R6.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/R7.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/R8.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/R9.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 }
+        { "image": "/character/walking/R1.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/R2.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/R3.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/R4.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/R5.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/R6.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/R7.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/R8.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/R9.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 }
       ],
       "up": [
-        { "image": "src/main/resources/character/walking/U1.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/U2.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/U3.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/U4.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/U5.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/U6.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/U7.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/U8.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/walking/U9.png","width": 30, "height": 50, "xOffset": 0, "yOffset": 0 }
+        { "image": "/character/walking/U1.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/U2.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/U3.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/U4.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/U5.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/U6.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/U7.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/U8.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/walking/U9.png","width": 30, "height": 50, "xOffset": 0, "yOffset": 0 }
+      ]
+    },
+    "resting": {
+      "down": [
+        { "image": "/character/resting/D1.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/resting/D2.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/resting/D3.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/resting/D4.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/resting/D5.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/resting/D6.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 }
+      ],
+      "left": [
+        { "image": "/character/resting/L1.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/resting/L2.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/resting/L3.png", "width": 30, "height": 51, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/resting/L4.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/resting/L5.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/resting/L6.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 }
+      ],
+      "right": [
+        { "image": "/character/resting/R1.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/resting/R2.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/resting/R3.png", "width": 30, "height": 51, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/resting/R4.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/resting/R5.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/resting/R6.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 }
+      ],
+      "up": [
+        { "image": "/character/resting/U1.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/resting/U2.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/resting/U3.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/resting/U4.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/resting/U5.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/resting/U6.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 }
       ]
     },
     "attacking": {
       "down": [
-        { "image": "src/main/resources/character/swordHit/D1.png","width": 40, "height": 52, "xOffset": -10, "yOffset": 0 },
-        { "image": "src/main/resources/character/swordHit/D2.png","width": 48, "height": 50, "xOffset": -18, "yOffset": 0 },
-        { "image": "src/main/resources/character/swordHit/D3.png","width": 43, "height": 50, "xOffset": -13, "yOffset": 0 },
-        { "image": "src/main/resources/character/swordHit/D4.png","width": 57, "height": 50, "xOffset": -27, "yOffset": 0 },
-        { "image": "src/main/resources/character/swordHit/D5.png","width": 81, "height": 70, "xOffset": -33, "yOffset": 0 },
-        { "image": "src/main/resources/character/swordHit/D6.png","width": 73, "height": 67, "xOffset": -1, "yOffset": 0 }
+        { "image": "/character/swordHit/D1.png","width": 40, "height": 52, "xOffset": -10, "yOffset": 0 },
+        { "image": "/character/swordHit/D2.png","width": 48, "height": 50, "xOffset": -18, "yOffset": 0 },
+        { "image": "/character/swordHit/D3.png","width": 43, "height": 50, "xOffset": -13, "yOffset": 0 },
+        { "image": "/character/swordHit/D4.png","width": 57, "height": 50, "xOffset": -27, "yOffset": 0 },
+        { "image": "/character/swordHit/D5.png","width": 81, "height": 70, "xOffset": -33, "yOffset": 0 },
+        { "image": "/character/swordHit/D6.png","width": 73, "height": 67, "xOffset": -1, "yOffset": 0 }
       ],
       "left": [
-        { "image": "src/main/resources/character/swordHit/L1.png","width": 58, "height": 53, "xOffset": -28, "yOffset": 0 },
-        { "image": "src/main/resources/character/swordHit/L2.png","width": 33, "height": 50, "xOffset": -2, "yOffset": 0 },
-        { "image": "src/main/resources/character/swordHit/L3.png","width": 39, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/swordHit/L4.png","width": 57, "height": 50, "xOffset": -10, "yOffset": 0 },
-        { "image": "src/main/resources/character/swordHit/L5.png","width": 91, "height": 50, "xOffset": -61, "yOffset": 0 },
-        { "image": "src/main/resources/character/swordHit/L6.png","width": 90, "height": 50, "xOffset": -59, "yOffset": 0 }
+        { "image": "/character/swordHit/L1.png","width": 58, "height": 53, "xOffset": -28, "yOffset": 0 },
+        { "image": "/character/swordHit/L2.png","width": 33, "height": 50, "xOffset": -2, "yOffset": 0 },
+        { "image": "/character/swordHit/L3.png","width": 39, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/swordHit/L4.png","width": 57, "height": 50, "xOffset": -10, "yOffset": 0 },
+        { "image": "/character/swordHit/L5.png","width": 91, "height": 50, "xOffset": -61, "yOffset": 0 },
+        { "image": "/character/swordHit/L6.png","width": 90, "height": 50, "xOffset": -59, "yOffset": 0 }
       ],
       "right": [
-        { "image": "src/main/resources/character/swordHit/R1.png","width": 58, "height": 53, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/swordHit/R2.png","width": 33, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/swordHit/R3.png","width": 39, "height": 50, "xOffset": -9, "yOffset": 0 },
-        { "image": "src/main/resources/character/swordHit/R4.png","width": 57, "height": 50, "xOffset": -17, "yOffset": 0 },
-        { "image": "src/main/resources/character/swordHit/R5.png","width": 91, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/swordHit/R6.png","width": 90, "height": 50, "xOffset": -2, "yOffset": 0 }
+        { "image": "/character/swordHit/R1.png","width": 58, "height": 53, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/swordHit/R2.png","width": 33, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/swordHit/R3.png","width": 39, "height": 50, "xOffset": -9, "yOffset": 0 },
+        { "image": "/character/swordHit/R4.png","width": 57, "height": 50, "xOffset": -17, "yOffset": 0 },
+        { "image": "/character/swordHit/R5.png","width": 91, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/swordHit/R6.png","width": 90, "height": 50, "xOffset": -2, "yOffset": 0 }
       ],
       "up": [
-        { "image": "src/main/resources/character/swordHit/U1.png","width": 36, "height": 50, "xOffset": -6, "yOffset": 0 },
-        { "image": "src/main/resources/character/swordHit/U2.png","width": 48, "height": 50, "xOffset": -18, "yOffset": 0 },
-        { "image": "src/main/resources/character/swordHit/U3.png","width": 46, "height": 50, "xOffset": -16, "yOffset": 0 },
-        { "image": "src/main/resources/character/swordHit/U4.png","width": 59, "height": 50, "xOffset": -29, "yOffset": 0 },
-        { "image": "src/main/resources/character/swordHit/U5.png","width": 81, "height": 68, "xOffset": -33, "yOffset": -18 },
-        { "image": "src/main/resources/character/swordHit/U6.png","width": 76, "height": 66, "xOffset": -1, "yOffset": -16 }
+        { "image": "/character/swordHit/U1.png","width": 36, "height": 50, "xOffset": -6, "yOffset": 0 },
+        { "image": "/character/swordHit/U2.png","width": 48, "height": 50, "xOffset": -18, "yOffset": 0 },
+        { "image": "/character/swordHit/U3.png","width": 46, "height": 50, "xOffset": -16, "yOffset": 0 },
+        { "image": "/character/swordHit/U4.png","width": 59, "height": 50, "xOffset": -29, "yOffset": 0 },
+        { "image": "/character/swordHit/U5.png","width": 81, "height": 68, "xOffset": -33, "yOffset": -18 },
+        { "image": "/character/swordHit/U6.png","width": 76, "height": 66, "xOffset": -1, "yOffset": -16 }
       ]
     },
     "dying": {
       "down": [
-        { "image": "src/main/resources/character/dying/D1.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/dying/D2.png", "width": 32, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/dying/D3.png", "width": 32, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/dying/D4.png", "width": 32, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/dying/D5.png", "width": 33, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/character/dying/D6.png", "width": 35, "height": 51, "xOffset": 0, "yOffset": 0 }
+        { "image": "/character/dying/D1.png", "width": 30, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/dying/D2.png", "width": 32, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/dying/D3.png", "width": 32, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/dying/D4.png", "width": 32, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/dying/D5.png", "width": 33, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/character/dying/D6.png", "width": 35, "height": 51, "xOffset": 0, "yOffset": 0 }
         ]
       }
     },
   "skeletonWarrior": {
     "walking": {
       "down": [
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/D1.png", "width": 35, "height": 47, "xOffset": -3, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/D2.png", "width": 30, "height": 47, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/D3.png", "width": 30, "height": 47, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/D4.png", "width": 31, "height": 49, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/D5.png", "width": 30, "height": 47, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/D6.png", "width": 30, "height": 47, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/D7.png", "width": 30, "height": 47, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/D8.png", "width": 30, "height": 47, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/D9.png", "width": 30, "height": 47, "xOffset": 0, "yOffset": 0 }
+        { "image": "/enemy/skeletonWarrior/walking/D1.png", "width": 35, "height": 47, "xOffset": -3, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/walking/D2.png", "width": 30, "height": 47, "xOffset": 0, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/walking/D3.png", "width": 30, "height": 47, "xOffset": 0, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/walking/D4.png", "width": 31, "height": 49, "xOffset": 0, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/walking/D5.png", "width": 30, "height": 47, "xOffset": 0, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/walking/D6.png", "width": 30, "height": 47, "xOffset": 0, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/walking/D7.png", "width": 30, "height": 47, "xOffset": 0, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/walking/D8.png", "width": 30, "height": 47, "xOffset": 0, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/walking/D9.png", "width": 30, "height": 47, "xOffset": 0, "yOffset": 0 }
       ],
       "left": [
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/L1.png", "width": 40, "height": 50, "xOffset": -10, "yOffset": -3 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/L2.png", "width": 47, "height": 47, "xOffset": -17, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/L3.png", "width": 47, "height": 47, "xOffset": -17, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/L4.png", "width": 46, "height": 47, "xOffset": -16, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/L5.png", "width": 41, "height": 50, "xOffset": -11, "yOffset": -3 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/L6.png", "width": 34, "height": 50, "xOffset": -3, "yOffset": -3 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/L7.png", "width": 39, "height": 50, "xOffset": -9, "yOffset": -3 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/L8.png", "width": 45, "height": 47, "xOffset": -15, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/L9.png", "width": 47, "height": 47, "xOffset": -17, "yOffset": 0 }
+        { "image": "/enemy/skeletonWarrior/walking/L1.png", "width": 40, "height": 50, "xOffset": -10, "yOffset": -3 },
+        { "image": "/enemy/skeletonWarrior/walking/L2.png", "width": 47, "height": 47, "xOffset": -17, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/walking/L3.png", "width": 47, "height": 47, "xOffset": -17, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/walking/L4.png", "width": 46, "height": 47, "xOffset": -16, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/walking/L5.png", "width": 41, "height": 50, "xOffset": -11, "yOffset": -3 },
+        { "image": "/enemy/skeletonWarrior/walking/L6.png", "width": 34, "height": 50, "xOffset": -3, "yOffset": -3 },
+        { "image": "/enemy/skeletonWarrior/walking/L7.png", "width": 39, "height": 50, "xOffset": -9, "yOffset": -3 },
+        { "image": "/enemy/skeletonWarrior/walking/L8.png", "width": 45, "height": 47, "xOffset": -15, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/walking/L9.png", "width": 47, "height": 47, "xOffset": -17, "yOffset": 0 }
       ],
       "right": [
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/R1.png", "width": 40, "height": 51, "xOffset": 0, "yOffset": -4 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/R2.png", "width": 47, "height": 47, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/R3.png", "width": 47, "height": 47, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/R4.png", "width": 46, "height": 47, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/R5.png", "width": 41, "height": 50, "xOffset": 0, "yOffset": -3 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/R6.png", "width": 34, "height": 50, "xOffset": -1, "yOffset": -3 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/R7.png", "width": 39, "height": 50, "xOffset": 0, "yOffset": -3 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/R8.png", "width": 45, "height": 47, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/R9.png", "width": 47, "height": 47, "xOffset": 0, "yOffset": 0 }
+        { "image": "/enemy/skeletonWarrior/walking/R1.png", "width": 40, "height": 51, "xOffset": 0, "yOffset": -4 },
+        { "image": "/enemy/skeletonWarrior/walking/R2.png", "width": 47, "height": 47, "xOffset": 0, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/walking/R3.png", "width": 47, "height": 47, "xOffset": 0, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/walking/R4.png", "width": 46, "height": 47, "xOffset": 0, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/walking/R5.png", "width": 41, "height": 50, "xOffset": 0, "yOffset": -3 },
+        { "image": "/enemy/skeletonWarrior/walking/R6.png", "width": 34, "height": 50, "xOffset": -1, "yOffset": -3 },
+        { "image": "/enemy/skeletonWarrior/walking/R7.png", "width": 39, "height": 50, "xOffset": 0, "yOffset": -3 },
+        { "image": "/enemy/skeletonWarrior/walking/R8.png", "width": 45, "height": 47, "xOffset": 0, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/walking/R9.png", "width": 47, "height": 47, "xOffset": 0, "yOffset": 0 }
       ],
       "up": [
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/U1.png", "width": 39, "height": 47, "xOffset": -9, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/U2.png", "width": 35, "height": 51, "xOffset": 0, "yOffset": -4 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/U3.png", "width": 36, "height": 53, "xOffset": 0, "yOffset": -6 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/U4.png", "width": 32, "height": 47, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/U5.png", "width": 36, "height": 53, "xOffset": 0, "yOffset": -6 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/U6.png", "width": 36, "height": 50, "xOffset": 0, "yOffset": -3 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/U7.png", "width": 36, "height": 50, "xOffset": 0, "yOffset": -3 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/U8.png", "width": 36, "height": 49, "xOffset": 0, "yOffset": -2 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/walking/U9.png", "width": 36, "height": 51, "xOffset": 0, "yOffset": -4 }
+        { "image": "/enemy/skeletonWarrior/walking/U1.png", "width": 39, "height": 47, "xOffset": -9, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/walking/U2.png", "width": 35, "height": 51, "xOffset": 0, "yOffset": -4 },
+        { "image": "/enemy/skeletonWarrior/walking/U3.png", "width": 36, "height": 53, "xOffset": 0, "yOffset": -6 },
+        { "image": "/enemy/skeletonWarrior/walking/U4.png", "width": 32, "height": 47, "xOffset": 0, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/walking/U5.png", "width": 36, "height": 53, "xOffset": 0, "yOffset": -6 },
+        { "image": "/enemy/skeletonWarrior/walking/U6.png", "width": 36, "height": 50, "xOffset": 0, "yOffset": -3 },
+        { "image": "/enemy/skeletonWarrior/walking/U7.png", "width": 36, "height": 50, "xOffset": 0, "yOffset": -3 },
+        { "image": "/enemy/skeletonWarrior/walking/U8.png", "width": 36, "height": 49, "xOffset": 0, "yOffset": -2 },
+        { "image": "/enemy/skeletonWarrior/walking/U9.png", "width": 36, "height": 51, "xOffset": 0, "yOffset": -4 }
       ]
     },
     "attacking": {
       "down": [
-        { "image": "src/main/resources/enemy/skeletonWarrior/swordHit/D1.png", "width": 40, "height": 50, "xOffset": -10, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/swordHit/D2.png", "width": 48, "height": 47, "xOffset": -18, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/swordHit/D3.png", "width": 43, "height": 47, "xOffset": -13, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/swordHit/D4.png", "width": 57, "height": 47, "xOffset": -27, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/swordHit/D5.png", "width": 81, "height": 68, "xOffset": -31, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/swordHit/D6.png", "width": 73, "height": 65, "xOffset": 0, "yOffset": 0 }
+        { "image": "/enemy/skeletonWarrior/swordHit/D1.png", "width": 40, "height": 50, "xOffset": -10, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/swordHit/D2.png", "width": 48, "height": 47, "xOffset": -18, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/swordHit/D3.png", "width": 43, "height": 47, "xOffset": -13, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/swordHit/D4.png", "width": 57, "height": 47, "xOffset": -27, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/swordHit/D5.png", "width": 81, "height": 68, "xOffset": -31, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/swordHit/D6.png", "width": 73, "height": 65, "xOffset": 0, "yOffset": 0 }
       ],
       "left": [
-        { "image": "src/main/resources/enemy/skeletonWarrior/swordHit/L1.png", "width": 58, "height": 50, "xOffset": -28, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/swordHit/L2.png", "width": 33, "height": 47, "xOffset": -3, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/swordHit/L3.png", "width": 39, "height": 47, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/swordHit/L4.png", "width": 57, "height": 47, "xOffset": -10, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/swordHit/L5.png", "width": 91, "height": 47, "xOffset": -61, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/swordHit/L6.png", "width": 90, "height": 47, "xOffset": -60, "yOffset": 0 }
+        { "image": "/enemy/skeletonWarrior/swordHit/L1.png", "width": 58, "height": 50, "xOffset": -28, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/swordHit/L2.png", "width": 33, "height": 47, "xOffset": -3, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/swordHit/L3.png", "width": 39, "height": 47, "xOffset": 0, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/swordHit/L4.png", "width": 57, "height": 47, "xOffset": -10, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/swordHit/L5.png", "width": 91, "height": 47, "xOffset": -61, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/swordHit/L6.png", "width": 90, "height": 47, "xOffset": -60, "yOffset": 0 }
       ],
       "right": [
-        { "image": "src/main/resources/enemy/skeletonWarrior/swordHit/R1.png", "width": 58, "height": 50, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/swordHit/R2.png", "width": 33, "height": 47, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/swordHit/R3.png", "width": 39, "height": 47, "xOffset": -9, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/swordHit/R4.png", "width": 57, "height": 47, "xOffset": -17, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/swordHit/R5.png", "width": 91, "height": 47, "xOffset": 0, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/swordHit/R6.png", "width": 90, "height": 47, "xOffset": 0, "yOffset": 0 }
+        { "image": "/enemy/skeletonWarrior/swordHit/R1.png", "width": 58, "height": 50, "xOffset": 0, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/swordHit/R2.png", "width": 33, "height": 47, "xOffset": 0, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/swordHit/R3.png", "width": 39, "height": 47, "xOffset": -9, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/swordHit/R4.png", "width": 57, "height": 47, "xOffset": -17, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/swordHit/R5.png", "width": 91, "height": 47, "xOffset": 0, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/swordHit/R6.png", "width": 90, "height": 47, "xOffset": 0, "yOffset": 0 }
       ],
       "up": [
-        { "image": "src/main/resources/enemy/skeletonWarrior/swordHit/U1.png", "width": 36, "height": 47, "xOffset": -6, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/swordHit/U2.png", "width": 48, "height": 47, "xOffset": -18, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/swordHit/U3.png", "width": 46, "height": 47, "xOffset": -16, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/swordHit/U4.png", "width": 59, "height": 47, "xOffset": -29, "yOffset": 0 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/swordHit/U5.png", "width": 81, "height": 67, "xOffset": -30, "yOffset": -20 },
-        { "image": "src/main/resources/enemy/skeletonWarrior/swordHit/U6.png", "width": 76, "height": 65, "xOffset": 0, "yOffset": -18 }
+        { "image": "/enemy/skeletonWarrior/swordHit/U1.png", "width": 36, "height": 47, "xOffset": -6, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/swordHit/U2.png", "width": 48, "height": 47, "xOffset": -18, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/swordHit/U3.png", "width": 46, "height": 47, "xOffset": -16, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/swordHit/U4.png", "width": 59, "height": 47, "xOffset": -29, "yOffset": 0 },
+        { "image": "/enemy/skeletonWarrior/swordHit/U5.png", "width": 81, "height": 67, "xOffset": -30, "yOffset": -20 },
+        { "image": "/enemy/skeletonWarrior/swordHit/U6.png", "width": 76, "height": 65, "xOffset": 0, "yOffset": -18 }
         ]
       }
     },
     "skeletonArcher": {
       "walking": {
         "down": [
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/D1.png", "width": 34, "height": 51, "xOffset": 0, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/D2.png", "width": 34, "height": 51, "xOffset": 0, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/D3.png", "width": 34, "height": 51, "xOffset": 0, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/D4.png", "width": 34, "height": 51, "xOffset": 0, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/D5.png", "width": 35, "height": 51, "xOffset": 0, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/D6.png", "width": 34, "height": 51, "xOffset": 0, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/D7.png", "width": 34, "height": 51, "xOffset": 0, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/D8.png", "width": 34, "height": 51, "xOffset": 0, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/D9.png", "width": 34, "height": 51, "xOffset": 0, "yOffset": -1 }
+          { "image": "/enemy/skeletonArcher/walking/D1.png", "width": 34, "height": 51, "xOffset": 0, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/walking/D2.png", "width": 34, "height": 51, "xOffset": 0, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/walking/D3.png", "width": 34, "height": 51, "xOffset": 0, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/walking/D4.png", "width": 34, "height": 51, "xOffset": 0, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/walking/D5.png", "width": 35, "height": 51, "xOffset": 0, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/walking/D6.png", "width": 34, "height": 51, "xOffset": 0, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/walking/D7.png", "width": 34, "height": 51, "xOffset": 0, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/walking/D8.png", "width": 34, "height": 51, "xOffset": 0, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/walking/D9.png", "width": 34, "height": 51, "xOffset": 0, "yOffset": -1 }
         ],
         "left": [
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/L1.png", "width": 32, "height": 50, "xOffset": -2, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/L2.png", "width": 32, "height": 50, "xOffset": -2, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/L3.png", "width": 32, "height": 50, "xOffset": -2, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/L4.png", "width": 32, "height": 50, "xOffset": -2, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/L5.png", "width": 31, "height": 50, "xOffset": -1, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/L6.png", "width": 33, "height": 50, "xOffset": -2, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/L7.png", "width": 32, "height": 50, "xOffset": -2, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/L8.png", "width": 32, "height": 50, "xOffset": -2, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/L9.png", "width": 32, "height": 50, "xOffset": -2, "yOffset": 0 }
+          { "image": "/enemy/skeletonArcher/walking/L1.png", "width": 32, "height": 50, "xOffset": -2, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/walking/L2.png", "width": 32, "height": 50, "xOffset": -2, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/walking/L3.png", "width": 32, "height": 50, "xOffset": -2, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/walking/L4.png", "width": 32, "height": 50, "xOffset": -2, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/walking/L5.png", "width": 31, "height": 50, "xOffset": -1, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/walking/L6.png", "width": 33, "height": 50, "xOffset": -2, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/walking/L7.png", "width": 32, "height": 50, "xOffset": -2, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/walking/L8.png", "width": 32, "height": 50, "xOffset": -2, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/walking/L9.png", "width": 32, "height": 50, "xOffset": -2, "yOffset": 0 }
         ],
         "right": [
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/R1.png", "width": 32, "height": 50, "xOffset": 0, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/R2.png", "width": 32, "height": 50, "xOffset": 0, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/R3.png", "width": 32, "height": 50, "xOffset": 0, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/R4.png", "width": 32, "height": 50, "xOffset": 0, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/R5.png", "width": 33, "height": 50, "xOffset": 0, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/R6.png", "width": 33, "height": 50, "xOffset": -1, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/R7.png", "width": 32, "height": 50, "xOffset": 0, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/R8.png", "width": 32, "height": 50, "xOffset": 0, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/R9.png", "width": 32, "height": 50, "xOffset": 0, "yOffset": 0 }
+          { "image": "/enemy/skeletonArcher/walking/R1.png", "width": 32, "height": 50, "xOffset": 0, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/walking/R2.png", "width": 32, "height": 50, "xOffset": 0, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/walking/R3.png", "width": 32, "height": 50, "xOffset": 0, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/walking/R4.png", "width": 32, "height": 50, "xOffset": 0, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/walking/R5.png", "width": 33, "height": 50, "xOffset": 0, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/walking/R6.png", "width": 33, "height": 50, "xOffset": -1, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/walking/R7.png", "width": 32, "height": 50, "xOffset": 0, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/walking/R8.png", "width": 32, "height": 50, "xOffset": 0, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/walking/R9.png", "width": 32, "height": 50, "xOffset": 0, "yOffset": 0 }
         ],
         "up": [
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/U1.png", "width": 32, "height": 51, "xOffset": -2, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/U2.png", "width": 32, "height": 51, "xOffset": -2, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/U3.png", "width": 32, "height": 51, "xOffset": -2, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/U4.png", "width": 32, "height": 51, "xOffset": -2, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/U5.png", "width": 32, "height": 51, "xOffset": -1, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/U6.png", "width": 32, "height": 51, "xOffset": -2, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/U7.png", "width": 32, "height": 51, "xOffset": -2, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/U8.png", "width": 32, "height": 51, "xOffset": -2, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/walking/U9.png", "width": 32, "height": 51, "xOffset": -2, "yOffset": -1 }
+          { "image": "/enemy/skeletonArcher/walking/U1.png", "width": 32, "height": 51, "xOffset": -2, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/walking/U2.png", "width": 32, "height": 51, "xOffset": -2, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/walking/U3.png", "width": 32, "height": 51, "xOffset": -2, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/walking/U4.png", "width": 32, "height": 51, "xOffset": -2, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/walking/U5.png", "width": 32, "height": 51, "xOffset": -1, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/walking/U6.png", "width": 32, "height": 51, "xOffset": -2, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/walking/U7.png", "width": 32, "height": 51, "xOffset": -2, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/walking/U8.png", "width": 32, "height": 51, "xOffset": -2, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/walking/U9.png", "width": 32, "height": 51, "xOffset": -2, "yOffset": -1 }
         ]
       },
       "attacking": {
         "down": [
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/D1.png", "width": 39, "height": 51, "xOffset": -2, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/D2.png", "width": 37, "height": 51, "xOffset": -5, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/D3.png", "width": 36, "height": 51, "xOffset": -4, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/D4.png", "width": 30, "height": 52, "xOffset": 0, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/D5.png", "width": 31, "height": 52, "xOffset": 0, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/D6.png", "width": 30, "height": 51, "xOffset": 0, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/D7.png", "width": 30, "height": 51, "xOffset": 0, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/D8.png", "width": 30, "height": 51, "xOffset": 0, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/D9.png", "width": 30, "height": 51, "xOffset": 0, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/D10.png", "width": 30, "height": 52, "xOffset": 0, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/D11.png", "width": 30, "height": 52, "xOffset": 0, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/D12.png", "width": 30, "height": 52, "xOffset": 0, "yOffset": -1 }
+          { "image": "/enemy/skeletonArcher/arrowShot/D1.png", "width": 39, "height": 51, "xOffset": -2, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/arrowShot/D2.png", "width": 37, "height": 51, "xOffset": -5, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/arrowShot/D3.png", "width": 36, "height": 51, "xOffset": -4, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/arrowShot/D4.png", "width": 30, "height": 52, "xOffset": 0, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/arrowShot/D5.png", "width": 31, "height": 52, "xOffset": 0, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/arrowShot/D6.png", "width": 30, "height": 51, "xOffset": 0, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/arrowShot/D7.png", "width": 30, "height": 51, "xOffset": 0, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/arrowShot/D8.png", "width": 30, "height": 51, "xOffset": 0, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/arrowShot/D9.png", "width": 30, "height": 51, "xOffset": 0, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/arrowShot/D10.png", "width": 30, "height": 52, "xOffset": 0, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/arrowShot/D11.png", "width": 30, "height": 52, "xOffset": 0, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/arrowShot/D12.png", "width": 30, "height": 52, "xOffset": 0, "yOffset": -1 }
         ],
         "left": [
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/L1.png", "width": 44, "height": 50, "xOffset": -10, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/L2.png", "width": 37, "height": 50, "xOffset": -5, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/L3.png", "width": 39, "height": 50, "xOffset": -9, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/L4.png", "width": 38, "height": 50, "xOffset": -8, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/L5.png", "width": 43, "height": 50, "xOffset": -11, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/L6.png", "width": 47, "height": 53, "xOffset": -17, "yOffset": -3 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/L7.png", "width": 46, "height": 55, "xOffset": -16, "yOffset": -5 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/L8.png", "width": 45, "height": 53, "xOffset": -13, "yOffset": -3 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/L9.png", "width": 44, "height": 50, "xOffset": -10, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/L10.png", "width": 35, "height": 51, "xOffset": -4, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/L11.png", "width": 34, "height": 51, "xOffset": -4, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/L12.png", "width": 34, "height": 51, "xOffset": -4, "yOffset": -1 }
+          { "image": "/enemy/skeletonArcher/arrowShot/L1.png", "width": 44, "height": 50, "xOffset": -10, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/arrowShot/L2.png", "width": 37, "height": 50, "xOffset": -5, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/arrowShot/L3.png", "width": 39, "height": 50, "xOffset": -9, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/arrowShot/L4.png", "width": 38, "height": 50, "xOffset": -8, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/arrowShot/L5.png", "width": 43, "height": 50, "xOffset": -11, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/arrowShot/L6.png", "width": 47, "height": 53, "xOffset": -17, "yOffset": -3 },
+          { "image": "/enemy/skeletonArcher/arrowShot/L7.png", "width": 46, "height": 55, "xOffset": -16, "yOffset": -5 },
+          { "image": "/enemy/skeletonArcher/arrowShot/L8.png", "width": 45, "height": 53, "xOffset": -13, "yOffset": -3 },
+          { "image": "/enemy/skeletonArcher/arrowShot/L9.png", "width": 44, "height": 50, "xOffset": -10, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/arrowShot/L10.png", "width": 35, "height": 51, "xOffset": -4, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/arrowShot/L11.png", "width": 34, "height": 51, "xOffset": -4, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/arrowShot/L12.png", "width": 34, "height": 51, "xOffset": -4, "yOffset": -1 }
         ],
         "right": [
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/R1.png", "width": 44, "height": 50, "xOffset": -4, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/R2.png", "width": 37, "height": 50, "xOffset": -2, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/R3.png", "width": 39, "height": 50, "xOffset": 0, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/R4.png", "width": 38, "height": 50, "xOffset": 0, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/R5.png", "width": 43, "height": 50, "xOffset": 0, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/R6.png", "width": 47, "height": 53, "xOffset": 0, "yOffset": -3 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/R7.png", "width": 46, "height": 55, "xOffset": 0, "yOffset": -5 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/R8.png", "width": 45, "height": 53, "xOffset": -2, "yOffset": -3 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/R9.png", "width": 44, "height": 50, "xOffset": -4, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/R10.png", "width": 35, "height": 51, "xOffset": -1, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/R11.png", "width": 34, "height": 51, "xOffset": 0, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/R12.png", "width": 34, "height": 51, "xOffset": 0, "yOffset": -1 }
+          { "image": "/enemy/skeletonArcher/arrowShot/R1.png", "width": 44, "height": 50, "xOffset": -4, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/arrowShot/R2.png", "width": 37, "height": 50, "xOffset": -2, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/arrowShot/R3.png", "width": 39, "height": 50, "xOffset": 0, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/arrowShot/R4.png", "width": 38, "height": 50, "xOffset": 0, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/arrowShot/R5.png", "width": 43, "height": 50, "xOffset": 0, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/arrowShot/R6.png", "width": 47, "height": 53, "xOffset": 0, "yOffset": -3 },
+          { "image": "/enemy/skeletonArcher/arrowShot/R7.png", "width": 46, "height": 55, "xOffset": 0, "yOffset": -5 },
+          { "image": "/enemy/skeletonArcher/arrowShot/R8.png", "width": 45, "height": 53, "xOffset": -2, "yOffset": -3 },
+          { "image": "/enemy/skeletonArcher/arrowShot/R9.png", "width": 44, "height": 50, "xOffset": -4, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/arrowShot/R10.png", "width": 35, "height": 51, "xOffset": -1, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/arrowShot/R11.png", "width": 34, "height": 51, "xOffset": 0, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/arrowShot/R12.png", "width": 34, "height": 51, "xOffset": 0, "yOffset": -1 }
         ],
         "up": [
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/U1.png", "width": 43, "height": 51, "xOffset": -9, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/U2.png", "width": 39, "height": 50, "xOffset": -6, "yOffset": 0 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/U3.png", "width": 37, "height": 51, "xOffset": -3, "yOffset": -1 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/U4.png", "width": 32, "height": 52, "xOffset": -2, "yOffset": -2 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/U5.png", "width": 31, "height": 55, "xOffset": -1, "yOffset": -5 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/U6.png", "width": 32, "height": 58, "xOffset": -2, "yOffset": -8 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/U7.png", "width": 32, "height": 59, "xOffset": -2, "yOffset": -9 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/U8.png", "width": 32, "height": 60, "xOffset": -2, "yOffset": -10 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/U9.png", "width": 32, "height": 57, "xOffset": -2, "yOffset": -7 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/U10.png", "width": 32, "height": 60, "xOffset": -2, "yOffset": -10 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/U11.png", "width": 32, "height": 60, "xOffset": -2, "yOffset": -10 },
-          { "image": "src/main/resources/enemy/skeletonArcher/arrowShot/U12.png", "width": 32, "height": 60, "xOffset": -2, "yOffset": -10 }
+          { "image": "/enemy/skeletonArcher/arrowShot/U1.png", "width": 43, "height": 51, "xOffset": -9, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/arrowShot/U2.png", "width": 39, "height": 50, "xOffset": -6, "yOffset": 0 },
+          { "image": "/enemy/skeletonArcher/arrowShot/U3.png", "width": 37, "height": 51, "xOffset": -3, "yOffset": -1 },
+          { "image": "/enemy/skeletonArcher/arrowShot/U4.png", "width": 32, "height": 52, "xOffset": -2, "yOffset": -2 },
+          { "image": "/enemy/skeletonArcher/arrowShot/U5.png", "width": 31, "height": 55, "xOffset": -1, "yOffset": -5 },
+          { "image": "/enemy/skeletonArcher/arrowShot/U6.png", "width": 32, "height": 58, "xOffset": -2, "yOffset": -8 },
+          { "image": "/enemy/skeletonArcher/arrowShot/U7.png", "width": 32, "height": 59, "xOffset": -2, "yOffset": -9 },
+          { "image": "/enemy/skeletonArcher/arrowShot/U8.png", "width": 32, "height": 60, "xOffset": -2, "yOffset": -10 },
+          { "image": "/enemy/skeletonArcher/arrowShot/U9.png", "width": 32, "height": 57, "xOffset": -2, "yOffset": -7 },
+          { "image": "/enemy/skeletonArcher/arrowShot/U10.png", "width": 32, "height": 60, "xOffset": -2, "yOffset": -10 },
+          { "image": "/enemy/skeletonArcher/arrowShot/U11.png", "width": 32, "height": 60, "xOffset": -2, "yOffset": -10 },
+          { "image": "/enemy/skeletonArcher/arrowShot/U12.png", "width": 32, "height": 60, "xOffset": -2, "yOffset": -10 }
         ]
       }
     }

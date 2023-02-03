@@ -2,28 +2,51 @@ package utilityClasses;
 
 import GUI.GamePanel;
 import GUI.OptionsMenuPanel;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class InputHandler implements KeyListener {
 
-    public static int upKey, leftKey, downKey, rightKey, attackKey, inventoryKey;
-    public boolean attackPressed;
-    public boolean menuPressed, inventoryPressed;
-    public int lastDirection;
-    public int attackDirection, walkingDirection;
+    private static int upKey, leftKey, downKey, rightKey, attackKey, inventoryKey, interactKey;
+    public boolean optionsPressed, inventoryPressed, interactPressed;
+    public int lastDirection, attackDirection, walkingDirection;
     public ArrayList<Integer> movementKeys = new ArrayList<>();
+    private final boolean[] states = new boolean[3];
 
     public InputHandler() {
 
-        attackDirection = 10000;
+        initVariables();
         loadKeyBindings();
     }
 
-    public void clearVariables() {
+    public void initVariables() {
 
-        lastDirection = 10000;
+        // 0 -> resting
+        // 1 -> walking
+        // 2 -> attacking
+        setCurrentState(0);
+
+        lastDirection = 1;
+        attackDirection = 10000;
+    }
+
+    public int getCurrentDirection() {
+
+        if (isInState(2)) return attackDirection;
+        else if (isInState(1)) return walkingDirection;
+        else return lastDirection;
+    }
+
+    public static String getKey(String name) {
+
+        return switch (name) {
+            case "interact" -> KeyEvent.getKeyText(interactKey);
+            case "inventory" -> KeyEvent.getKeyText(inventoryKey);
+            default -> "";
+        };
     }
 
     // In this method, a file containing the saved key
@@ -60,22 +83,24 @@ public class InputHandler implements KeyListener {
                         case "Rechts" -> KeyEvent.VK_RIGHT;
                         default -> keyCode;
                     };
-
                 }
+                keyName = keyName.toLowerCase();
 
                 // Checks which key to bind it to
-                if (keyName.contains("Up")) {
+                if (keyName.contains("up")) {
                     upKey = keyCode;
-                } else if (keyName.contains("Left")) {
+                } else if (keyName.contains("left")) {
                     leftKey = keyCode;
-                } else if (keyName.contains("Down")) {
+                } else if (keyName.contains("down")) {
                     downKey = keyCode;
-                } else if (keyName.contains("Right")) {
+                } else if (keyName.contains("right")) {
                     rightKey = keyCode;
                 } else if (keyName.contains("attack")) {
                     attackKey = keyCode;
-                } else {
+                } else if (keyName.contains("inventory")) {
                     inventoryKey = keyCode;
+                } else if (keyName.contains("interact")) {
+                    interactKey = keyCode;
                 }
             }
         }
@@ -86,40 +111,52 @@ public class InputHandler implements KeyListener {
         return key == upKey || key == leftKey || key == downKey || key == rightKey;
     }
 
-    // all 3 are required by KeyListener,
-    // however we don't use this specific one
-    public void keyTyped(KeyEvent e) {}
+    private int abstractKeyValue(int key) {
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-        int key = e.getKeyCode();
+        if (key == upKey) return 0;
+        else if (key == downKey) return 1;
+        else if (key == leftKey) return 2;
+        else return 3;
+    }
 
-        if (GamePanel.isDead || GamePanel.loading) {
-            e.consume();
-            return;
+    public void setCurrentState(int currentState) {
+
+        Arrays.fill(states, false);
+
+        if (currentState < states.length && currentState >= 0) {
+            states[currentState] = true;
         }
+    }
 
-        if (key == KeyEvent.VK_ESCAPE) {
-            menuPressed = true;
-        } else if (key == attackKey) {
-            attackPressed = true;
-        } else if (key == inventoryKey) {
-            inventoryPressed = true;
-        }
+    public boolean movementKeyPressed() {
 
-        // Only allows movement keys to be added to the key array
-        if (!movementKeys.contains(key) && isMovementKey(key)) {
-            if (movementKeys.size() < 2) {
-                movementKeys.add(key);
-            }
-        }
+        return movementKeys.size() > 0;
+    }
 
-        if (attackPressed && attackDirection == 10000) {
+    public boolean isInState(int state) {
+
+        if (state >= states.length) return false;
+        return states[state];
+    }
+
+    private void handleAttack() {
+
+        if (attackDirection == 10000) {
             if (walkingDirection == 10000) {
                 attackDirection = lastDirection;
             } else {
                 attackDirection = walkingDirection;
             }
+        }
+    }
+
+    private void addMovementKey(int key) {
+
+        if (!movementKeys.contains(key)) {
+            if (movementKeys.size() < 2) {
+                movementKeys.add(key);
+            }
+            setCurrentState(1);
         }
 
         // If one key is pressed at a time, walks that direction
@@ -132,14 +169,7 @@ public class InputHandler implements KeyListener {
         };
     }
 
-    @Override
-    public void keyReleased(KeyEvent e) {
-        int key = e.getKeyCode();
-
-        if (GamePanel.isDead) {
-            e.consume();
-            return;
-        }
+    private void removeMovementKey(int key) {
 
         // Removes the movement key from the list
         if (movementKeys.contains(key)) {
@@ -154,6 +184,69 @@ public class InputHandler implements KeyListener {
 
             lastDirection = walkingDirection;
             walkingDirection = 10000;
+            if (!isInState(2)) setCurrentState(0);
         }
+    }
+
+    private void handleKeyPressed(int key) {
+
+        if (key == KeyEvent.VK_ESCAPE) {
+            optionsPressed = true;
+        } else if (key == inventoryKey) {
+            inventoryPressed = true;
+        } else if (key == interactKey) {
+            interactPressed = true;
+        } else if (key == attackKey) {
+            setCurrentState(2);
+        }
+
+        if (isInState(2)) {
+            handleAttack();
+            return;
+        }
+
+        // Only allows movement keys to be added to the key array
+        if (isMovementKey(key)) {
+            key = abstractKeyValue(key);
+            addMovementKey(key);
+        }
+    }
+
+    private void handleKeyReleased(int key) {
+
+        if (isMovementKey(key)) {
+            key = abstractKeyValue(key);
+            removeMovementKey(key);
+        }
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int key = e.getKeyCode();
+
+        if (GamePanel.isLoading) {
+            if (key == interactKey) {
+                interactPressed = true;
+            }
+            e.consume();
+            return;
+        }
+        if (GamePanel.isOpeningChest) {
+            e.consume();
+            return;
+        }
+        handleKeyPressed(key);
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        int key = e.getKeyCode();
+
+        handleKeyReleased(key);
+    }
+
+    // all 3 are required by KeyListener,
+    // however we don't use this specific one
+    public void keyTyped(KeyEvent e) {
     }
 }

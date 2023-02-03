@@ -13,7 +13,7 @@
             "itemName": "",
             "image": [
               {
-                "image": "src/main/resources/item/armor/chestplate/chestChainCommon.png",
+                "image": "/item/armor/chestplate/chestChainCommon.png",
                 "width": 16,
                 "height": 16
               }
@@ -30,7 +30,7 @@
             "itemName": "",
             "image": [
               {
-                "image": "src/main/resources/item/armor/chestplate/chestChainRare.png",
+                "image": "/item/armor/chestplate/chestChainRare.png",
                 "width": 16,
                 "height": 16
               }
@@ -47,7 +47,7 @@
             "itemName": "",
             "image": [
               {
-                "image": "src/main/resources/item/armor/chestplate/chestChainEpic.png",
+                "image": "/item/armor/chestplate/chestChainEpic.png",
                 "width": 16,
                 "height": 16
               }
@@ -68,7 +68,7 @@
             "itemName": "",
             "image": [
               {
-                "image": "src/main/resources/item/armor/robe/bodyClothCommon.png",
+                "image": "/item/armor/robe/bodyClothCommon.png",
                 "width": 16,
                 "height": 16
               }
@@ -85,7 +85,7 @@
             "itemName": "",
             "image": [
               {
-                "image": "src/main/resources/item/armor/robe/bodyClothRare.png",
+                "image": "/item/armor/robe/bodyClothRare.png",
                 "width": 16,
                 "height": 16
               }
@@ -102,7 +102,7 @@
             "itemName": "",
             "image": [
               {
-                "image": "src/main/resources/item/armor/robe/bodyClothEpic.png",
+                "image": "/item/armor/robe/bodyClothEpic.png",
                 "width": 16,
                 "height": 16
               }
@@ -119,7 +119,7 @@
             "itemName": "",
             "image": [
               {
-                "image": "src/main/resources/item/armor/robe/bodyClothLegendary.png",
+                "image": "/item/armor/robe/bodyClothLegendary.png",
                 "width": 16,
                 "height": 16
               }
@@ -143,7 +143,7 @@
             "itemName": "",
             "image": [
               {
-                "image": "src/main/resources/item/armor/hat/headClothCommon.png",
+                "image": "/item/armor/hat/headClothCommon.png",
                 "width": 16,
                 "height": 16
               }
@@ -160,7 +160,7 @@
             "itemName": "",
             "image": [
               {
-                "image": "src/main/resources/item/armor/hat/headClothRare.png",
+                "image": "/item/armor/hat/headClothRare.png",
                 "width": 16,
                 "height": 16
               }
@@ -181,7 +181,7 @@
             "itemName": "",
             "image": [
               {
-                "image": "src/main/resources/item/armor/helmet/headIronCommon.png",
+                "image": "/item/armor/helmet/headIronCommon.png",
                 "width": 16,
                 "height": 16
               }
@@ -198,7 +198,7 @@
             "itemName": "",
             "image": [
               {
-                "image": "src/main/resources/item/armor/helmet/headIronRare.png",
+                "image": "/item/armor/helmet/headIronRare.png",
                 "width": 16,
                 "height": 16
               }
@@ -215,7 +215,7 @@
             "itemName": "",
             "image": [
               {
-                "image": "src/main/resources/item/armor/helmet/headIronEpic.png",
+                "image": "/item/armor/helmet/headIronEpic.png",
                 "width": 16,
                 "height": 16
               }
@@ -232,7 +232,7 @@
             "itemName": "",
             "image": [
               {
-                "image": "src/main/resources/item/armor/helmet/headIronLegendary.png",
+                "image": "/item/armor/helmet/headIronLegendary.png",
                 "width": 16,
                 "height": 16
               }
@@ -249,7 +249,7 @@
             "itemName": "",
             "image": [
               {
-                "image": "src/main/resources/item/armor/helmet/headIronUnique.png",
+                "image": "/item/armor/helmet/headIronUnique.png",
                 "width": 16,
                 "height": 16
               }
@@ -273,7 +273,7 @@
             "itemName": "",
             "image": [
               {
-                "image": "src/main/resources/item/armor/shield/armIronCommon.png",
+                "image": "/item/armor/shield/armIronCommon.png",
                 "width": 16,
                 "height": 16
               }
@@ -290,7 +290,7 @@
             "itemName": "",
             "image": [
               {
-                "image": "src/main/resources/item/armor/shield/armIronRare.png",
+                "image": "/item/armor/shield/armIronRare.png",
                 "width": 16,
                 "height": 16
               }
@@ -307,7 +307,7 @@
             "itemName": "",
             "image": [
               {
-                "image": "src/main/resources/item/armor/shield/armIronEpic.png",
+                "image": "/item/armor/shield/armIronEpic.png",
                 "width": 16,
                 "height": 16
               }

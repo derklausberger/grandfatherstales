@@ -2,17 +2,22 @@ package main;
 
 import GUI.*;
 import utilityClasses.AudioManager;
+import utilityClasses.InputHandler;
 import utilityClasses.ResourceLoader;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
 
 public class Main {
+
+    // Main window
+    private static JFrame window;
+
+    private static GamePanel gamePanel;
 
     // Window size for all screens
     public static final int
@@ -36,9 +41,7 @@ public class Main {
         previousScreen = currentScreen;
         currentScreen = "Main Menu";
 
-        AudioManager.stopAll();
-        // Attempt to create a smoother transition when looping
-        //AudioManager.loop("M - mainTheme", 0, 175, AudioManager.getFrames("M - mainTheme") - 1);
+        AudioManager.stopAllSounds();
     }
 
     public static void showOptionsScreen() {
@@ -49,115 +52,191 @@ public class Main {
     }
 
     public static void showLoadingScreen() {
+
         cardLayout.show(rootPanel, "Loading");
+        currentScreen = "Loading";
+        createGamePanel();
     }
 
-    public static void showGameScreen(JPanel gamePanel) {
+    private static void createGamePanel() {
 
+        // Starts a new thread to load the game resources
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                // Create the game panel and add it to the main panel
+                try {
+                    if (gamePanel != null) {
+                        gamePanel = null;
+                    }
+                    gamePanel = new GamePanel();
+                    createGameScreenComponents();
+                    showGameScreen();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+    private static void createGameScreenComponents() {
+
+        // Sets the gamePanel to the same size as the window (full window)
         gamePanel.setBounds(0, 0,
                 (int) (DEFAULT_WINDOW_WIDTH * SCALING_FACTOR),
                 (int) (DEFAULT_WINDOW_HEIGHT * SCALING_FACTOR));
 
-        InventoryPanel inventoryPanel = new InventoryPanel();
-        inventoryPanel.setSize(inventoryPanel.getPreferredSize());
-
-        RewardPanel rewardPanel = new RewardPanel();
-        rewardPanel.setSize(rewardPanel.getPreferredSize());
-
-        ResourceLoader rl = ResourceLoader.getResourceLoader();
-        BufferedImage bufferedBackground = rl.getBufferedImage("/screen/inventoryPanel/healthContainer.png");
-
-
-        JLabel healthContainer = new JLabel("Health Container");
-        healthContainer.setSize(new Dimension(166 * 2, 37 * 2));
-        healthContainer.setIcon(new ImageIcon(bufferedBackground.getScaledInstance(166 * 2, 37 * 2, Image.SCALE_SMOOTH)));
-
-        // Creates the layered pane to hold the game and inventory panels
+        // Creates the layered pane to hold all panels in different layers
         layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(
                 (int) (DEFAULT_WINDOW_WIDTH * SCALING_FACTOR),
                 (int) (DEFAULT_WINDOW_HEIGHT * SCALING_FACTOR)));
         layeredPane.setSize(layeredPane.getPreferredSize());
 
-        // Still doesn't center the inventory perfectly vertically,
-        // Therefore, moved 20px upwards
-        int yCenter = (layeredPane.getHeight() - inventoryPanel.getHeight()) / 2;
-        inventoryPanel.setLocation((int) ((layeredPane.getWidth() / 16) * SCALING_FACTOR), yCenter - 20);
+        // Creates the inventory panel for the character
+        InventoryPanel inventoryPanel = new InventoryPanel();
+        InventoryPanel.loadInventory(gamePanel.getGame().getPlayer());
+        inventoryPanel.setSize(inventoryPanel.getPreferredSize());
 
+        // Still doesn't center the inventory perfectly vertically
+        // Therefore, moved 20px upwards
+        inventoryPanel.setLocation((int) ((layeredPane.getWidth() / 16) * SCALING_FACTOR), (layeredPane.getHeight() - inventoryPanel.getHeight()) / 2 - 20);
+
+        // Creates the reward panel when opening a chest
+        RewardPanel rewardPanel = new RewardPanel(gamePanel.getGame());
+        rewardPanel.setSize(rewardPanel.getPreferredSize());
+        rewardPanel.setLocation((layeredPane.getWidth() - rewardPanel.getWidth()) / 2, (layeredPane.getHeight() - rewardPanel.getHeight()) / 2);
+
+        // Loads the image for the health container and adds it to a label
+        ResourceLoader rl = ResourceLoader.getResourceLoader();
+        BufferedImage healthContainerBackground = rl.getBufferedImage("/screen/inventoryPanel/healthContainer.png");
+
+        // Creates the health container in the top left
+        JLabel healthContainer = new JLabel();
+        healthContainer.setSize(new Dimension(166 * 2, 37 * 2));
+        healthContainer.setIcon(new ImageIcon(healthContainerBackground.getScaledInstance(166 * 2, 37 * 2, Image.SCALE_SMOOTH)));
         healthContainer.setLocation(20, 20);
 
-        rewardPanel.setLocation((layeredPane.getWidth() - rewardPanel.getWidth()) / 2, yCenter);
-
+        // Creates the black screen in the background when loading levels
         blackScreen = new JPanel();
-        blackScreen.setLayout(new BorderLayout());
+        blackScreen.setLayout(new GridBagLayout());
         blackScreen.setPreferredSize(new Dimension(
                 (int) (DEFAULT_WINDOW_WIDTH * SCALING_FACTOR),
                 (int) (DEFAULT_WINDOW_HEIGHT * SCALING_FACTOR)));
         blackScreen.setSize(blackScreen.getPreferredSize());
         blackScreen.setVisible(false);
 
+        // Adds all panels to suitable layers
         layeredPane.add(blackScreen, JLayeredPane.POPUP_LAYER);
         layeredPane.add(gamePanel, JLayeredPane.DEFAULT_LAYER);
         layeredPane.add(inventoryPanel, JLayeredPane.PALETTE_LAYER);
         layeredPane.add(healthContainer, JLayeredPane.PALETTE_LAYER);
         layeredPane.add(rewardPanel, JLayeredPane.MODAL_LAYER);
-
-
         rootPanel.add(layeredPane, "Game");
+    }
+
+    public static void showGameScreen() {
+
         cardLayout.show(rootPanel, "Game");
         currentScreen = "Game";
     }
 
-    public static void showBlackScreen(String msg) {
+    private static JLabel continueMessage;
 
-        blackScreen.removeAll();
-
-        ResourceLoader rl = ResourceLoader.getResourceLoader();
-        Font font = rl.getFontByFilePath("DePixelBreit.ttf");
-
-        JLabel message = new JLabel(msg);
-        message.setFont(font.deriveFont(46f));
-        message.setForeground(new Color(0x7d0027));
-        message.setVisible(false);
-        message.setHorizontalAlignment(JLabel.CENTER);
-
-        blackScreen.add(message, BorderLayout.CENTER);
+    private static void startBlackScreenTimer(JLabel gameStateMessage) {
 
         // Creates a Timer to schedule the fading of the screen
-        Timer fadeTimer = new Timer(35, new ActionListener() {
+        new Timer(35, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Fade the game screen to black by decreasing the alpha value
 
+                // Fades the game screen to black by increasing the alpha value
                 if (!blackScreen.isVisible()) {
-                    blackScreen.setBackground(new Color(0, 0, 0, 0));
+                    blackScreen.setBackground(new Color(0, 0, 0, 25));
                     blackScreen.setVisible(true);
                 }
                 blackScreen.setBackground(new Color(0, 0, 0, blackScreen.getBackground().getAlpha() + 1));
 
-                if (blackScreen.getBackground().getAlpha() >= 50) {
+                if (blackScreen.getBackground().getAlpha() >= 75) {
                     ((Timer) e.getSource()).stop();
                     // Display the "Game Over" text
-                    message.setVisible(true);
-                    // Schedule a delay of 3 seconds before showing the main menu
-                    new Timer(3000, new ActionListener() {
+                    gameStateMessage.setVisible(true);
+
+                    // Schedule a delay of half a second before showing
+                    // the message to continue by clicking
+                    new Timer(1000, new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
                             // Make the main menu visible
                             ((Timer) e.getSource()).stop();
 
-                            if (msg.equals("Game Over") || msg.contains("Congrats!")) showMainScreen();
-                            else blackScreen.setVisible(false);
+                            continueMessage.setVisible(true);
                         }
                     }).start();
                 }
             }
-        });
-
-// Start the fading of the screen
-        fadeTimer.start();
+            // Starts the fading of the screen
+        }).start();
     }
 
+    public static boolean allowContinue() {
+
+        return continueMessage.isVisible();
+    }
+
+    public static void discardBlackScreen() {
+
+        blackScreen.setVisible(false);
+    }
+
+    private static JLabel createBlackScreenComponents(String msg) {
+
+        blackScreen.removeAll();
+
+        // Loads the font and creates the message
+        ResourceLoader rl = ResourceLoader.getResourceLoader();
+        Font font = rl.getDefaultTextFont();
+
+        GridBagConstraints constraints = new GridBagConstraints();
+
+        JLabel gameStateMessage = new JLabel(msg);
+        gameStateMessage.setFont(font.deriveFont(46f));
+        gameStateMessage.setForeground(new Color(0x7d0027));
+        gameStateMessage.setVisible(false);
+
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.gridwidth = GridBagConstraints.REMAINDER;
+        constraints.gridheight = GridBagConstraints.REMAINDER;
+        constraints.weightx = 1;
+        constraints.weighty = 1;
+        constraints.anchor = GridBagConstraints.CENTER;
+
+        blackScreen.add(gameStateMessage, constraints);
+
+        continueMessage = new JLabel("Press " + InputHandler.getKey("interact") + " to continue");
+        continueMessage.setFont(font.deriveFont(16f));
+        continueMessage.setForeground(new Color(0xe0d9ae));
+        continueMessage.setVisible(false);
+
+        constraints.fill = GridBagConstraints.NONE;
+        constraints.gridx = 1;
+        constraints.gridy = 1;
+        constraints.weightx = 0;
+        constraints.weighty = 0;
+        constraints.anchor = GridBagConstraints.SOUTHEAST;
+        constraints.insets = new Insets(0, 0, 60, 40);
+
+        blackScreen.add(continueMessage, constraints);
+
+        return gameStateMessage;
+    }
+
+    public static void showBlackScreen(String msg) {
+
+        startBlackScreenTimer(createBlackScreenComponents(msg));
+    }
 
     public static void toggleInventory() {
 
@@ -168,11 +247,12 @@ public class Main {
     }
 
     public static void toggleRewardScreen() {
-        ((RewardPanel)(layeredPane.getComponentsInLayer(JLayeredPane.MODAL_LAYER)[0])).setRandomRewards();
+
+        ((RewardPanel) (layeredPane.getComponentsInLayer(JLayeredPane.MODAL_LAYER)[0])).setRewards();
         layeredPane.getComponentsInLayer(JLayeredPane.MODAL_LAYER)[0]
                 .setVisible(
-                !layeredPane.getComponentsInLayer(JLayeredPane.MODAL_LAYER)[0]
-                        .isVisible());
+                        !layeredPane.getComponentsInLayer(JLayeredPane.MODAL_LAYER)[0]
+                                .isVisible());
     }
 
     public static void showPreviousScreen() {
@@ -184,23 +264,19 @@ public class Main {
         currentScreen = s;
     }
 
-    public static void main(String[] args) {
+    private static void createPrimaryScreens() {
 
-        // Create the main window
-        JFrame window = new JFrame("Grandfather's Tales");
-        window.setPreferredSize(new Dimension(
-                (int) (DEFAULT_WINDOW_WIDTH * SCALING_FACTOR),
-                (int) (DEFAULT_WINDOW_HEIGHT * SCALING_FACTOR)));
-
-        // "Main" panel that acts as the foundation
+        // Creates the main/root panel that acts as the foundation
         rootPanel = new JPanel();
         rootPanel.setPreferredSize(new Dimension(
                 (int) (DEFAULT_WINDOW_WIDTH * SCALING_FACTOR),
                 (int) (DEFAULT_WINDOW_HEIGHT * SCALING_FACTOR)));
 
+        // Sets a card layout to simply swap screens by calling a function
         rootPanel.setLayout(cardLayout);
 
-        // Creates the main menu screen
+        // Creates the "primary" screens that are loaded
+        // even though the game is not started
         MainMenuPanel mainMenuPanel = new MainMenuPanel();
         rootPanel.add(mainMenuPanel, "Main Menu");
 
@@ -209,23 +285,33 @@ public class Main {
 
         LoadingPanel loadingPanel = new LoadingPanel();
         rootPanel.add(loadingPanel, "Loading");
+    }
 
-        //currentScreen = "Game";
-        //GamePanel game = null;
-        try {
-            //game = new GamePanel();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //showGameScreen(game);
+    public static void closeWindow() {
+
+        window.dispose();
+        System.exit(0);
+    }
+
+    public static void main(String[] args) {
+
+        // Creates the main window
+        window = new JFrame("Grandfather's Tales");
+        window.setPreferredSize(new Dimension(
+                (int) (DEFAULT_WINDOW_WIDTH * SCALING_FACTOR),
+                (int) (DEFAULT_WINDOW_HEIGHT * SCALING_FACTOR)));
 
 
-        showMainScreen();
+        createPrimaryScreens();
 
         window.add(rootPanel);
+        showMainScreen();
+        //showLoadingScreen();
 
-        // window image at the top left (very small and unreadable at the moment)
-        
+        // Attempt to create a smoother transition when looping
+        //AudioManager.loop("M - mainTheme", 0, 175, AudioManager.getFrames("M - mainTheme") - 1);
+
+        // Loads an image for the icon in the top left (very small and unreadable at the moment)
         ResourceLoader rl = ResourceLoader.getResourceLoader();
         window.setIconImage(new ImageIcon(rl.getBufferedImage("/screen/mainMenuPanel/logo.png")).getImage());
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

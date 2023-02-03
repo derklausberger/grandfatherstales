@@ -23,6 +23,7 @@ import javax.swing.ImageIcon;
 public final class ResourceLoader {
 
     private static final ResourceLoader RESOURCE_LOADER = new ResourceLoader();
+    private Font defaultTextFont;
 
     private ResourceLoader() {}
 
@@ -30,8 +31,25 @@ public final class ResourceLoader {
         return RESOURCE_LOADER;
     }
 
+    public Font getDefaultTextFont() {
+
+        if (defaultTextFont == null) {
+            defaultTextFont = getFontByFilePath("DePixelBreit.ttf");
+        }
+        return defaultTextFont;
+    }
+
     public BufferedImage getBufferedImage(String filePath) {
 
+        BufferedImage image;
+        try {
+            image = ImageIO.read(new File(Objects.requireNonNull(getClass().getResource(filePath)).toURI()));
+        } catch (IOException | URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        return image;
+
+        /*
         BufferedImage image = null;
         File required = null;
         URL url = null;
@@ -68,6 +86,18 @@ public final class ResourceLoader {
             throw new RuntimeException(e);
         }
         return image;
+         */
+    }
+
+    public Image getImage(String filePath) {
+
+        Image image;
+        try {
+            image = ImageIO.read(new File(Objects.requireNonNull(getClass().getResource(filePath)).toURI()));
+        } catch (IOException | URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        return image;
     }
 
     public AudioInputStream getAudio(String filePath) {
@@ -81,13 +111,14 @@ public final class ResourceLoader {
         return ais;
     }
 
-    public ImageIcon getImageIcon(String filePath, int LOGO_WIDTH, int LOGO_HEIGHT) {
+    public ImageIcon getImageIcon(String filePath) {
 
-        BufferedImage buf = null;
-        ImageIcon image = null;
-        System.out.println(filePath);
-        buf = getBufferedImage(filePath);
-        image = new ImageIcon(buf.getScaledInstance(LOGO_WIDTH, LOGO_HEIGHT, Image.SCALE_DEFAULT));
+        ImageIcon image;
+        try {
+            image = new ImageIcon(ImageIO.read(new File(getClass().getResource(filePath).toURI())));
+        } catch (IOException | URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
 
         return image;
     }

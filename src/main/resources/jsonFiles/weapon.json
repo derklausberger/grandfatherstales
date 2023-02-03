@@ -12,7 +12,7 @@
           "itemName": "",
           "image": [
             {
-              "image": "src/main/resources/item/weapon/axe/axeCommon.png",
+              "image": "/item/weapon/axe/axeCommon.png",
               "width": 16,
               "height": 16
             }
@@ -30,7 +30,7 @@
           "itemName": "",
           "image": [
             {
-              "image": "src/main/resources/item/weapon/axe/axeRare.png",
+              "image": "/item/weapon/axe/axeRare.png",
               "width": 16,
               "height": 16
             }
@@ -48,7 +48,7 @@
           "itemName": "",
           "image": [
             {
-              "image": "src/main/resources/item/weapon/axe/axeEpic.png",
+              "image": "/item/weapon/axe/axeEpic.png",
               "width": 16,
               "height": 16
             }
@@ -70,7 +70,7 @@
           "itemName": "",
           "image": [
             {
-              "image": "src/main/resources/item/weapon/crossbow/crossbowCommon.png",
+              "image": "/item/weapon/crossbow/crossbowCommon.png",
               "width": 16,
               "height": 16
             }
@@ -88,7 +88,7 @@
           "itemName": "",
           "image": [
             {
-              "image": "src/main/resources/item/weapon/crossbow/crossbowRare.png",
+              "image": "/item/weapon/crossbow/crossbowRare.png",
               "width": 16,
               "height": 16
             }
@@ -106,7 +106,7 @@
           "itemName": "",
           "image": [
             {
-              "image": "src/main/resources/item/weapon/crossbow/crossbowEpic.png",
+              "image": "/item/weapon/crossbow/crossbowEpic.png",
               "width": 16,
               "height": 16
             }
@@ -128,7 +128,7 @@
           "itemName": "",
           "image": [
             {
-              "image": "src/main/resources/item/weapon/dagger/daggerCommon.png",
+              "image": "/item/weapon/dagger/daggerCommon.png",
               "width": 16,
               "height": 16
             }
@@ -146,7 +146,7 @@
           "itemName": "",
           "image": [
             {
-              "image": "src/main/resources/item/weapon/dagger/daggerRare.png",
+              "image": "/item/weapon/dagger/daggerRare.png",
               "width": 16,
               "height": 16
             }
@@ -164,7 +164,7 @@
           "itemName": "",
           "image": [
             {
-              "image": "src/main/resources/item/weapon/dagger/daggerEpic.png",
+              "image": "/item/weapon/dagger/daggerEpic.png",
               "width": 16,
               "height": 16
             }
@@ -186,7 +186,7 @@
           "itemName": "",
           "image": [
             {
-              "image": "src/main/resources/item/weapon/sable/sableCommon.png",
+              "image": "/item/weapon/sable/sableCommon.png",
               "width": 16,
               "height": 16
             }
@@ -204,7 +204,7 @@
           "itemName": "",
           "image": [
             {
-              "image": "src/main/resources/item/weapon/sable/sableRare.png",
+              "image": "/item/weapon/sable/sableRare.png",
               "width": 16,
               "height": 16
             }
@@ -222,7 +222,7 @@
           "itemName": "",
           "image": [
             {
-              "image": "src/main/resources/item/weapon/sable/sableEpic.png",
+              "image": "/item/weapon/sable/sableEpic.png",
               "width": 16,
               "height": 16
             }
@@ -244,7 +244,7 @@
           "itemName": "",
           "image": [
             {
-              "image": "src/main/resources/item/weapon/spear/spearCommon.png",
+              "image": "/item/weapon/spear/spearCommon.png",
               "width": 16,
               "height": 16
             }
@@ -262,7 +262,7 @@
           "itemName": "",
           "image": [
             {
-              "image": "src/main/resources/item/weapon/spear/spearRare.png",
+              "image": "/item/weapon/spear/spearRare.png",
               "width": 16,
               "height": 16
             }
@@ -280,7 +280,7 @@
           "itemName": "",
           "image": [
             {
-              "image": "src/main/resources/item/weapon/spear/spearEpic.png",
+              "image": "/item/weapon/spear/spearEpic.png",
               "width": 16,
               "height": 16
             }
@@ -302,7 +302,7 @@
           "itemName": "",
           "image": [
             {
-              "image": "src/main/resources/item/weapon/scythe/scytheCommon.png",
+              "image": "/item/weapon/scythe/scytheCommon.png",
               "width": 16,
               "height": 16
             }
@@ -320,7 +320,7 @@
           "itemName": "",
           "image": [
             {
-              "image": "src/main/resources/item/weapon/scythe/scytheRare.png",
+              "image": "/item/weapon/scythe/scytheRare.png",
               "width": 16,
               "height": 16
             }
@@ -338,7 +338,7 @@
           "itemName": "",
           "image": [
             {
-              "image": "src/main/resources/item/weapon/scythe/scytheEpic.png",
+              "image": "/item/weapon/scythe/scytheEpic.png",
               "width": 16,
               "height": 16
             }
@@ -360,7 +360,7 @@
           "itemName": "",
           "image": [
             {
-              "image": "src/main/resources/item/weapon/wand/wandCommon.png",
+              "image": "/item/weapon/wand/wandCommon.png",
               "width": 16,
               "height": 16
             }
@@ -378,7 +378,7 @@
           "itemName": "",
           "image": [
             {
-              "image": "src/main/resources/item/weapon/wand/wandRare.png",
+              "image": "/item/weapon/wand/wandRare.png",
               "width": 16,
               "height": 16
             }
@@ -396,7 +396,7 @@
           "itemName": "",
           "image": [
             {
-              "image": "src/main/resources/item/weapon/wand/wandEpic.png",
+              "image": "/item/weapon/wand/wandEpic.png",
               "width": 16,
               "height": 16
             }

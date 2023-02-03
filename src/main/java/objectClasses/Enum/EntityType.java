@@ -5,21 +5,36 @@ public enum EntityType {
     character {
         @Override
         public void attack() {
-            System.out.println("character attacking");
+            //System.out.println("character attacking");
+        }
+
+        @Override
+        public int getAttackCollisionFrame() {
+            return 4;
         }
     },
 
     skeletonWarrior {
         @Override
         public void attack() {
-            System.out.println("skeletonWarrior attacking");
+            //System.out.println("skeletonWarrior attacking");
+        }
+
+        @Override
+        public int getAttackCollisionFrame() {
+            return 4;
         }
     },
 
     skeletonArcher {
         @Override
         public void attack() {
-            System.out.println("skeletonArcher attacking");
+            //System.out.println("skeletonArcher attacking");
+        }
+
+        @Override
+        public int getAttackCollisionFrame() {
+            return 10;
         }
     };
 
@@ -30,4 +45,6 @@ public enum EntityType {
     }
 
     public abstract void attack();
+
+    public abstract int getAttackCollisionFrame();
 }

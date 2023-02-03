@@ -3,26 +3,16 @@ package GUI;
 import main.Main;
 import utilityClasses.AudioManager;
 import utilityClasses.ResourceLoader;
-
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public class MainMenuPanel extends JPanel {
 
-    private final int
-            LOGO_WIDTH = (int) (1274 * Main.SCALING_FACTOR / 2),
-            LOGO_HEIGHT = (int) (735 * Main.SCALING_FACTOR / 2);
-
     public static BufferedImage backgroundImage = null;
-
     private final Map<String, ImageIcon> buttonImages = new HashMap<>();
 
     private final JPanel
@@ -34,33 +24,20 @@ public class MainMenuPanel extends JPanel {
             quitButton = new JLabel(),
             logo = new JLabel();
 
-
     public MainMenuPanel() {
-
-        this.setLayout(new GridBagLayout());
-        this.setPreferredSize(new Dimension(
-                (int) (Main.DEFAULT_WINDOW_WIDTH * Main.SCALING_FACTOR),
-                (int) (Main.DEFAULT_WINDOW_HEIGHT * Main.SCALING_FACTOR)));
 
         init();
     }
 
     private void init() {
 
-        ResourceLoader rl = ResourceLoader.getResourceLoader();
+        setLayout(new GridBagLayout());
+        setPreferredSize(new Dimension(
+                (int) (Main.DEFAULT_WINDOW_WIDTH * Main.SCALING_FACTOR),
+                (int) (Main.DEFAULT_WINDOW_HEIGHT * Main.SCALING_FACTOR)));
 
-        // Loads static background image
-        backgroundImage = rl.getBufferedImage("/screen/mainMenuPanel/mainMenu.png");
-        
-        // Loads the logo image and adds it to the main menu screen
-        logo.setPreferredSize(new Dimension(LOGO_WIDTH, LOGO_HEIGHT));
-
-
-        //BufferedImage bufferedLogo = rl.getImageIcon("/screen/mainMenuPanel/logo.png", LOGO_WIDTH, LOGO_HEIGHT);
-        logo.setIcon(rl.getImageIcon("/screen/mainMenuPanel/logo.png", LOGO_WIDTH, LOGO_HEIGHT));
-
-
-
+        loadImages();
+        loadAudio();
 
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
@@ -69,48 +46,48 @@ public class MainMenuPanel extends JPanel {
         c.gridheight = 1;
         c.insets = new Insets(10, 10, 10, 10);
         c.anchor = GridBagConstraints.CENTER;
+        add(logo, c);
 
-        this.add(logo, c);
+        createMenuButtons(c);
+        createListeners();
+    }
 
+    private void loadImages() {
 
-        // reads menu button images and saves them to a map
+        ResourceLoader rl = ResourceLoader.getResourceLoader();
+
+        // Loads static background image
+        backgroundImage = rl.getBufferedImage("/screen/mainMenuPanel/mainMenu.png");
+
+        // Loads the logo image and adds it to the main menu screen
+        int LOGO_WIDTH = (int) (1274 * Main.SCALING_FACTOR / 2);
+        int LOGO_HEIGHT = (int) (735 * Main.SCALING_FACTOR / 2);
+
+        logo.setIcon(new ImageIcon(
+                rl.getBufferedImage("/screen/mainMenuPanel/logo.png")
+                        .getScaledInstance(LOGO_WIDTH, LOGO_HEIGHT, Image.SCALE_SMOOTH)));
+
+        // Reads menu button images and saves them to a map,
         // to not have to reload a file for every mouse event
-        BufferedImage bufferedImage;
+        addButtonImage("new", "/screen/optionsMenuPanel/new.png");
+        addButtonImage("options", "/screen/optionsMenuPanel/options.png");
+        addButtonImage("quit", "/screen/optionsMenuPanel/quit.png");
+        addButtonImage("newHover", "/screen/optionsMenuPanel/newShadow.png");
+        addButtonImage("optionsHover", "/screen/optionsMenuPanel/optionsShadow.png");
+        addButtonImage("quitHover", "/screen/optionsMenuPanel/quitShadow.png");
+    }
 
+    private void addButtonImage(String name, String path) {
 
-        bufferedImage = rl.getBufferedImage("/screen/optionsMenuPanel/new.png");
-        buttonImages.put("new", new ImageIcon(
+        ResourceLoader rl = ResourceLoader.getResourceLoader();
+        BufferedImage bufferedImage = rl.getBufferedImage(path);
+        buttonImages.put(name, new ImageIcon(
                 bufferedImage.getScaledInstance(
                         (int) (bufferedImage.getWidth() * Main.SCALING_FACTOR),
                         -1, Image.SCALE_SMOOTH)));
+    }
 
-        bufferedImage = rl.getBufferedImage("/screen/optionsMenuPanel/options.png");
-        buttonImages.put("options", new ImageIcon(
-                bufferedImage.getScaledInstance(
-                        (int) (bufferedImage.getWidth() * Main.SCALING_FACTOR),
-                        -1, Image.SCALE_SMOOTH)));
-
-        bufferedImage = rl.getBufferedImage("/screen/optionsMenuPanel/quit.png");
-        buttonImages.put("quit", new ImageIcon(
-                bufferedImage.getScaledInstance(
-                        (int) (bufferedImage.getWidth() * Main.SCALING_FACTOR),
-                        -1, Image.SCALE_SMOOTH)));
-
-        bufferedImage = rl.getBufferedImage("/screen/optionsMenuPanel/newShadow.png");
-        buttonImages.put("newHover", new ImageIcon(
-                bufferedImage.getScaledInstance(
-                        (int) (bufferedImage.getWidth() * Main.SCALING_FACTOR), -1, Image.SCALE_SMOOTH)));
-
-        bufferedImage = rl.getBufferedImage("/screen/optionsMenuPanel/optionsShadow.png");
-        buttonImages.put("optionsHover", new ImageIcon(
-                bufferedImage.getScaledInstance(
-                        (int) (bufferedImage.getWidth() * Main.SCALING_FACTOR), -1, Image.SCALE_SMOOTH)));
-
-        bufferedImage = rl.getBufferedImage("/screen/optionsMenuPanel/quitShadow.png");
-        buttonImages.put("quitHover", new ImageIcon(
-                bufferedImage.getScaledInstance(
-                        (int) (bufferedImage.getWidth() * Main.SCALING_FACTOR), -1, Image.SCALE_SMOOTH)));
-
+    private void createMenuButtons(GridBagConstraints c) {
 
         // Sets icons and centers horizontally inside the container
         startButton.setIcon(buttonImages.get("new"));
@@ -136,13 +113,8 @@ public class MainMenuPanel extends JPanel {
         menuButtons.add(Box.createVerticalStrut(15));
         menuButtons.add(quitButton);
 
-        this.add(menuButtons, c);
-
-        loadAudio();
-        createListeners();
+        add(menuButtons, c);
     }
-
-    GamePanel gamePanel;
 
     private void loadAudio() {
 
@@ -150,9 +122,9 @@ public class MainMenuPanel extends JPanel {
         AudioManager.init();
         // Loads the audio files
         AudioManager.load("/music/Main Theme.wav", "M - mainTheme");
-        AudioManager.load("/sounds/GUI/Hover 1.wav", "S - h1");
-        AudioManager.load("/sounds/GUI/Click 1.wav", "S - c1");
-        AudioManager.load("/sounds/GUI/Click 2.wav", "S - c2");
+        AudioManager.load("/sounds/GUI/Hover 1.wav", "S - hover1");
+        AudioManager.load("/sounds/GUI/Click 1.wav", "S - click1");
+        AudioManager.load("/sounds/GUI/Click 2.wav", "S - click2");
 
         AudioManager.setMusicVolume(1.0f);
         AudioManager.setSoundVolume(1.0f);
@@ -160,7 +132,7 @@ public class MainMenuPanel extends JPanel {
 
     private void createListeners() {
 
-        this.addMouseListener(new MouseAdapter() {
+        addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
@@ -170,7 +142,6 @@ public class MainMenuPanel extends JPanel {
             }
         });
 
-
         startButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
@@ -178,21 +149,6 @@ public class MainMenuPanel extends JPanel {
 
                 Main.showLoadingScreen();
 
-                // Start a new thread to load the game resources
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        // Create the game panel and add it to the main panel
-                        try {
-                            if (gamePanel != null) gamePanel = null;
-                            gamePanel = new GamePanel();
-                            Main.showGameScreen(gamePanel);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
             }
         });
         startButton.addMouseListener(new MouseAdapter() {
@@ -201,7 +157,7 @@ public class MainMenuPanel extends JPanel {
                 super.mouseEntered(e);
 
                 startButton.setIcon(buttonImages.get("newHover"));
-                AudioManager.play("S - h1");
+                AudioManager.play("S - hover1");
             }
         });
         startButton.addMouseListener(new MouseAdapter() {
@@ -218,7 +174,7 @@ public class MainMenuPanel extends JPanel {
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
 
-                AudioManager.play("S - c1");
+                AudioManager.play("S - click1");
                 Main.showOptionsScreen();
             }
         });
@@ -228,7 +184,7 @@ public class MainMenuPanel extends JPanel {
                 super.mouseEntered(e);
 
                 optionsButton.setIcon(buttonImages.get("optionsHover"));
-                AudioManager.play("S - h1");
+                AudioManager.play("S - hover1");
             }
         });
         optionsButton.addMouseListener(new MouseAdapter() {
@@ -245,11 +201,7 @@ public class MainMenuPanel extends JPanel {
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
 
-                // gets the main window and disposes it
-                JComponent comp = (JComponent) e.getSource();
-                Window window = SwingUtilities.getWindowAncestor(comp);
-                window.dispose();
-                System.exit(0);
+                Main.closeWindow();
             }
         });
         quitButton.addMouseListener(new MouseAdapter() {
@@ -258,7 +210,7 @@ public class MainMenuPanel extends JPanel {
                 super.mouseEntered(e);
 
                 quitButton.setIcon(buttonImages.get("quitHover"));
-                AudioManager.play("S - h1");
+                AudioManager.play("S - hover1");
             }
         });
         quitButton.addMouseListener(new MouseAdapter() {

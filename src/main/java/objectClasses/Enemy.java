@@ -6,7 +6,6 @@ import objectClasses.Enum.AnimationType;
 import objectClasses.Enum.EntityType;
 import utilityClasses.AnimationFrame;
 import utilityClasses.AudioManager;
-import utilityClasses.InputHandler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,43 +13,24 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.*;
 import java.util.ArrayList;
-
+import java.util.Arrays;
 
 public class Enemy extends Entity {
 
-    Double[] factor = {1.0, 0.98, 0.95, 0.88, 0.70, 0.56, 0.47, 0.40, 0.35, 0.30, 0.27, 0.25, 0.21, 0.20, 0.19};
-
-    private int walkingAnimationFrame, attackAnimationFrame;
-    private final Timer animationTimer;
+    private final boolean[] states = new boolean[3];
 
     private boolean playingWalkingSound;
 
-    // isAttacking -> indicates if the attack animation is executed
     // attackHitBoxDrawn -> is set to true as soon as the third frame
     // of the attack animation is reached and the hit box is drawn
     // attackCollisionFrame -> indicates, when exactly (frame)
     // the hitbox for an attack should be drawn
-    private boolean isAttacking, attackHitBoxDrawn;
-    private int sightRadius, attackDistance;
-    private int attackCollisionFrame = 4;
+    private boolean attackHitBoxDrawn;
+    private final int sightRadius, attackDistance;
+    private final int attackCollisionFrame;
     private int viewDirection;
 
-    private ArrayList<Projectile> projectiles;
-
-
-
-    /*
-        public Entity getEnemy(EnemyType type) {
-
-        switch(type) {
-        case EntityType.skeletonWarrior: return new SkeletonWarrior();
-        case EntityType.skeletonArcher: return new SkeletonArcher();
-        default: throw new NotSupportedException();
-            }
-        }
-
-
-     */
+    private final ArrayList<Projectile> projectiles;
 
 
     public Enemy(int positionX, int positionY, int movementSpeed, int healthPoints, int sightRadius, int attackDistance, EntityType entityType, int viewDirection) {
@@ -59,110 +39,142 @@ public class Enemy extends Entity {
         // Enemies don't need an armor or weapon object, only values
         super.setBlockAmount(5);
         super.setAttackDamage(10);
-        super.setAttackDelay(10);
+        super.setAttackDelay(1000);
         this.sightRadius = sightRadius;
         this.attackDistance = attackDistance;
 
-        // Delay between frame updates in milliseconds
-        int animationDelay = 100;
-
-        animationTimer = new Timer(animationDelay, new AnimationHandler());
-        walkingAnimationFrame = 0;
-        attackAnimationFrame = 0;
-        isAttacking = false;
+        attackCollisionFrame = entityType.getAttackCollisionFrame();
         projectiles = new ArrayList<>();
 
-        if (entityType == EntityType.skeletonWarrior) {
-            attackCollisionFrame = 4;
-        } else if (entityType == EntityType.skeletonArcher) {
-            attackCollisionFrame = 10;
+        setWalkingAnimationFrame(0);
+        setAttackAnimationFrame(0);
+        setRestingAnimationFrame(0);
+
+        // 0 -> resting
+        // 1 -> walking
+        // 2 -> attacking
+        setCurrentState(0);
+
+        startAnimationTimer();
+    }
+
+    private void setCurrentState(int currentState) {
+
+        Arrays.fill(states, false);
+
+        if (currentState < states.length && currentState >= 0) {
+            states[currentState] = true;
         }
     }
 
-    public void detectPlayer(Game game) {
+    private boolean isInState(int state) {
 
-        Point2D playerMiddle = new Point2D.Double(),
-                enemyMiddle = new Point2D.Double();
+        if (state >= states.length) return false;
+        return states[state];
+    }
 
-        playerMiddle.setLocation(
-                game.getPlayer().getPositionX() + 15,
-                game.getPlayer().getPositionY() + 25);
 
-        enemyMiddle.setLocation(
-                getPositionX() + 15,
-                getPositionY() + 25);
+    public void update(Game game) {
 
-        if (!isAttacking) {
+        if (isAttacking()) {
+            attack(game);
+
+        } else if (isWalking()) {
+            walk(game);
+
+        } else if (isResting()) {
+            rest(game);
+        }
+    }
+
+    private void recover() {
+
+        toggleWalkingSound(true);
+        setWalkingAnimationFrame(0);
+        setRestingAnimationFrame(0);
+        setAttackAnimationFrame(1);
+        setCurrentState(0);
+
+        setCurrentAnimationType(AnimationType.walking.toString());
+        adaptViewDirection(viewDirection);
+        setCurrentAnimationFrame(getRestingAnimationFrame());
+    }
+
+    private void walk(Game game) {
+
+        if (getCoolDown() == 0) {
+
+            //
+            // Implement code to walk around in a certain area
+            //
+
+            setCurrentAnimationFrame(getWalkingAnimationFrame());
             setCurrentAnimationType(AnimationType.walking.toString());
-            if (getCooldown() == 0) {
-                if (enemyMiddle.distance(playerMiddle) <= sightRadius) {
-                    followPlayer(game);
-                } else {
-                    if (animationTimer.isRunning()) {
-                        animationTimer.stop();
-                    }
+            setCurrentState(1);
 
-                    walkingAnimationFrame = 0;
-                    setViewDirection(viewDirection);
-                    setCurrentAnimationFrame(walkingAnimationFrame);
-
-                    if (playingWalkingSound) {
-                        AudioManager.stop("S - skeletonWalking");
-                        playingWalkingSound = false;
-                        AudioManager.playingSkeletonWalking = false;
-                    }
-                }
+            if (isInRange(game, sightRadius)) {
+                followPlayer(game);
             } else {
-                if (playingWalkingSound) {
-                    AudioManager.stop("S - skeletonWalking");
-                    playingWalkingSound = false;
-                    AudioManager.playingSkeletonWalking = false;
-                }
-                walkingAnimationFrame = 0;
-                setViewDirection(viewDirection);
-                setCurrentAnimationFrame(walkingAnimationFrame);
+                recover();
             }
         } else {
-            attackPlayer(game);
+            recover();
         }
     }
 
+    private void rest(Game game) {
+        // !Resting currently not implemented for enemies!
 
-    public void followPlayer(Game game) {
-        animationTimer.start();
+        if (getCoolDown() == 0) {
+            setCurrentAnimationFrame(getRestingAnimationFrame());
+            setCurrentAnimationType(AnimationType.walking.toString());
+            setCurrentState(0);
 
-        Point2D playerMiddle = new Point2D.Double(),
-                enemyMiddle = new Point2D.Double();
+            //
+            // Implement code to wait a few seconds
+            // before walking again
+            //
 
-        playerMiddle.setLocation(
-                game.getPlayer().getPositionX() + 15,
-                game.getPlayer().getPositionY() + 25);
-
-        enemyMiddle.setLocation(
-                getPositionX() + 15,
-                getPositionY() + 25);
-
-        double angle, theta;
-        theta = Math.atan2(playerMiddle.getY() - enemyMiddle.getY(), playerMiddle.getX() - enemyMiddle.getX());
-        theta += Math.PI / 2.0;
-        angle = Math.toDegrees(theta);
-
-        if (angle < 0) {
-            angle += 360;
+            // If awake/attentive, check FOV
+            if (isInRange(game, sightRadius)) {
+                followPlayer(game);
+            } else {
+                recover();
+            }
+        } else {
+            recover();
         }
 
-        if (enemyMiddle.distance(playerMiddle) <= attackDistance) {
-            isAttacking = true;
+        // e.g. if sleeping/eating,
+        // don't check FOV
+        // -> Makes attacks from behind possible
+    }
 
+    private Point2D getEntityMiddle(Entity entity) {
+
+        Point2D entityMiddle = new Point2D.Double();
+        entityMiddle.setLocation(
+                entity.getPositionX() + 15,
+                entity.getPositionY() + 25);
+
+        return entityMiddle;
+    }
+
+    private boolean isInRange(Game game, int radius) {
+
+        Point2D playerMiddle = getEntityMiddle(game.getPlayer()),
+                enemyMiddle = getEntityMiddle(this);
+
+        return enemyMiddle.distance(playerMiddle) <= radius;
+    }
+
+    private void toggleWalkingSound(boolean stop) {
+        if (stop) {
             if (playingWalkingSound) {
                 AudioManager.stop("S - skeletonWalking");
                 playingWalkingSound = false;
                 AudioManager.playingSkeletonWalking = false;
             }
-
-            if (getEntityType() == EntityType.skeletonArcher) animationTimer.setDelay(80);
-
-
         } else {
             if (!playingWalkingSound) {
                 if (!AudioManager.playingSkeletonWalking) {
@@ -171,92 +183,118 @@ public class Enemy extends Entity {
                     playingWalkingSound = true;
                 }
             }
-            if (angle >= 315 && angle < 359 || angle >= 0 && angle < 45) { // -> von 315 bis 45 -> Up
-                viewDirection = 27;
-                //setCurrentFrame(walkingAnimationFrame + getViewDirection());
-                //setCurrentAnimationFrame(walkingAnimationFrame);
+        }
+    }
+
+    private void determineViewDirection(Game game) {
+
+        Point2D playerMiddle = getEntityMiddle(game.getPlayer()),
+                enemyMiddle = getEntityMiddle(this);
+        double angle = game.getAngle(playerMiddle, enemyMiddle);
+
+        if (angle >= 315 && angle < 359 || angle >= 0 && angle < 45) { // -> von 315 bis 45 -> Up
+            viewDirection = 0;
+
+        } else if (angle >= 135 && angle < 225) { // -> von 135 bis 225 -> Down
+            viewDirection = 1;
+
+        } else if (angle >= 225 && angle < 315) { // -> von 225 bis 315 -> Left
+            viewDirection = 2;
+
+        } else if (angle >= 45 && angle < 135) { // -> von 45 bis 135 -> Right
+            viewDirection = 3;
+        }
+    }
+
+    private void moveEnemy(Game game) {
+
+        switch (viewDirection) {
+            case 0 -> {
                 if (game.getCurrentLevel().isSolid(getPositionX() + Math.floorDiv(GamePanel.NEW_TILE_SIZE * 3, 10), getPositionY() - getMovementSpeed()) &&
                         game.getCurrentLevel().isSolid(getPositionX() - Math.floorDiv(GamePanel.NEW_TILE_SIZE * 3, 10), getPositionY() - getMovementSpeed())) {
                     setPositionY(getPositionY() - getMovementSpeed());
                 }
-            } else if (angle >= 45 && angle < 135) { // -> von 45 bis 135 -> Right
-                viewDirection = 18;
-                //setCurrentFrame(walkingAnimationFrame + getViewDirection());
-                if (game.getCurrentLevel().isSolid(getPositionX() + getMovementSpeed() + Math.floorDiv(GamePanel.NEW_TILE_SIZE * 3, 10), getPositionY()) &&
-                        game.getCurrentLevel().isSolid(getPositionX() + getMovementSpeed() + Math.floorDiv(GamePanel.NEW_TILE_SIZE * 3, 10), getPositionY() + Math.floorDiv(GamePanel.NEW_TILE_SIZE * 4, 10))) {
-                    setPositionX(getPositionX() + getMovementSpeed());
-                }
-            } else if (angle >= 135 && angle < 225) { // -> von 135 bis 225 -> Down
-                viewDirection = 0;
-                //setCurrentFrame(walkingAnimationFrame + getViewDirection());
+            }
+            case 1 -> {
                 if (game.getCurrentLevel().isSolid(getPositionX() - Math.floorDiv(GamePanel.NEW_TILE_SIZE * 3, 10), getPositionY() + getMovementSpeed() + Math.floorDiv(GamePanel.NEW_TILE_SIZE * 4, 10)) &&
                         game.getCurrentLevel().isSolid(getPositionX() + Math.floorDiv(GamePanel.NEW_TILE_SIZE * 3, 10), getPositionY() + getMovementSpeed() + Math.floorDiv(GamePanel.NEW_TILE_SIZE * 4, 10))) {
                     setPositionY(getPositionY() + getMovementSpeed());
                 }
-            } else if (angle >= 225 && angle < 315) { // -> von 225 bis 315 -> Left
-                viewDirection = 9;
-                //setCurrentFrame(walkingAnimationFrame + getViewDirection());
+            }
+            case 2 -> {
                 if (game.getCurrentLevel().isSolid(getPositionX() - getMovementSpeed() - Math.floorDiv(GamePanel.NEW_TILE_SIZE * 3, 10), getPositionY() + Math.floorDiv(GamePanel.NEW_TILE_SIZE * 4, 10)) &&
                         game.getCurrentLevel().isSolid(getPositionX() - getMovementSpeed() - Math.floorDiv(GamePanel.NEW_TILE_SIZE * 3, 10), getPositionY())) {
                     setPositionX(getPositionX() - getMovementSpeed());
                 }
             }
-            setViewDirection(viewDirection);
-            setCurrentAnimationFrame(walkingAnimationFrame);
-            System.out.println(getCurrentFrame());
+            case 3 -> {
+                if (game.getCurrentLevel().isSolid(getPositionX() + getMovementSpeed() + Math.floorDiv(GamePanel.NEW_TILE_SIZE * 3, 10), getPositionY()) &&
+                        game.getCurrentLevel().isSolid(getPositionX() + getMovementSpeed() + Math.floorDiv(GamePanel.NEW_TILE_SIZE * 3, 10), getPositionY() + Math.floorDiv(GamePanel.NEW_TILE_SIZE * 4, 10))) {
+                    setPositionX(getPositionX() + getMovementSpeed());
+                }
+            }
         }
     }
 
-    public void attackPlayer(Game game) {
-        setCurrentAnimationType(AnimationType.attacking.toString()); // type for enemy
+    public void followPlayer(Game game) {
+        setCurrentAnimationFrame(getWalkingAnimationFrame());
+        setCurrentAnimationType(AnimationType.walking.toString());
+        setCurrentState(1);
 
-        if (viewDirection == 27) {
-            setViewDirection(18);
-        } else if (viewDirection == 18) {
-            setViewDirection(12);
-        } else if (viewDirection == 0) {
-            setViewDirection(0);
-        } else if (viewDirection == 9) {
-            setViewDirection(6);
+        determineViewDirection(game);
+
+        if (isInRange(game, attackDistance)) {
+
+            if (getEntityType() == EntityType.skeletonArcher) setAnimationDelay(80);
+            toggleWalkingSound(true);
+
+            setCurrentAnimationType(AnimationType.attacking.toString());
+            adaptViewDirection(viewDirection);
+            attack(game);
+
+        } else {
+            toggleWalkingSound(false);
+            adaptViewDirection(viewDirection);
+            moveEnemy(game);
         }
+    }
 
-        setCurrentAnimationFrame(attackAnimationFrame);
+    private void attack(Game game) {
+
+        setCurrentState(2);
+        setCurrentAnimationFrame(getAttackAnimationFrame());
 
         // Draws the hit box when the sword was swung (fourth image seems fine)
         // Therefore, the character has the possibility to walk out of an attack
         // and dodge it before he was actually (visually) hit
-        if (attackAnimationFrame == attackCollisionFrame && !attackHitBoxDrawn) {
+        if (getAttackAnimationFrame() == attackCollisionFrame && !attackHitBoxDrawn) {
             attackHitBoxDrawn = true;
-            walkingAnimationFrame = 0;
-            getEntityType().attack(); // -> inside enum
+
             if (getEntityType() == EntityType.skeletonWarrior) {
 
-                Point2D playerMiddle = new Point2D.Double(
-                        game.getPlayer().getPositionX() + 15,
-                        game.getPlayer().getPositionY() + 25);
+                if (isInRange(game, attackDistance)) {
+                    Point2D playerMiddle = getEntityMiddle(game.getPlayer()),
+                            enemyMiddle = getEntityMiddle(this);
 
-                Point2D enemyMiddle = new Point2D.Double(
-                        getPositionX() + 15,
-                        getPositionY() + 25);
+                    double angle = game.getAngle(playerMiddle, enemyMiddle);
 
-                double angle;
-                double theta = Math.atan2(playerMiddle.getY() - enemyMiddle.getY(), playerMiddle.getX() - enemyMiddle.getX());
-                theta += Math.PI / 2.0;
-                angle = Math.toDegrees(theta);
-
-                if (angle < 0) {
-                    angle += 360;
-                }
-
-                if (enemyMiddle.distance(playerMiddle) <= attackDistance) { // if on the fourth frame still in range
-                    if (game.enemyAttack(angle, getViewDirection())) {
-                        game.dealDamage(this);
+                    if (game.enemyAttack(angle, viewDirection)) {
+                        game.dealDamageToPlayer(this);
                     }
                 }
             } else if (getEntityType() == EntityType.skeletonArcher) {
-                projectiles.add(new Projectile(getPositionX(), getPositionY(), getViewDirection()));
+                projectiles.add(new Projectile(getPositionX(), getPositionY(), viewDirection));
             }
         }
+    }
+
+    public Point2D getEnemyMiddle() {
+
+        Point2D enemyMiddle = new Point2D.Double();
+        enemyMiddle.setLocation(
+                getPositionX() + getEntityFrames(getCurrentAnimationType())[getCurrentFrame()].getXOffset(),
+                getPositionY() + getEntityFrames(getCurrentAnimationType())[getCurrentFrame()].getYOffset());
+        return enemyMiddle;
     }
 
     public ArrayList<Projectile> getProjectiles() {
@@ -264,8 +302,9 @@ public class Enemy extends Entity {
     }
 
     @Override
-    public void draw(Graphics2D graph2D, Game game, GamePanel gamePanel) {
+    public void draw(Graphics2D graph2D, Game game) {
 
+        /*
         Point2D playerMiddle = new Point2D.Double(
                 game.getPlayer().getPositionX() + 15,
                 game.getPlayer().getPositionY() + 25);
@@ -275,15 +314,13 @@ public class Enemy extends Entity {
                 getPositionY() + 25);
 
         Shape enemy = new Rectangle2D.Double(
-                 getPositionX() + getEntityFrames(getCurrentAnimationType())[getCurrentFrame()].getXOffset(),
+                getPositionX() + getEntityFrames(getCurrentAnimationType())[getCurrentFrame()].getXOffset(),
                 getPositionY() + getEntityFrames(getCurrentAnimationType())[getCurrentFrame()].getYOffset(),
                 getEntityFrames(getCurrentAnimationType())[getCurrentFrame()].getWidth(),
                 getEntityFrames(getCurrentAnimationType())[getCurrentFrame()].getHeight());
 
         graph2D.setColor(Color.ORANGE);
         graph2D.fill(enemy);
-
-
 
         Shape player = new Rectangle2D.Double(
                 game.getPlayer().getPositionX(),
@@ -299,10 +336,17 @@ public class Enemy extends Entity {
 
         graph2D.setColor(Color.GREEN);
         graph2D.fill(getCircleByCenter(enemyMiddle, 10));
-
+         */
 
         int x = (int) ((GamePanel.WINDOW_WIDTH) / 2);
         int y = (int) ((GamePanel.WINDOW_HEIGHT) / 2);
+
+        drawEnemy(graph2D, game, x, y);
+        drawHealthBar(graph2D, game, x, y);
+        drawProjectiles(graph2D, game);
+    }
+
+    private void drawEnemy(Graphics2D graph2D, Game game, int x, int y) {
 
         // The current frame
         AnimationFrame frame = getEntityFrames(getCurrentAnimationType())[getCurrentFrame()];
@@ -312,12 +356,11 @@ public class Enemy extends Entity {
                 frame.getImage(),
                 x + frame.getXOffset() - game.getPlayer().getPositionX() + this.getPositionX(),
                 y + frame.getYOffset() - game.getPlayer().getPositionY() + this.getPositionY(),
-                frame.getWidth(), frame.getHeight(), gamePanel
+                frame.getWidth(), frame.getHeight(), null
         );
+    }
 
-        for (Projectile p : projectiles) {
-            p.draw(graph2D, game, gamePanel);
-        }
+    private void drawHealthBar(Graphics2D graph2D, Game game, int x, int y) {
 
         if (this.getCurrentHealthPoints() < this.getMaxHealthPoints()) {
             Shape healthBarOutside = new Rectangle2D.Double(
@@ -339,92 +382,104 @@ public class Enemy extends Entity {
         }
     }
 
+    private void drawProjectiles(Graphics2D graph2D, Game game) {
 
-    private static Ellipse2D getCircleByCenter(Point2D center, double radius) {
-        Ellipse2D.Double myCircle = new Ellipse2D.Double(center.getX() - radius, center.getY() - radius, 2 * radius, 2 * radius);
-        return myCircle;
+        for (Projectile p : projectiles) {
+            p.draw(graph2D, game);
+        }
     }
 
+    private boolean isAttacking() {
+        return isInState(2);
+    }
 
-    private class AnimationHandler implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
+    private boolean isWalking() {
+        return isInState(1);
+    }
 
-            if (!isAttacking) {
-                walkingAnimationFrame++;
-
-                if (walkingAnimationFrame >= getAnimationFrameLimit(getCurrentAnimationType())) {
-                    walkingAnimationFrame = 0;
-                }
-                if (getCooldown() > 0) {
-                    reduceCooldown();
-                }
-            } else {
-                System.out.println(attackAnimationFrame);
-                attackAnimationFrame++;
-
-                if (attackAnimationFrame >= getAnimationFrameLimit(getCurrentAnimationType())) {
-                    attackAnimationFrame = 0;
-                    isAttacking = false;
-                    attackHitBoxDrawn = false;
-                    animationTimer.setDelay(100);
-                    setCooldown(getAttackDelay());
-                }
-            }
-        }
-
+    private boolean isResting() {
+        return isInState(0);
     }
 
     @Override
-    public void update(Game game) {
-        if (this.getKnockBackDuration() <= 1) {
-            this.setKnockBackDuration(0);
-            this.setKnockBack(false);
+    protected void handleAnimation() {
 
-            this.setMomentum(0);
-        } else if (this.isKnockBack()) {
-            if (GamePanel.player.getCurrentFrame() >= 19 && GamePanel.player.getCurrentFrame() < 25 + 1) { // up
-                if (game.getCurrentLevel().isSolid(this.getPositionX(), this.getPositionY() - (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()])) &&
-                        game.getCurrentLevel().isSolid(this.getPositionX() + GamePanel.NEW_TILE_SIZE, this.getPositionY() - (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]))
-                ) {
-                    this.setPositionY(this.getPositionY() - (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
-                } else {
-                    this.setKnockBackDuration(0);
-                }
-            } else if (GamePanel.player.getCurrentFrame() >= 13 && GamePanel.player.getCurrentFrame() < 18 + 1) { // right
-                if (game.getCurrentLevel().isSolid(this.getPositionX() + (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]) + GamePanel.NEW_TILE_SIZE, this.getPositionY()) &&
-                        game.getCurrentLevel().isSolid(this.getPositionX() + (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]) + GamePanel.NEW_TILE_SIZE, this.getPositionY() + GamePanel.NEW_TILE_SIZE)
-                ) {
-                    this.setPositionX(this.getPositionX() + (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
-                } else {
-                    this.setKnockBackDuration(0);
-                }
-            } else if (GamePanel.player.getCurrentFrame() >= 1 && GamePanel.player.getCurrentFrame() < 6 + 1) { // down
-                if (game.getCurrentLevel().isSolid(this.getPositionX(), this.getPositionY() + (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]) + GamePanel.NEW_TILE_SIZE) &&
-                        game.getCurrentLevel().isSolid(this.getPositionX() + GamePanel.NEW_TILE_SIZE, this.getPositionY() + (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]) + GamePanel.NEW_TILE_SIZE)
-                ) {
-                    this.setPositionY(this.getPositionY() + (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
-                } else {
-                    this.setKnockBackDuration(0);
-                }
-            } else if (GamePanel.player.getCurrentFrame() >= 7 && GamePanel.player.getCurrentFrame() < 12 + 1) { // left
-                if (game.getCurrentLevel().isSolid(this.getPositionX() - (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]), this.getPositionY()) &&
-                        game.getCurrentLevel().isSolid(this.getPositionX() - (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]), this.getPositionY() + GamePanel.NEW_TILE_SIZE)
-                ) {
-                    this.setPositionX(this.getPositionX() - (int) (this.getMomentum() * factor[15 - this.getKnockBackDuration()]));
-                } else {
-                    this.setKnockBackDuration(0);
-                }
+        if (isDead()) {
+            //   if (proceedAnimationFrame(AnimationType.dying.toString(),
+            //           getAnimationFrameLimit(AnimationType.dying.toString()) - 1)) {
+            //       endDyingAnimation();
+            //   }
+        } else if (isAttacking()) {
+            if (proceedAnimationFrame(AnimationType.attacking.toString(),
+                    getAnimationFrameLimit(AnimationType.attacking.toString()))) {
+                endAttackingAnimation();
             }
-            this.setKnockBackDuration(this.getKnockBackDuration() - 1);
+        } else if (isWalking()) {
+            if (proceedAnimationFrame(AnimationType.walking.toString(),
+                    getAnimationFrameLimit(AnimationType.walking.toString()))) {
+                endWalkingAnimation();
+            }
+        } else if (isResting()) {
+            setRestingAnimationFrame(0);
+            //if (proceedAnimationFrame(AnimationType.resting.toString(),
+            //        getAnimationFrameLimit(AnimationType.resting.toString()))) {
+            //    endRestingAnimation();
+            // }
         }
     }
 
     @Override
-    public void hit() {
-        this.setKnockBackDuration(15);
-        this.setMomentum(this.getKnockBackDuration() * this.getMovementSpeed());
-        this.setKnockBack(true);
+    protected void endRestingAnimation() {
+
+        // Currently no rest animation for enemies
+    }
+
+    @Override
+    protected void endWalkingAnimation() {
+        setWalkingAnimationFrame(1);
+    }
+
+    @Override
+    protected void endAttackingAnimation() {
+
+        attackHitBoxDrawn = false;
+        setCurrentState(0);
+        setAnimationDelay(100);
+        setCoolDown(getAttackDelay());
+
+        new Timer(getAttackDelay(), new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ((Timer) e.getSource()).stop();
+                setCoolDown(0);
+            }
+        }).start();
+    }
+
+    @Override
+    protected void endDyingAnimation() {
+
+        // Currently no dying animation for enemies
+    }
+
+    @Override
+    public void updateKnockBack(Game game) {
+
+        if (!allowKnockBack(game, game.getPlayer().getCurrentDirection())) {
+            setKnockBackDuration(0);
+            setKnockBack(false);
+            setMomentum(0);
+        } else if (reduceKnockBackDuration()) {
+            setKnockBack(false);
+            setMomentum(0);
+        }
+    }
+
+    @Override
+    public void startKnockBack() {
+        setKnockBackDuration(15);
+        setMomentum(getKnockBackDuration() * getMovementSpeed());
+        setKnockBack(true);
     }
 }
 
