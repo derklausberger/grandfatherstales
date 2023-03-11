@@ -121,10 +121,10 @@ public class MainMenuPanel extends JPanel {
         // Initializes the SoundManager
         AudioManager.init();
         // Loads the audio files
-        AudioManager.load("/music/Main Theme.wav", "M - mainTheme");
-        AudioManager.load("/sounds/GUI/Hover 1.wav", "S - hover1");
-        AudioManager.load("/sounds/GUI/Click 1.wav", "S - click1");
-        AudioManager.load("/sounds/GUI/Click 2.wav", "S - click2");
+        AudioManager.load("/music/mainTheme.wav", "M - mainTheme");
+        AudioManager.load("/sounds/GUI/hover1.wav", "S - hover1");
+        AudioManager.load("/sounds/GUI/click1.wav", "S - click1");
+        AudioManager.load("/sounds/GUI/click2.wav", "S - click2");
 
         AudioManager.setMusicVolume(1.0f);
         AudioManager.setSoundVolume(1.0f);

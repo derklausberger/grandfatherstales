@@ -111,6 +111,7 @@ public class AudioManager {
         if (name.startsWith("S")) {
             setVolume(c, soundVolume);
         } else if (name.startsWith("M")) {
+            stopAllMusic();
             setVolume(c, musicVolume);
         }
         c.setFramePosition(startFrame);
@@ -131,6 +132,16 @@ public class AudioManager {
 
         for (String c : clips.keySet()) {
             if (c.contains("S -")) {
+                stop(c);
+            }
+        }
+    }
+
+    // Stops all music
+    public static void stopAllMusic() {
+
+        for (String c : clips.keySet()) {
+            if (c.contains("M -")) {
                 stop(c);
             }
         }
@@ -189,6 +200,7 @@ public class AudioManager {
         if (name.startsWith("S")) {
             setVolume(c, soundVolume);
         } else if (name.startsWith("M")) {
+            stopAllMusic();
             setVolume(c, musicVolume);
         }
         c.setLoopPoints(loopStart, loopEnd);

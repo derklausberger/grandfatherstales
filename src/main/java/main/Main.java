@@ -67,6 +67,12 @@ public class Main {
         return gameCreated;
     }
 
+    public static void clearGamePanel() {
+
+        gamePanel = null;
+        gameCreated = false;
+    }
+
     private static void createGamePanel() {
 
         // Starts a new thread to load the game resources
@@ -74,11 +80,8 @@ public class Main {
             @Override
             public void run() {
 
-                // Create the game panel and add it to the main panel
+                // Creates the game panel and adds it to the main panel
                 try {
-                    if (gamePanel != null) {
-                        gamePanel = null;
-                    }
                     gamePanel = new GamePanel();
                     createGameScreenComponents();
                     gameCreated = true;
@@ -150,6 +153,9 @@ public class Main {
         GamePanel.isLoading = false;
         cardLayout.show(rootPanel, "Game");
         currentScreen = "Game";
+
+        // Loop in game music
+        AudioManager.loop("M - dungeon", 0, 352000, AudioManager.getFrames("M - dungeon") - 1);
     }
 
     private static void startBlackScreenTimer(JLabel gameStateMessage) {

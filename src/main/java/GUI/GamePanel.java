@@ -83,6 +83,7 @@ public class GamePanel extends JPanel implements Runnable {
         game.getPlayer().removeKeyHandler();
         game = null;
         AudioManager.stopAllSounds();
+        Main.clearGamePanel();
     }
 
     public void startGameThread() {
@@ -92,14 +93,15 @@ public class GamePanel extends JPanel implements Runnable {
 
     private void loadAudio() {
 
-        AudioManager.load("/sounds/attack/Sword Swipe 1.wav", "S - swordSwipe1");
-        AudioManager.load("/sounds/attack/Sword Swipe 2.wav", "S - swordSwipe2");
-        AudioManager.load("/sounds/attack/Sword Swipe 3.wav", "S - swordSwipe3");
+        AudioManager.load("/sounds/attack/swordSwipe1.wav", "S - swordSwipe1");
+        AudioManager.load("/sounds/attack/swordSwipe2.wav", "S - swordSwipe2");
+        AudioManager.load("/sounds/attack/swordSwipe3.wav", "S - swordSwipe3");
         AudioManager.load("/sounds/attack/characterHit.wav", "S - characterHit");
-        AudioManager.load("/sounds/Walking Hard Ground.wav", "S - characterWalking");
+        AudioManager.load("/sounds/walkingHardGround.wav", "S - characterWalking");
         AudioManager.load("/sounds/skeletonHit.wav", "S - skeletonHit");
         AudioManager.load("/sounds/skeletonWalk.wav", "S - skeletonWalking");
         AudioManager.load("/sounds/openingChest.wav", "S - openingChest");
+        AudioManager.load("/music/dungeon.wav", "M - dungeon");
     }
 
     // Game thread
@@ -169,6 +171,7 @@ public class GamePanel extends JPanel implements Runnable {
         // Functions that are called,
         // if the character is not dead
         if (game.isOpeningChest()) {
+            AudioManager.stop("S - skeletonWalking");
             isOpeningChest = true;
             return;
         } else {
