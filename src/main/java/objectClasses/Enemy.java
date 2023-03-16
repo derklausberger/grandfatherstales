@@ -154,8 +154,8 @@ public class Enemy extends Entity {
 
         Point2D entityMiddle = new Point2D.Double();
         entityMiddle.setLocation(
-                entity.getPositionX() + 15,
-                entity.getPositionY() + 25);
+                entity.getPositionX(),
+                entity.getPositionY());
 
         return entityMiddle;
     }
@@ -304,39 +304,25 @@ public class Enemy extends Entity {
     @Override
     public void draw(Graphics2D graph2D, Game game) {
 
-        /*
+
         Point2D playerMiddle = new Point2D.Double(
-                game.getPlayer().getPositionX() + 15,
-                game.getPlayer().getPositionY() + 25);
+                game.getPlayer().getPositionX() - 5,
+                game.getPlayer().getPositionY() - 5);
 
         Point2D enemyMiddle = new Point2D.Double(
-                getPositionX() + 15,
-                getPositionY() + 25);
+                getPositionX() - 5,
+                getPositionY() - 5);
 
-        Shape enemy = new Rectangle2D.Double(
-                getPositionX() + getEntityFrames(getCurrentAnimationType())[getCurrentFrame()].getXOffset(),
-                getPositionY() + getEntityFrames(getCurrentAnimationType())[getCurrentFrame()].getYOffset(),
-                getEntityFrames(getCurrentAnimationType())[getCurrentFrame()].getWidth(),
-                getEntityFrames(getCurrentAnimationType())[getCurrentFrame()].getHeight());
 
-        graph2D.setColor(Color.ORANGE);
-        graph2D.fill(enemy);
+        Shape s1 = new Ellipse2D.Double(playerMiddle.getX() - 15 , playerMiddle.getY() - 25, 10, 10);
+        Shape s2 = new Ellipse2D.Double(enemyMiddle.getX(), enemyMiddle.getY(), 10, 10);
 
-        Shape player = new Rectangle2D.Double(
-                game.getPlayer().getPositionX(),
-                game.getPlayer().getPositionY(),
-                game.getPlayer().getEntityFrames(game.getPlayer().getCurrentAnimationType())[game.getPlayer().getCurrentFrame()].getWidth(),
-                game.getPlayer().getEntityFrames(game.getPlayer().getCurrentAnimationType())[game.getPlayer().getCurrentFrame()].getHeight());
 
         graph2D.setColor(Color.ORANGE);
-        graph2D.fill(player);
-
-        graph2D.setColor(Color.BLACK);
-        graph2D.fill(getCircleByCenter(playerMiddle, 10));
-
+        graph2D.draw(s1);
         graph2D.setColor(Color.GREEN);
-        graph2D.fill(getCircleByCenter(enemyMiddle, 10));
-         */
+        graph2D.draw(s2);
+
 
         int x = (int) ((GamePanel.WINDOW_WIDTH) / 2);
         int y = (int) ((GamePanel.WINDOW_HEIGHT) / 2);
@@ -482,5 +468,3 @@ public class Enemy extends Entity {
         setKnockBack(true);
     }
 }
-
-

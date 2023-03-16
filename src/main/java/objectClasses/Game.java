@@ -636,31 +636,25 @@ public class Game {
     }
 
     public void checkPlayerAttack() {
-
         if (player.attack()) {
-
-            //ArrayList<Enemy> alreadyHit = new ArrayList<>();
-            //int[] angles = getAttackAngles();
-
-            Point2D playerMiddle = new Point2D.Double(
-                    player.getPositionX() + 15,
-                    player.getPositionY() + 25);
 
             for (Enemy enemy : getCurrentLevel().getEnemies()) {
 
-                Point2D enemyMiddle = enemy.getEnemyMiddle();
-                double angle = getAngle(playerMiddle, enemyMiddle);
+                Point2D playerMiddle = new Point2D.Double(player.getPositionX() + 15, player.getPositionY() + 25);
+                Point2D enemyMiddle = new Point2D.Double(enemy.getPositionX(), enemy.getPositionY());
+                double angle = getAngle(enemyMiddle, playerMiddle);
+
+                System.out.println("\n\n The angle: [" +angle+ "]");
+                System.out.println("\n Distance is: [" +playerMiddle.distance(enemyMiddle)+ "]");
+                System.out.println("\n Range is: [" +player.getWeapon().getAttackRange()+ "]");
+                System.out.println("\n Boolean: [" + (playerMiddle.distance(enemyMiddle) <= player.getWeapon().getAttackRange())+ "]\n\n");
 
                 if (playerMiddle.distance(enemyMiddle) <= player.getWeapon().getAttackRange()) {
 
                     if (isHit(angle)) {
-                        //if (!alreadyHit.contains(enemy)) {
-                        //alreadyHit.add(enemy);
-
                         if (dealDamageToEnemy(enemy)) {
                             getCurrentLevel().getEnemies().remove(enemy);
                         }
-                        //}
                     }
                 }
             }
@@ -668,17 +662,13 @@ public class Game {
     }
 
     private boolean isHit(double angle) {
-
-        if (player.getAttackDirection() == 0) {
+        if (player.getAttackDirection() == 0) { // left
             return angle >= 315 && angle < 359 || angle >= 0 && angle < 45;
-
-        } else if (player.getAttackDirection() == 1) {
+        } else if (player.getAttackDirection() == 1) { // up
             return angle >= 135 && angle < 225;
-
-        } else if (player.getAttackDirection() == 2) {
+        } else if (player.getAttackDirection() == 2) { // right
             return angle >= 225 && angle < 315;
-
-        } else if (player.getAttackDirection() == 3) {
+        } else if (player.getAttackDirection() == 3) {// down
             return angle >= 45 && angle < 135;
         }
         return false;
@@ -733,4 +723,3 @@ public class Game {
         return new int[]{startAngle, arcAngle};
     }
 }
-

@@ -56,7 +56,7 @@ public class Player extends Entity {
         ResourceLoader rl = ResourceLoader.getResourceLoader();
         BufferedImage sword = rl.getBufferedImage("/item/weapon/sable/sableCommon.png");
 
-        setWeapon(new Weapon("sword", RarityType.Common, sword, 10, 100));
+        setWeapon(new Weapon("sword", RarityType.Common, sword, 10, 150));
     }
 
     public void addItem(Item item) {
@@ -65,7 +65,7 @@ public class Player extends Entity {
         // Note: attackRange is currently always 100,
         // it has to be changed for different weapons later on
         if (item.getItemStatName().equals("Attack")) {
-            setWeapon(new Weapon(item.getItemName(), item.getRarity(), item.getImage(), item.getStatValue(), 100));
+            setWeapon(new Weapon(item.getItemName(), item.getRarity(), item.getImage(), item.getStatValue(), 150));
 
             // If the item is an armor piece
         } else if (item.getItemStatName().equals("Defense")) {
@@ -224,7 +224,6 @@ public class Player extends Entity {
     }
 
     public boolean attack() {
-
         // Returns true if the character is allowed to attack
         // -> i.e. allowed to draw a hit box
         if (getAttackAnimationFrame() >= 4 && !attackHitBoxDrawn) {
